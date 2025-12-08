@@ -1,1 +1,862 @@
-<!doctype html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>blog-temp</title><script defer="defer" src="/js/chunk-vendors.be57d9ab.js"></script><script defer="defer" src="/js/app.a0a5a1c3.js"></script><link href="/css/app.c8141450.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but blog-temp doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- ===== BASIC SEO ===== -->
+    <title>Vix.cpp : Offline-first, P2P, ultra-fast C++ runtime</title>
+    <meta
+      name="description"
+      content="Vix.cpp is a next-generation offline-first, peer-to-peer, ultra-fast runtime for modern C++. Designed for unstable networks, real-world backends, edge systems and WebSocket APIs."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- ===== FAVICONS ===== -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/logo/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/logo/favicon-32x32.png"
+    />
+    <link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/assets/logo/site.webmanifest" />
+    <link rel="shortcut icon" href="/assets/logo/favicon.ico" />
+
+    <!-- Android icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/assets/logo/android-chrome-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/assets/logo/android-chrome-512x512.png"
+    />
+
+    <!-- ===== OPEN GRAPH (Facebook, LinkedIn, Twitter) ===== -->
+    <meta
+      property="og:title"
+      content="Vix.cpp — Offline-first, P2P, ultra-fast C++ runtime"
+    />
+    <meta
+      property="og:description"
+      content="Ultra-fast, offline-first, peer-to-peer C++ runtime designed for unstable networks, edge systems and WebSocket APIs."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://vixcpp.github.io/assets/logo/vix-logo.png"
+    />
+    <meta property="og:url" content="https://vixcpp.github.io/" />
+    <meta property="og:site_name" content="Vix.cpp" />
+
+    <!-- ===== TWITTER CARD ===== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Vix.cpp — Offline-first, ultra-fast C++ runtime"
+    />
+    <meta
+      name="twitter:description"
+      content="A modern C++ runtime built for real-world latency, unstable networks, offline-first systems & WebSockets."
+    />
+    <meta
+      name="twitter:image"
+      content="https://vixcpp.github.io/assets/logo/vix-logo.png"
+    />
+
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <!-- Ligne du haut : logo + burger -->
+        <div class="header-top">
+          <!-- LOGO -->
+          <div class="logo">
+            <img
+              src="/assets/logo/vix-logo.png"
+              alt="Vix logo"
+              class="logo-icon"
+            />
+
+            <span class="logo-text">
+              <span class="logo-main">Vix</span
+              ><span class="logo-sub">.cpp</span>
+            </span>
+          </div>
+          <!-- Bouton burger (SVG) -->
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded="false"
+            aria-controls="primary-nav"
+          >
+            <svg class="nav-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- NAVIGATION + COMMUNITY -->
+        <nav class="nav" id="primary-nav">
+          <a href="#overview">Overview</a>
+          <a href="#benchmarks">Benchmarks</a>
+          <a href="#features">Features</a>
+          <a href="#realtime-chat">WebSocket chat</a>
+          <a href="#example">Example</a>
+          <a href="#get-started">Get started</a>
+
+          <!-- Community dans le nav -->
+          <div class="community-wrapper">
+            <button
+              class="community-toggle"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="community-menu"
+            >
+              <span class="community-label">Community</span>
+              <span class="community-icon">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </span>
+            </button>
+
+            <div id="community-menu" class="community-menu" role="menu">
+              <div class="community-section">
+                <div class="community-title">GitHub</div>
+                <a
+                  href="https://github.com/vixcpp/vix"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-github">GH</span>
+                  <span class="community-link-label">vixcpp/vix</span>
+                </a>
+                <a
+                  href="https://github.com/iviphp"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-github">GH</span>
+                  <span class="community-link-label">iviphp</span>
+                </a>
+              </div>
+
+              <div class="community-section">
+                <div class="community-title">X (Twitter)</div>
+                <a
+                  href="https://x.com/g_kirira"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-x">X</span>
+                  <span class="community-link-label">@g_kirira</span>
+                </a>
+                <a
+                  href="https://x.com/vixframework"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-x">X</span>
+                  <span class="community-link-label">@vixframework</span>
+                </a>
+              </div>
+
+              <div class="community-section">
+                <div class="community-title">LinkedIn</div>
+                <a
+                  href="https://www.linkedin.com/in/gaspard-kirira-bab908294"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-linkedin">in</span>
+                  <span class="community-link-label">Gaspard Kirira</span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/vix-framework-0026a7389/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-linkedin">in</span>
+                  <span class="community-link-label">Vix Framework</span>
+                </a>
+              </div>
+
+              <div class="community-section">
+                <div class="community-title">YouTube</div>
+                <a
+                  href="https://www.youtube.com/@gkirira"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="icon-chip icon-youtube">YT</span>
+                  <span class="community-link-label">@gkirira</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section id="overview" class="hero">
+        <div class="container hero-inner">
+          <div class="hero-text">
+            <h1>Offline-first, P2P & ultra-fast runtime for modern C++.</h1>
+
+            <p class="hero-subtitle">
+              Vix.cpp is a next-generation C++ runtime for building HTTP &
+              WebSocket backends that keep working on unstable networks
+              offline-first, peer-to-peer and tuned for real-world latency.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="btn primary"
+                href="https://github.com/vixcpp/vix"
+                target="_blank"
+                rel="noreferrer"
+              >
+                ⭐ View on GitHub
+              </a>
+              <a class="btn secondary" href="#benchmarks"> View benchmarks </a>
+            </div>
+
+            <p class="hero-meta">
+              C++20 • Offline-first • Peer-to-peer • HTTP & WebSocket • Async
+              runtime • CLI
+            </p>
+
+            <div class="card" style="margin-top: 1.25rem; max-width: 420px">
+              <h3
+                style="
+                  margin-top: 0;
+                  margin-bottom: 0.35rem;
+                  font-size: 0.98rem;
+                "
+              >
+                Latest benchmark (Dec 2025)
+              </h3>
+              <p style="margin: 0; font-size: 0.9rem; color: #9ca3af">
+                <strong>Vix.cpp v1.12.1</strong> reaches
+                <strong>~99k requests/sec</strong> on a simple “OK” endpoint (8
+                threads, 800 connections, pinned CPU).
+              </p>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div class="terminal">
+              <div class="terminal-header">
+                <span></span><span></span><span></span>
+                <span class="terminal-title">vix script mode</span>
+              </div>
+              <div class="terminal-body">
+                <pre><code>
+<span class="shell-prompt">$</span> <span class="shell-cmd">vix</span> <span class="shell-arg">run</span> <span class="shell-path">server.cpp</span>
+
+<span class="indent shell-info">Script mode: compiling server.cpp</span>
+<span class="indent shell-info">Using script build directory:</span> <span class="shell-path">.vix-scripts/server</span>
+
+<span class="indent shell-info">HTTP on port <span class="shell-number">8080</span>, WebSocket on port <span class="shell-number">9090</span></span>
+<span class="indent shell-log">[I] [WebSocket][Server] Listening on 0.0.0.0:9090</span>
+<span class="indent shell-log">[I] [ThreadPool] started with threads=4, maxThreads=8</span>
+</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- What is Vix -->
+      <section class="section section-alt">
+        <div class="container">
+          <h2>What is Vix?</h2>
+          <p class="section-intro">
+            Vix.cpp is not just another backend framework it is a
+            <strong>modular C++ runtime</strong> designed for distributed
+            applications, edge systems, offline devices and unstable,
+            low-quality networks.
+          </p>
+
+          <div class="grid features-grid">
+            <div class="card">
+              <h3>Built for unstable networks</h3>
+              <p>
+                Most runtimes assume stable connectivity. Vix.cpp is engineered
+                to keep working when latency spikes, packets drop and
+                connectivity is intermittent.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Offline-first by design</h3>
+              <p>
+                The goal is to let applications continue running and providing
+                value even when the cloud is not reachable sync when you can,
+                work when you can’t.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Peer-to-peer ready</h3>
+              <p>
+                Vix.cpp is evolving towards a P2P-friendly model where nodes can
+                communicate, sync state and coordinate locally without a central
+                server.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Modern C++ runtime</h3>
+              <p>
+                Rebuilt from scratch in C++20, inspired by FastAPI, Vue.js,
+                React and modern runtimes like Node, Deno and Bun but with
+                native speed and full control.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Benchmarks -->
+      <section id="benchmarks" class="section">
+        <div class="container">
+          <h2>Benchmarks — Vix.cpp vs other runtimes</h2>
+          <p class="section-intro">
+            Benchmarks are run with <code>wrk</code> using 8 threads, 800
+            connections and 30 seconds, on the same machine (Ubuntu 24.04, Intel
+            Xeon, C++20 release build, logging disabled).
+          </p>
+
+          <div class="card bench-card">
+            <div class="table-responsive">
+              <table class="bench-table">
+                <thead>
+                  <tr>
+                    <th>Framework</th>
+                    <th>Requests/sec</th>
+                    <th>Avg latency</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight">
+                    <td data-label="Framework">
+                      <strong>⭐ Vix.cpp (v1.12.1, pinned CPU)</strong>
+                    </td>
+                    <td data-label="Requests/sec"><strong>~98,942</strong></td>
+                    <td data-label="Avg latency">
+                      <strong>7.3–10.8 ms</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">Vix.cpp (default run)</td>
+                    <td data-label="Requests/sec">81,300–81,400</td>
+                    <td data-label="Avg latency">9.7–10.8 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">Go (Fiber)</td>
+                    <td data-label="Requests/sec">81,336</td>
+                    <td data-label="Avg latency">0.67 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">Deno</td>
+                    <td data-label="Requests/sec">~48,868</td>
+                    <td data-label="Avg latency">16.34 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">Node.js (Fastify)</td>
+                    <td data-label="Requests/sec">4,220</td>
+                    <td data-label="Avg latency">16.00 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">PHP (Slim)</td>
+                    <td data-label="Requests/sec">2,804</td>
+                    <td data-label="Avg latency">16.87 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">Crow (C++)</td>
+                    <td data-label="Requests/sec">1,149</td>
+                    <td data-label="Avg latency">41.60 ms</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Framework">FastAPI (Python)</td>
+                    <td data-label="Requests/sec">752</td>
+                    <td data-label="Avg latency">63.71 ms</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="bench-note">
+              When pinned to a single core (<code>taskset -c 2</code>), Vix.cpp
+              reaches ~99k req/s, matching or surpassing high performance C++
+              microframeworks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why Vix exists -->
+      <section class="section section-alt">
+        <div class="container">
+          <h2>Why Vix exists</h2>
+          <p class="section-intro">
+            Traditional cloud frameworks assume stable networks, predictable
+            latency and always-online connectivity. In most of the world, this
+            is simply not true.
+          </p>
+
+          <div class="grid perf-grid">
+            <div class="card">
+              <h3>Offline-first reality</h3>
+              <p>
+                Many users work in environments where connectivity is
+                unreliable. Vix.cpp aims to keep applications usable, even when
+                the network disappears.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Edge & local-first</h3>
+              <p>
+                Move computation closer to the user: edge devices, local
+                clusters, and hybrid systems where cloud is only one part of the
+                picture.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key features -->
+      <section id="features" class="section">
+        <div class="container">
+          <h2>Key features</h2>
+          <div class="grid features-grid">
+            <div class="card">
+              <h3>Async HTTP server</h3>
+              <p>
+                A modern HTTP stack built on top of Beast/Asio, with fast
+                routing and predictable threading.
+              </p>
+            </div>
+            <div class="card">
+              <h3>WebSocket engine</h3>
+              <p>
+                WebSocket module with rooms, metrics and integration with the
+                runtime executor for real-time systems.
+              </p>
+            </div>
+            <div class="card">
+              <h3>ORM for MySQL/SQLite</h3>
+              <p>
+                Database layer for relational workloads, designed to integrate
+                with Vix.cpp’s runtime model.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Middleware system</h3>
+              <p>
+                Structured middleware pipeline for auth, logging, metrics and
+                cross-cutting concerns.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Developer-friendly CLI</h3>
+              <p>
+                <code>vix new</code>, <code>vix build</code>,
+                <code>vix run</code> and script mode to simplify the
+                CMake/toolchain story for C++ developers.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Modular design</h3>
+              <p>
+                Core, utils, websocket, ORM, JSON, CLI, Rix library and more —
+                each module focused and composable.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WebSocket chat showcase -->
+      <section id="realtime-chat" class="section section-alt">
+        <div class="container app-grid">
+          <!-- Texte à gauche -->
+          <div class="app-content">
+            <h2>Real-time WebSocket chat, built with Vix.cpp</h2>
+            <p class="section-intro">
+              This is not a mockup it’s a real chat application running on top
+              of the <strong>Vix WebSocket module</strong>. Rooms, history,
+              typed messages and activity feed, all powered by the runtime.
+            </p>
+
+            <ul class="app-list">
+              <li>
+                <span class="app-badge">Rooms</span>
+                Join any room (like <code>africa</code>) and start chatting in
+                real time.
+              </li>
+              <li>
+                <span class="app-badge">History</span>
+                Messages are persisted and re-loaded when you reconnect.
+              </li>
+              <li>
+                <span class="app-badge">Events</span>
+                System events such as joins, leaves and connection status are
+                streamed in a dedicated activity panel.
+              </li>
+              <li>
+                <span class="app-badge">Runtime</span>
+                All of this runs on the same executor, metrics and thread pool
+                used by the HTTP runtime.
+              </li>
+            </ul>
+
+            <p class="app-meta">
+              Built with <strong>C++20</strong>, <strong>Boost.Beast</strong>,
+              <strong>Asio</strong> and the <code>vix::websocket</code> module.
+            </p>
+          </div>
+
+          <!-- Screenshot à droite -->
+          <div class="app-media">
+            <div class="app-frame">
+              <div class="app-frame-header">
+                <span></span><span></span><span></span>
+                <span class="app-frame-title"
+                  >Vix WebSocket chat · rooms + history</span
+                >
+              </div>
+              <div class="app-frame-body">
+                <img
+                  src="/assets/images/vix-ws-chat.png"
+                  alt="Vix WebSocket chat UI screenshot"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <p class="app-caption">
+              Example: user <strong>Gaspard</strong> and
+              <strong>alice</strong> chatting in room
+              <code>africa</code> through a Vix.cpp WebSocket server.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick example -->
+      <section id="example" class="section section-alt">
+        <div class="container">
+          <h2>Quick example</h2>
+          <p class="section-intro">
+            A minimal HTTP server with a JSON response, using
+            <code>App</code> and a single route.
+          </p>
+
+          <div class="card code-card">
+            <div class="code-header">
+              <span>C++ · Minimal HTTP app</span>
+            </div>
+            <div class="code-block">
+              <pre><code><span class="cpp-directive">#include</span> <span class="cpp-include">&lt;vix.hpp&gt;</span>
+    <span class="cpp-keyword">using</span> <span class="cpp-keyword">namespace</span> <span class="cpp-namespace">Vix</span>;
+
+    <span class="cpp-keyword">int</span> <span class="cpp-function">main</span>() {
+        <span class="cpp-type">App</span> <span class="cpp-variable">app</span>;
+
+        <span class="cpp-variable">app</span>.<span class="cpp-method">get</span>(<span class="cpp-string">"/"</span>, [](auto&amp;, auto&amp; <span class="cpp-variable">res</span>) {
+            <span class="cpp-variable">res</span>.<span class="cpp-method">json</span>({ <span class="cpp-string">"message"</span>, <span class="cpp-string">"Hello world"</span> });
+        });
+
+        <span class="cpp-variable">app</span>.<span class="cpp-method">run</span>(<span class="cpp-number">8080</span>);
+    }</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Script mode -->
+      <section class="section">
+        <div class="container">
+          <h2>Script mode — run <code>.cpp</code> files directly</h2>
+          <p class="section-intro">
+            Vix.cpp can execute a single <code>.cpp</code> file like a script —
+            no manual CMake setup, no project boilerplate.
+          </p>
+
+          <div class="get-started-grid">
+            <!-- Block 1 -->
+            <div>
+              <div class="code-card">
+                <div class="code-header">Shell · Run C++ file</div>
+                <div class="code-block">
+                  <pre><code><span class="shell-cmd">vix</span> <span class="shell-arg">run</span> <span class="shell-path">file.cpp</span></code></pre>
+                </div>
+              </div>
+
+              <p class="code-note">
+                Under the hood, Vix generates a temporary CMake project in
+                <code>.vix-scripts/&lt;filename&gt;/</code>, builds it and runs
+                the resulting executable.
+              </p>
+            </div>
+
+            <!-- Block 2 -->
+            <div>
+              <div class="code-card">
+                <div class="code-header">Shell · Script mode output</div>
+                <div class="code-block">
+                  <pre><code><span class="shell-prompt">~/myapp/test$</span> <span class="shell-cmd">vix</span> <span class="shell-arg">run</span> <span class="shell-path">server.cpp</span>
+    <span class="shell-info">Script mode: compiling server.cpp</span>
+    <span class="shell-info">Using script build directory:</span>
+    <span class="shell-bullet">•</span> <span class="shell-path">.vix-scripts/server</span>
+
+    <span class="shell-success">✔ Build succeeded</span>
+    <span class="shell-log">[I] Server running on port 8080</span>
+    <span class="shell-input">^C</span>
+    <span class="shell-info">ℹ Server interrupted by user (SIGINT)</span></code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Get started -->
+      <section id="get-started" class="section section-alt">
+        <div class="container">
+          <h2>Get started</h2>
+
+          <div class="get-started-grid">
+            <!-- Left column -->
+            <div>
+              <p>Clone the repository and try the built-in examples:</p>
+
+              <div class="code-card">
+                <div class="code-header">Shell · Build Vix.cpp</div>
+                <div class="code-block">
+                  <pre><code><span class="shell-cmd">git</span> <span class="shell-arg">clone</span> <span class="shell-path">https://github.com/vixcpp/vix.git</span>
+    <span class="shell-cmd">cd</span> <span class="shell-path">vix</span>
+    <span class="shell-cmd">cmake</span> <span class="shell-flag">-S</span> . <span class="shell-flag">-B</span> build <span class="shell-flag">-DCMAKE_BUILD_TYPE=Release</span>
+    <span class="shell-cmd">cmake</span> <span class="shell-flag">--build</span> <span class="shell-path">build</span> <span class="shell-flag">-j</span>
+    <span class="shell-cmd">./build/hello_routes</span></code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div>
+              <p>
+                Once Vix.cpp is installed, you can generate a new project using
+                the CLI:
+              </p>
+
+              <div class="code-card">
+                <div class="code-header">Shell · Create & run project</div>
+                <div class="code-block">
+                  <pre><code><span class="shell-cmd">vix</span> <span class="shell-arg">new</span> <span class="shell-path">myapp</span>
+    <span class="shell-cmd">cd</span> <span class="shell-path">myapp</span>
+    <span class="shell-cmd">vix</span> <span class="shell-arg">build</span>
+    <span class="shell-cmd">vix</span> <span class="shell-arg">run</span></code></pre>
+                </div>
+              </div>
+
+              <p class="code-note">
+                For more examples, architecture details and module
+                documentation, check the README and the documentation inside the
+                repository.
+              </p>
+            </div>
+          </div>
+
+          <div class="center">
+            <a
+              class="btn primary"
+              href="https://github.com/vixcpp/vix"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Go to GitHub repo
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>© <span id="year"></span> Vix.cpp</span>
+        <span>Offline-first, peer-to-peer, ultra-fast C++ runtime.</span>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const header = document.querySelector(".site-header");
+        const nav = document.querySelector(".nav");
+        const navToggle = document.querySelector(".nav-toggle");
+        const communityToggle = document.querySelector(".community-toggle");
+        const communityMenu = document.querySelector(".community-menu");
+        const yearEl = document.getElementById("year");
+
+        if (yearEl) {
+          yearEl.textContent = new Date().getFullYear();
+        }
+
+        /* === Utils === */
+        const getHeaderOffset = () => (header ? header.offsetHeight : 0);
+
+        const smoothScrollToHash = (hash) => {
+          if (!hash || hash === "#") return;
+          const target = document.querySelector(hash);
+          if (!target) return;
+
+          const rect = target.getBoundingClientRect();
+          const offsetTop = window.scrollY + rect.top - getHeaderOffset() - 12;
+
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth",
+          });
+        };
+
+        /* === Community dropdown === */
+        if (communityToggle && communityMenu) {
+          communityToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = communityMenu.classList.toggle("is-open");
+            communityToggle.setAttribute(
+              "aria-expanded",
+              isOpen ? "true" : "false"
+            );
+          });
+
+          document.addEventListener("click", (e) => {
+            if (
+              communityMenu.classList.contains("is-open") &&
+              !communityMenu.contains(e.target) &&
+              !communityToggle.contains(e.target)
+            ) {
+              communityMenu.classList.remove("is-open");
+              communityToggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
+
+        /* === Nav burger === */
+        const closeNav = () => {
+          if (!nav || !navToggle) return;
+          nav.classList.remove("is-open");
+          navToggle.classList.remove("is-active");
+          navToggle.setAttribute("aria-expanded", "false");
+          navToggle.setAttribute("aria-label", "Open navigation");
+          document.body.classList.remove("nav-open");
+        };
+
+        const openNav = () => {
+          if (!nav || !navToggle) return;
+          nav.classList.add("is-open");
+          navToggle.classList.add("is-active");
+          navToggle.setAttribute("aria-expanded", "true");
+          navToggle.setAttribute("aria-label", "Close navigation");
+          document.body.classList.add("nav-open");
+        };
+
+        if (nav && navToggle) {
+          navToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = nav.classList.contains("is-open");
+            if (isOpen) {
+              closeNav();
+            } else {
+              openNav();
+            }
+          });
+
+          nav.querySelectorAll("a[href^='#']").forEach((link) => {
+            link.addEventListener("click", (e) => {
+              const hash = link.getAttribute("href");
+              if (!hash || hash === "#") return;
+
+              e.preventDefault();
+              closeNav();
+
+              if (history.pushState) {
+                history.pushState(null, "", hash);
+              } else {
+                window.location.hash = hash;
+              }
+
+              smoothScrollToHash(hash);
+            });
+          });
+
+          document.addEventListener("click", (e) => {
+            if (
+              nav.classList.contains("is-open") &&
+              !nav.contains(e.target) &&
+              !navToggle.contains(e.target)
+            ) {
+              closeNav();
+            }
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+              closeNav();
+            }
+          });
+
+          window.addEventListener("resize", () => {
+            if (window.innerWidth > 900) {
+              closeNav();
+            }
+          });
+        }
+
+        document.querySelectorAll("a[href^='#']").forEach((link) => {
+          if (nav && nav.contains(link)) return;
+
+          link.addEventListener("click", (e) => {
+            const hash = link.getAttribute("href");
+            if (!hash || hash === "#") return;
+
+            e.preventDefault();
+
+            if (history.pushState) {
+              history.pushState(null, "", hash);
+            } else {
+              window.location.hash = hash;
+            }
+
+            smoothScrollToHash(hash);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
