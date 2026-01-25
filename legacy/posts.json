@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "title": "Bienvenue sur le blog SoftAdAstra",
+    "excerpt": "Découvre les coulisses du développement, astuces et guides pour développeurs africains.",
+    "date": "2025-12-01",
+    "slug": "bienvenue-sur-le-blog"
+  },
+  {
+    "id": 2,
+    "title": "Comment déployer une app Vue sur un mutualisé",
+    "excerpt": "Étapes simples et pièges à éviter quand on utilise un hébergement mutualisé.",
+    "date": "2025-11-30",
+    "slug": "deployer-vue-sur-mutualise"
+  },
+  {
+    "id": 3,
+    "title": "Vue.js : Les bases essentielles",
+    "excerpt": "Apprends les concepts fondamentaux de Vue.js et commence à créer tes premières pages.",
+    "date": "2025-11-29",
+    "slug": "vue-les-bases"
+  },
+  {
+    "id": 4,
+    "title": "Créer un blog dynamique avec Vue 3",
+    "excerpt": "Guide pas à pas pour construire un blog SPA moderne en utilisant Vue 3.",
+    "date": "2025-11-28",
+    "slug": "blog-dynamique-vue3"
+  },
+  {
+    "id": 5,
+    "title": "Introduction à Vue Router",
+    "excerpt": "Comment gérer la navigation entre pages et routes dynamiques dans une SPA Vue.",
+    "date": "2025-11-27",
+    "slug": "introduction-vue-router"
+  },
+  {
+    "id": 6,
+    "title": "Gérer l’état avec Vuex",
+    "excerpt": "Centraliser les données de ton application pour éviter le chaos dans tes composants.",
+    "date": "2025-11-26",
+    "slug": "gerer-etat-vuex"
+  },
+  {
+    "id": 7,
+    "title": "Les composants réutilisables",
+    "excerpt": "Créer des composants modulaires pour accélérer le développement et garder le code propre.",
+    "date": "2025-11-25",
+    "slug": "composants-reutilisables"
+  },
+  {
+    "id": 8,
+    "title": "Optimisation des performances Vue",
+    "excerpt": "Astuce pour rendre tes applications rapides même avec beaucoup de composants et de données.",
+    "date": "2025-11-24",
+    "slug": "optimisation-performances-vue"
+  },
+  {
+    "id": 9,
+    "title": "Déployer sur Netlify et Vercel",
+    "excerpt": "Publie rapidement ton application Vue en ligne avec ces services gratuits et rapides.",
+    "date": "2025-11-23",
+    "slug": "deployer-netlify-vercel"
+  },
+  {
+    "id": 10,
+    "title": "Les bonnes pratiques pour un SPA Vue",
+    "excerpt": "Structure, organisation et conventions pour un projet Vue clair et maintenable.",
+    "date": "2025-11-22",
+    "slug": "bonnes-pratiques-spa-vue"
+  }
+]
