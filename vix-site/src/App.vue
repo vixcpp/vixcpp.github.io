@@ -1,15 +1,19 @@
 <template>
-  <header style="display:flex;gap:12px;padding:16px;border-bottom:1px solid #eee;">
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/docs">Docs</RouterLink>
-    <RouterLink to="/blog">Blog</RouterLink>
-  </header>
-
-  <main style="padding:16px;">
-    <RouterView />
-  </main>
+  <div class="app">
+    <SiteHeader />
+    <main class="main">
+      <router-view />
+    </main>
+    <SiteFooter />
+  </div>
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import SiteHeader from "./components/SiteHeader.vue";
+import SiteFooter from "./components/SiteFooter.vue";
 </script>
+
+<style scoped>
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; }
+</style>

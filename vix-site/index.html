@@ -1,18 +1,85 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Basic -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vix-site</title>
+
+    <title>Vix.cpp — Modern C++ backend runtime</title>
+
+    <!-- Primary meta -->
+    <meta
+      name="description"
+      content="Vix.cpp is a modern C++ backend runtime focused on performance, clean DX, HTTP/WebSocket, middleware, and a practical registry workflow."
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/assets/logo/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/logo/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/logo/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/logo/apple-touch-icon.png"
+    />
+
+    <!-- PWA / Android -->
+    <link rel="manifest" href="/assets/logo/site.webmanifest" />
+    <meta name="theme-color" content="#0b0e14" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vix.cpp" />
+    <meta property="og:title" content="Vix.cpp — Modern C++ backend runtime" />
+    <meta
+      property="og:description"
+      content="Build fast backend services in modern C++ with a clean developer experience."
+    />
+    <meta property="og:url" content="https://vixcpp.com/" />
+    <meta
+      property="og:image"
+      content="https://vixcpp.com/assets/logo/vix-logo.png"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vix.cpp — Modern C++ backend runtime" />
+    <meta
+      name="twitter:description"
+      content="Build fast backend services in modern C++ with a clean developer experience."
+    />
+    <meta
+      name="twitter:image"
+      content="https://vixcpp.com/assets/logo/vix-logo.png"
+    />
+    <meta name="twitter:site" content="@vix_cpp" />
+
+    <!-- GitHub Pages SPA restore (history mode) -->
     <script>
-      const redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      if (redirect && redirect !== location.href) history.replaceState(null, "", redirect);
+      const redirect = sessionStorage.getItem("redirect");
+      if (redirect) {
+        sessionStorage.removeItem("redirect");
+        if (redirect !== location.pathname + location.search + location.hash) {
+          history.replaceState(null, "", redirect);
+        }
+      }
     </script>
   </head>
+
   <body>
     <div id="app"></div>
+
+    <!-- App -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
