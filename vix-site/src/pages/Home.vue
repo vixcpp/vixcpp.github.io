@@ -89,7 +89,7 @@ import CodeBlock from "@/components/CodeBlock.vue";
 
 
   <!-- SHOWCASE -->
-  <!-- <Section
+  <Section
     :title="HOME.showcase.title"
     :subtitle="HOME.showcase.subtitle"
   >
@@ -114,7 +114,7 @@ import CodeBlock from "@/components/CodeBlock.vue";
         </figcaption>
       </figure>
     </div>
-  </Section> -->
+  </Section>
 
   <!-- GET STARTED -->
   <Section
