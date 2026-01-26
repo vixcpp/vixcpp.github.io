@@ -5,7 +5,7 @@ export const HOME = {
       "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun. It is designed for unreliable networks, offline-first workflows, peer-to-peer systems, and extreme native performance.",
     ctas: [
       { label: "Install", to: "/install", kind: "primary" },
-      { label: "See examples", to: "/examples", kind: "secondary" },
+      { label: "See examples", to: "/docs/examples", kind: "secondary" },
     ],
     badges: [
       "Offline-first runtime",
