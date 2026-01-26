@@ -8,20 +8,24 @@ export const EXAMPLES = {
       id: "http-ping",
       title: "HTTP: /api/ping",
       desc: "A minimal JSON ping route.",
-      code: `#include <vix/app/App.hpp>
-using vix::App;
+      code: `#include <vix.hpp>
 
-int main() {
+using namespace vix;
+
+int main()
+{
   App app;
 
-  app.get("/api/ping", [](auto& req, auto& res) {
+  app.get("/api/ping", [](Request &, Response &res)
+          {
     res.json({
       "ok", true,
       "message", "pong"
     });
   });
 
-  return app.listen(8080);
+  app.run(8080);
+  return 0;
 }`,
       run: `vix run server.cpp`,
       out: `http :8080/api/ping
@@ -36,25 +40,29 @@ HTTP/1.1 200 OK
       id: "query-params",
       title: "HTTP: query params",
       desc: "Read query values with defaults.",
-      code: `#include <vix/app/App.hpp>
+      code: `#include <vix.hpp>
 #include <string>
-using vix::App;
 
-int main() {
+using namespace vix;
+
+int main()
+{
   App app;
 
-  app.get("/search", [](auto& req, auto& res) {
+  app.get("/search", [](Request &req, Response &res)
+          {
     const std::string q = req.query_value("q", "");
-    const std::string pageStr = req.query_value("page", "1");
+    const std::string page = req.query_value("page", "1");
 
     res.json({
       "ok", true,
       "q", q,
-      "page", pageStr
+      "page", page
     });
   });
 
-  return app.listen(8080);
+  app.run(8080);
+  return 0;
 }`,
       run: `vix run server.cpp`,
       out: `http ":8080/search?q=vix&page=2"
@@ -70,33 +78,52 @@ HTTP/1.1 200 OK
       id: "middleware-required-header",
       title: "Middleware: require header (401 demo)",
       desc: "Reject requests unless a required header is present.",
-      code: `#include <vix/app/App.hpp>
-using vix::App;
+      code: `#include <vix.hpp>
+#include <vix/middleware/app/adapter.hpp>
 
-int main() {
+using namespace vix;
+
+int main()
+{
   App app;
 
-  // Pseudo middleware (concept)
-  // In your real code, plug your middleware function in the proper pipeline.
-  app.use([](auto& req, auto& res, auto next) {
-    const auto v = req.header("x-demo");
-    if (!v || v->empty()) {
+  // ------------------------------------------------------------
+  // Middleware inline: require header x-demo: 1
+  // ------------------------------------------------------------
+  auto require_demo_header =
+      middleware::HttpMiddleware([](Request &req,
+                                    Response &res,
+                                    middleware::Next next)
+                                 {
+    const std::string value = req.header("x-demo");
+
+    if (value.empty() || value != "1")
+    {
       res.status(401).json({
-        "ok", false,
         "error", "unauthorized",
         "hint", "Missing or invalid header",
+        "ok", false,
         "required_header", "x-demo"
       });
-      return;
+      return; // block request
     }
-    next();
-  });
 
-  app.get("/api/ping", [](auto& req, auto& res) {
-    res.json({ "ok", true, "message", "pong" });
-  });
+    next(); });
 
-  return app.listen(8080);
+  // Attach middleware ONLY to /api/ping
+  middleware::app::install_exact(
+      app,
+      "/api/ping",
+      middleware::app::adapt(require_demo_header));
+
+  // ------------------------------------------------------------
+  // Route
+  // ------------------------------------------------------------
+  app.get("/api/ping", [](Request &, Response &res)
+          { res.json({"ok", true, "message", "pong"}); });
+
+  app.run(8080);
+  return 0;
 }`,
       run: `vix run server.cpp`,
       out: `http :8080/api/ping
@@ -114,7 +141,7 @@ HTTP/1.1 200 OK
   "ok": true,
   "message": "pong"
 }`,
-      note: "This matches your 401 output. Keep the error shape stable: ok/error/hint/required_header.",
+      note: "Keep the error shape stable: ok/error/hint/required_header. This matches your 401 output.",
     },
 
     {
@@ -123,38 +150,49 @@ HTTP/1.1 200 OK
       desc: "Structured logs, useful for debugging and CI.",
       code: `// Nothing special in code.
 // Use the CLI flags to control log format.`,
-      run: `vix run server.cpp --log-format=json --log-level=debug
-
-or
-vix run server.cpp --log-format=json-pretty --log-level=debug --log-color=always`,
+      run: `vix run server.cpp --log-format=json --log-level=debug`,
       out: `{"level":"debug","msg":"server listening","port":8080,"ts":"..."}`,
+      note: `Alternative (pretty + colored):
+vix run server.cpp --log-format=json-pretty --log-level=debug --log-color=always`,
     },
 
     {
       id: "http-ws-together",
       title: "HTTP + WebSocket in one process",
-      desc: "Serve HTTP routes and WebSocket events from a single Vix app.",
-      code: `#include <vix/app/App.hpp>
-// pseudo: websocket headers depend on your module layout
-// #include <vix/ws/WebSocket.hpp>
+      desc: "Serve HTTP routes and typed WebSocket events from a single runtime.",
+      code: `#include <vix.hpp>
+#include <vix/websocket/AttachedRuntime.hpp>
 
-using vix::App;
+using namespace vix;
 
-int main() {
-  App app;
+int main()
+{
+  // Default config path "config/config.json" and port 8080
+  vix::serve_http_and_ws([](auto &app, auto &ws)
+                         {
+    // Minimal HTTP route
+    app.get("/api/ping", [](auto&, auto& res) {
+      res.json({
+        "ok", true,
+        "message", "pong"
+      });
+    });
 
-  app.get("/api/ping", [](auto& req, auto& res) {
-    res.json({ "ok", true, "message", "pong" });
+    // Minimal WebSocket handler: echo/broadcast chat.message
+    ws.on_typed_message(
+      [&ws](auto& session,
+            const std::string& type,
+            const vix::json::kvs& payload)
+      {
+        (void)session;
+
+        if (type == "chat.message") {
+          ws.broadcast_json("chat.message", payload);
+        }
+      });
   });
 
-  // app.ws("/ws", [](auto& ws) {
-  //   ws.on_open([](auto& ctx){});
-  //   ws.on_message([](auto& ctx, std::string_view msg){
-  //     ctx.send(msg); // echo
-  //   });
-  // });
-
-  return app.listen(8080);
+  return 0;
 }`,
       run: `vix run server.cpp`,
       out: `http :8080/api/ping
@@ -163,7 +201,7 @@ HTTP/1.1 200 OK
   "ok": true,
   "message": "pong"
 }`,
-      note: "Keep the example simple and aligned with your actual ws API names once stabilized.",
+      note: "Keep this aligned with the stable ws API names (typed messages + broadcast_json).",
     },
 
     {
@@ -178,7 +216,7 @@ vix publish 0.7.0 --notes "Add tree helper"`,
       run: `vix add <author>/<pkg>@<version>`,
       out: `✔ added: gaspardkirira/tree@0.7.0
 ✔ configured: include paths + CMake integration`,
-      note: "The web UI will move to registry.vixcpp.com on the VPS.",
+      note: "Keep outputs short and stable; avoid promising features not shipped yet.",
     },
   ],
 };

@@ -130,18 +130,14 @@ const router = createRouter({
   },
 });
 
-// ✅ Global SEO hook (single source of truth)
 router.afterEach((to) => {
   const seo = to.meta?.seo;
 
-  // Fallback minimal
   if (!seo) {
     setSEO({ title: "Vix.cpp", description: "Modern C++ backend runtime." });
     return;
   }
 
-  // If you want dynamic SEO for posts later, you can override here.
-  // For now we keep a safe default.
   setSEO(seo);
 });
 
