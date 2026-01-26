@@ -4,7 +4,7 @@
     <p class="p">This page doesn’t exist.</p>
     <div class="row">
       <router-link class="btn" to="/">Go home</router-link>
-      <router-link class="btn" to="/examples">Examples</router-link>
+      <router-link class="btn" to="/docs/examples">Examples</router-link>
       <router-link class="btn" to="/install">Install</router-link>
     </div>
   </div>
