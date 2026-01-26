@@ -38,20 +38,24 @@ vix dev`,
 
   demo: {
     title: "A tiny HTTP route",
-    code: `#include <vix/app/App.hpp>
-using vix::App;
+    code: `#include <vix.hpp>
 
-int main() {
+using namespace vix;
+
+int main()
+{
   App app;
 
-  app.get("/api/ping", [](auto& req, auto& res) {
+  app.get("/api/ping", [](Request &, Response &res)
+          {
     res.json({
       "ok", true,
       "message", "pong"
     });
   });
 
-  return app.listen(8080);
+  app.run(8080);
+  return 0;
 }`,
     run: `vix run server.cpp`,
     out: `http :8080/api/ping
@@ -60,6 +64,7 @@ HTTP/1.1 200 OK
   "ok": true,
   "message": "pong"
 }`,
+    note: "This is the exact Vix.cpp style: vix.hpp + Request/Response handlers + app.run(port).",
   },
 
   next: {

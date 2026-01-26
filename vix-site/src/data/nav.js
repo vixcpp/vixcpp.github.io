@@ -6,21 +6,20 @@ export const NAV = [
   { label: "Blog", to: "/blog", optional: true },
 ];
 
-// External (switch to subdomains later)
 export const EXTERNAL = {
   docs: {
     label: "Docs",
-    href: "https://github.com/vixcpp/vix", // later: https://docs.vixcpp.com
-    badge: "coming soon",
+    href: "https://github.com/vixcpp/vix",
+    note: "Source-first documentation",
   },
   registry: {
     label: "Registry",
-    href: "https://github.com/vixcpp/registry", // later: https://registry.vixcpp.com
-    badge: "coming soon",
+    href: "https://github.com/vixcpp/registry",
+    note: "Git-based package index",
   },
   rix: {
     label: "Rix",
-    href: "https://github.com/vixcpp/rix", // later: https://rix.vixcpp.com
-    badge: "coming soon",
+    href: "https://github.com/vixcpp/rix",
+    note: "Core utilities and foundational modules",
   },
 };
