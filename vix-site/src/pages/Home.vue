@@ -1,58 +1,243 @@
-<template>
-  <div class="wrap">
-    <Hero :title="d.hero.title" :subtitle="d.hero.subtitle" :ctas="d.hero.ctas" />
-
-    <Section :title="d.quickstart.title">
-      <CodeBlock :code="d.quickstart.code" />
-      <p class="muted">{{ d.quickstart.note }}</p>
-    </Section>
-
-    <Section :title="d.proof.title">
-      <CardGrid :items="d.proof.items" />
-    </Section>
-
-    <Section :title="d.demo.title">
-      <div class="grid2">
-        <div>
-          <CodeBlock :code="d.demo.code" />
-          <p class="muted">Run:</p>
-          <CodeBlock :code="d.demo.run" />
-        </div>
-        <div>
-          <p class="muted">Output:</p>
-          <CodeBlock :code="d.demo.out" />
-        </div>
-      </div>
-    </Section>
-
-    <Section :title="d.next.title">
-      <ul class="list">
-        <li v-for="b in d.next.bullets" :key="b">{{ b }}</li>
-      </ul>
-
-      <div class="ctaRow">
-        <router-link class="btn primary" to="/install">Install</router-link>
-        <router-link class="btn" to="/examples">Examples</router-link>
-      </div>
-    </Section>
-  </div>
-</template>
-
 <script setup>
-import { HOME as d } from "../data/home";
-import Hero from "../components/Hero.vue";
-import Section from "../components/Section.vue";
-import CodeBlock from "../components/CodeBlock.vue";
-import CardGrid from "../components/CardGrid.vue";
+import { HOME } from "@/data/home";
+
+// Core sections
+import Hero from "@/components/Hero.vue";
+import Section from "@/components/Section.vue";
+import CardGrid from "@/components/CardGrid.vue";
+import CodeBlock from "@/components/CodeBlock.vue";
 </script>
 
+<template>
+  <!-- HERO -->
+  <Hero
+    :title="HOME.hero.title"
+    :subtitle="HOME.hero.subtitle"
+    :ctas="HOME.hero.ctas"
+    :badges="HOME.hero.badges"
+    :terminal="HOME.hero.terminal"
+  />
+
+  <!-- WORKFLOW -->
+  <Section
+    :title="HOME.workflow.title"
+    :subtitle="HOME.workflow.subtitle"
+  >
+    <CardGrid :items="HOME.workflow.items" />
+  </Section>
+
+  <!-- DEMO -->
+  <Section
+    :title="HOME.demo.title"
+    :subtitle="HOME.demo.subtitle"
+  >
+    <CodeBlock :code="HOME.demo.code" :run="HOME.demo.run" :out="HOME.demo.out" :note="HOME.demo.note" />
+  </Section>
+
+  <!-- WHY -->
+  <Section
+    :title="HOME.why.title"
+    :subtitle="HOME.why.subtitle"
+    alt
+  >
+    <CardGrid :items="HOME.why.items" />
+  </Section>
+
+  <!-- PROOF -->
+  <Section
+    :title="HOME.proof.title"
+    :subtitle="HOME.proof.subtitle"
+  >
+    <CardGrid :items="HOME.proof.items" />
+  </Section>
+
+  <!-- BATTERIES INCLUDED -->
+  <Section
+    :title="HOME.batteries.title"
+    :subtitle="HOME.batteries.subtitle"
+    alt
+  >
+    <CardGrid :items="HOME.batteries.items" />
+  </Section>
+
+  <!-- CLI -->
+  <!-- <Section
+    :title="HOME.cli.title"
+    :subtitle="HOME.cli.subtitle"
+  >
+    <div class="cli-grid">
+      <CodeBlock
+        :code="HOME.cli.code"
+        note="Tip: use --log-level=debug or --log-format=json-pretty for deep diagnostics."
+      />
+      <div class="cli-side card reveal">
+        <h3>What this unlocks</h3>
+        <ul>
+          <li><span class="pill">vix new</span> Scaffold a clean project fast</li>
+          <li><span class="pill">vix dev</span> Hot-reload while you iterate</li>
+          <li><span class="pill">vix run</span> Run a single .cpp like a script</li>
+          <li><span class="pill">vix pack</span> Ship reproducible artifacts</li>
+          <li><span class="pill">vix verify</span> Verify what you run</li>
+          <li><span class="pill">vix publish</span> Share libraries via Registry</li>
+        </ul>
+        <p class="cli-side-note">
+          The goal is simple: less glue code, fewer external tools, and a workflow that stays readable under pressure.
+        </p>
+      </div>
+    </div>
+  </Section> -->
+
+
+  <!-- SHOWCASE -->
+  <!-- <Section
+    :title="HOME.showcase.title"
+    :subtitle="HOME.showcase.subtitle"
+  >
+    <div class="showcase-grid">
+      <ul class="showcase-list">
+        <li v-for="item in HOME.showcase.bullets" :key="item">
+          {{ item }}
+        </li>
+      </ul>
+
+      <figure
+        v-if="HOME.showcase.media?.image"
+        class="showcase-media"
+      >
+        <img
+          :src="HOME.showcase.media.image"
+          :alt="HOME.showcase.media.alt"
+          loading="lazy"
+        />
+        <figcaption>
+          {{ HOME.showcase.media.caption }}
+        </figcaption>
+      </figure>
+    </div>
+  </Section> -->
+
+  <!-- GET STARTED -->
+  <Section
+    :title="HOME.getStarted.title"
+    :subtitle="HOME.getStarted.subtitle"
+    alt
+  >
+    <CodeBlock
+      :code="HOME.getStarted.code"
+      :note="HOME.getStarted.note"
+    />
+
+    <div class="cta-row">
+      <a
+        v-for="cta in HOME.getStarted.ctas"
+        :key="cta.label"
+        :href="cta.href || cta.to"
+        :class="['btn', cta.kind]"
+        :target="cta.external ? '_blank' : null"
+        :rel="cta.external ? 'noreferrer' : null"
+      >
+        {{ cta.label }}
+      </a>
+    </div>
+  </Section>
+</template>
+
 <style scoped>
-.wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 60px; }
-.grid2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 980px) { .grid2 { grid-template-columns: 1.1fr 0.9fr; } }
-.muted { opacity: 0.75; margin-top: 10px; }
-.list { padding-left: 18px; opacity: 0.9; }
-.ctaRow { display: flex; gap: 12px; margin-top: 14px; }
-.btn { display: inline-flex; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.16); text-decoration: none; }
-.primary { border-color: rgba(255,255,255,0.28); }
+.showcase-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 900px) {
+  .showcase-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+
+.showcase-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.showcase-list li {
+  margin-bottom: 0.6rem;
+}
+
+.showcase-media img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.showcase-media figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.cta-row {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.cli-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.cli-grid :deep(.code-card) {
+  grid-column: span 7;
+  margin: 0; /* important pour coller au grid */
+}
+
+.cli-side {
+  grid-column: span 5;
+  padding: 1.25rem 1.4rem;
+}
+
+.cli-side h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.05rem;
+}
+
+.cli-side ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.cli-side li {
+  color: var(--muted);
+  line-height: 1.55;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.cli-side-note {
+  margin-top: 0.9rem;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+  opacity: 0.95;
+}
+
+@media (max-width: 900px) {
+  .cli-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cli-grid :deep(.code-card),
+  .cli-side {
+    grid-column: auto;
+  }
+}
+
 </style>

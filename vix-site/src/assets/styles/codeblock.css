@@ -1,0 +1,235 @@
+
+.code-card{
+  border: 1px solid rgba(148,163,184,.18);
+  background: rgba(2,6,23,.72);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 46px rgba(0,0,0,.55);
+}
+
+.code-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: linear-gradient(to bottom, rgba(2,6,23,.92), rgba(2,6,23,.72));
+  border-bottom: 1px solid rgba(148,163,184,.14);
+}
+
+.head-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width: 0;
+}
+
+.dot{ width:10px; height:10px; border-radius:999px; background:#475569; }
+.dot-red{ background:#fb923c; }
+.dot-yellow{ background:#facc15; }
+.dot-green{ background:#22c55e; }
+
+.head-title{
+  color:#e5e7eb;
+  font-size:.82rem;
+  font-weight:600;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+
+.chips{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: .72rem;
+  color: #cbd5e1;
+  border: 1px solid rgba(34,197,154,.22);
+  background: rgba(2,44,34,.35);
+}
+
+.head-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+
+.tabs{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(15,23,42,.55);
+  border: 1px solid rgba(148,163,184,.16);
+}
+
+.tab{
+  border: 0;
+  background: transparent;
+  color:#cbd5e1;
+  font-size:.75rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor:pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.tab:hover{
+  background: rgba(148,163,184,.12);
+  color:#e5e7eb;
+}
+
+.tab.active{
+  background: rgba(34,197,154,.18);
+  color:#d1fae5;
+}
+
+.copy{
+  border: 1px solid rgba(148,163,184,.18);
+  background: rgba(15,23,42,.45);
+  color:#e5e7eb;
+  font-size:.75rem;
+  padding: 7px 10px;
+  border-radius: 10px;
+  cursor:pointer;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease;
+}
+
+.copy:hover{
+  transform: translateY(-1px);
+  background: rgba(15,23,42,.65);
+  border-color: rgba(34,197,154,.28);
+}
+
+/* Footer note */
+.code-foot{
+  border-top: 1px solid rgba(148,163,184,.12);
+  background: rgba(2,6,23,.62);
+  padding: 10px 12px;
+}
+
+.code-note{
+  margin:0;
+  color:#94a3b8;
+  font-size:.85rem;
+  line-height: 1.55;
+}
+
+/* Scrollbars */
+.code-body::-webkit-scrollbar{ height: 8px; width: 10px; }
+.code-body::-webkit-scrollbar-thumb{
+  background: rgba(34,197,154,.35);
+  border-radius: 999px;
+}
+.code-body::-webkit-scrollbar-track{
+  background: rgba(2,6,23,.9);
+}
+
+/* Highlight colors */
+.cpp-directive { color:#60a5fa; }
+.cpp-include { color:#38bdf8; }
+.cpp-keyword { color:#fb7185; }
+.cpp-type { color:#22c55e; }
+.cpp-string { color:#34d399; }
+.cpp-comment { color:#94a3b8; font-style: italic; opacity:.85; }
+.cpp-fn { color:#fbbf24; }
+
+.shell-prompt { color:#22c55e; font-weight: 800; }
+.shell-cmd { color:#38bdf8; font-weight: 800; }
+.shell-flag { color:#f97316; font-weight: 800; }
+.shell-path { color:#a5b4fc; }
+.shell-success { color:#22c55e; font-weight: 900; }
+.shell-pill-dev { color:#38bdf8; font-weight: 900; }
+
+.code-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.cli-grid > * {
+  min-width: 0;
+}
+
+pre,
+code {
+  max-width: 100%;
+}
+/* ✅ le card ne doit jamais dépasser son parent */
+.code-card{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ✅ le scroll reste DEDANS */
+.code-body{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #020617;
+}
+
+.code-body{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #020617;
+}
+
+.code-pre{
+  margin:0;
+  padding: 14px 14px;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;            /* ✅ */
+  white-space: pre;
+  line-height: 1.65;
+
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: .88rem;
+  color: #e2e8f0;
+}
+
+/* ✅ permet le scroll horizontal SANS forcer la largeur du card */
+.code-pre > code{
+  display: inline-block;   /* ✅ important */
+  min-width: 100%;         /* ✅ fond plein */
+}
+
+
+
+@media (min-width: 900px) {
+  .cli-grid .code-pre { padding: 12px 12px; }
+}
+.code-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+@media (max-width: 720px){
+  .head-title{
+    max-width: 35vw;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .code-pre{
+    font-size: .84rem;
+    min-width: 640px;
+  }
+}
