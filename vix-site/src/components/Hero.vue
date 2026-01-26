@@ -232,8 +232,8 @@ code {
 }
 
 .btn.primary {
-  border-color: rgba(255, 153, 0, 0.55);
   background: rgba(255, 153, 0, 0.12);
+  color: #fff;
 }
 
 .btn.primary:hover {
