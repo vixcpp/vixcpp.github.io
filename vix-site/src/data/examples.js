@@ -203,11 +203,12 @@ HTTP/1.1 200 OK
 }`,
       note: "Keep this aligned with the stable ws API names (typed messages + broadcast_json).",
     },
-
     {
       id: "registry-workflow",
       title: "Registry workflow: add & publish",
       desc: "Discover and reuse C++ libraries with a clean CLI workflow.",
+      lang: "shell",
+      blockTitle: "Shell",
       code: `# Add a package (example)
 vix add gaspardkirira/tree@0.7.0
 

@@ -11,21 +11,15 @@
         <p class="muted">{{ it.desc }}</p>
       </div>
 
-      <div class="grid">
-        <div>
-          <p class="label">Code</p>
-          <CodeBlock :code="it.code" />
-        </div>
-
-        <div>
-          <p class="label">Run</p>
-          <CodeBlock :code="it.run" />
-          <p class="label" style="margin-top:10px;">Expected output</p>
-          <CodeBlock :code="it.out" />
-        </div>
-      </div>
-
-      <p v-if="it.note" class="note">{{ it.note }}</p>
+      <CodeBlock
+        :title="it.blockTitle"
+        :code="it.code"
+        :run="it.run"
+        :out="it.out"
+        :note="it.note"
+        :lang="it.lang"
+        :maxHeight="it.maxHeight || 420"
+      />
     </section>
   </div>
 </template>
@@ -36,16 +30,56 @@ import CodeBlock from "../components/CodeBlock.vue";
 </script>
 
 <style scoped>
-.wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 60px; }
-.top { padding-bottom: 6px; }
-.h1 { margin: 0; font-size: 34px; letter-spacing: -0.02em; }
-.p { margin: 10px 0 0; opacity: 0.8; max-width: 900px; }
-.ex { margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
-.head { margin-bottom: 12px; }
-.h2 { margin: 0 0 6px; font-size: 16px; }
-.muted { margin: 0; opacity: 0.75; }
-.label { margin: 0 0 8px; opacity: 0.7; font-size: 12px; }
-.grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-@media (min-width: 980px) { .grid { grid-template-columns: 1fr 1fr; } }
-.note { margin: 12px 0 0; opacity: 0.7; font-size: 13px; }
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.6rem;
+}
+.grid > * {
+  min-width: 0;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.2rem 1.5rem 2.8rem;
+}
+
+.top {
+  margin-bottom: 1.6rem;
+}
+
+.h1 {
+  margin: 0 0 0.55rem 0;
+  font-size: clamp(2rem, 2.6vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 58ch;
+  line-height: 1.55;
+}
+
+.ex {
+  padding: 1.25rem 0 1.55rem;
+  border-top: 1px solid rgba(45, 212, 191, 0.12);
+}
+
+.head {
+  margin-bottom: 0.85rem;
+}
+
+.h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+}
+
+.muted {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 80ch;
+}
 </style>
