@@ -1215,3 +1215,202 @@ td {
     font-size: 0.82rem;
   }
 }
+
+/* ======================================================
+   PWA Update Toast (pro, Vix style)
+====================================================== */
+
+.pwa-toast-wrap {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  max-width: min(520px, calc(100vw - 36px));
+  pointer-events: none;
+}
+
+.pwa-toast {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 12px 12px 12px 14px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+      to bottom,
+      rgba(1, 24, 22, 0.92),
+      rgba(2, 6, 23, 0.82)
+    );
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+
+  animation: pwa-toast-in 180ms ease-out;
+}
+
+.pwa-toast-glow {
+  position: absolute;
+  inset: -40% -20% auto -20%;
+  height: 140%;
+  background: radial-gradient(
+    circle at top left,
+    rgba(30, 230, 163, 0.18),
+    rgba(6, 182, 212, 0.12),
+    transparent 60%
+  );
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.pwa-toast-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.pwa-toast-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top left, #064e3b, #011816);
+  border: 1px solid rgba(34, 197, 154, 0.55);
+  box-shadow: 0 0 18px rgba(34, 197, 154, 0.22);
+  display: grid;
+  place-items: center;
+  gap: 0;
+}
+
+.pwa-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  margin: 0 1px;
+}
+
+.pwa-dot-red {
+  background: #f97316;
+}
+.pwa-dot-yellow {
+  background: #eab308;
+}
+.pwa-dot-green {
+  background: #22c55e;
+}
+
+.pwa-toast-text {
+  min-width: 0;
+}
+
+.pwa-toast-title {
+  font-size: 0.92rem;
+  font-weight: 750;
+  letter-spacing: -0.2px;
+  color: #eafffb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40ch;
+}
+
+.pwa-toast-sub {
+  margin-top: 2px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.25;
+  max-width: 56ch;
+}
+
+.pwa-toast-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.pwa-btn {
+  border-radius: 999px;
+  font-size: 0.82rem;
+  padding: 0.46rem 0.85rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.12s ease, background 0.16s ease, border-color 0.16s ease,
+    box-shadow 0.16s ease;
+  white-space: nowrap;
+}
+
+.pwa-btn:active {
+  transform: translateY(1px);
+}
+
+.pwa-btn-ghost {
+  background: rgba(2, 44, 34, 0.5);
+  color: #e5f9f6;
+  border-color: rgba(45, 212, 191, 0.22);
+}
+
+.pwa-btn-ghost:hover {
+  background: rgba(2, 60, 47, 0.6);
+  border-color: rgba(45, 212, 191, 0.4);
+  transform: translateY(-1px);
+}
+
+.pwa-btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #01201f;
+  font-weight: 650;
+  box-shadow: 0 14px 28px rgba(12, 148, 136, 0.35);
+}
+
+.pwa-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(12, 148, 136, 0.55);
+}
+
+@keyframes pwa-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.pwa-toast-version {
+  margin-left: 0.4rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 212, 191, 0.25);
+  background: rgba(2, 44, 34, 0.4);
+  color: #a7f3d0;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+/* Mobile: full-width bottom sheet vibe */
+@media (max-width: 640px) {
+  .pwa-toast-wrap {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+
+  .pwa-toast {
+    gap: 12px;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .pwa-toast-title {
+    max-width: 28ch;
+  }
+}

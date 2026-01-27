@@ -212,10 +212,17 @@ router.afterEach((to) => {
         "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun.",
       path: "/",
     });
-    return;
+  } else {
+    setSEO(seo);
   }
 
-  setSEO(seo);
+  // Google Analytics (SPA page view)
+  if (window.gtag) {
+    window.gtag("event", "page_view", {
+      page_path: to.fullPath,
+      page_title: document.title,
+    });
+  }
 });
 
 export default router;
