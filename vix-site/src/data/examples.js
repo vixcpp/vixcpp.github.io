@@ -9,15 +9,13 @@ export const EXAMPLES = {
       title: "HTTP: /api/ping",
       desc: "A minimal JSON ping route.",
       code: `#include <vix.hpp>
-
 using namespace vix;
 
 int main()
 {
   App app;
 
-  app.get("/api/ping", [](Request &, Response &res)
-          {
+  app.get("/api/ping", [](Request &, Response &res){
     res.json({
       "ok", true,
       "message", "pong"
@@ -42,18 +40,15 @@ HTTP/1.1 200 OK
       desc: "Read query values with defaults.",
       code: `#include <vix.hpp>
 #include <string>
-
 using namespace vix;
 
 int main()
 {
   App app;
 
-  app.get("/search", [](Request &req, Response &res)
-          {
+  app.get("/search", [](Request &req, Response &res){
     const std::string q = req.query_value("q", "");
     const std::string page = req.query_value("page", "1");
-
     res.json({
       "ok", true,
       "q", q,
@@ -80,25 +75,21 @@ HTTP/1.1 200 OK
       desc: "Reject requests unless a required header is present.",
       code: `#include <vix.hpp>
 #include <vix/middleware/app/adapter.hpp>
-
 using namespace vix;
 
 int main()
 {
   App app;
 
-  // ------------------------------------------------------------
   // Middleware inline: require header x-demo: 1
-  // ------------------------------------------------------------
   auto require_demo_header =
-      middleware::HttpMiddleware([](Request &req,
-                                    Response &res,
-                                    middleware::Next next)
-                                 {
+      middleware::HttpMiddleware(
+                  [](Request &req,
+                  Response &res,
+                  middleware::Next next){
     const std::string value = req.header("x-demo");
 
-    if (value.empty() || value != "1")
-    {
+    if (value.empty() || value != "1"){
       res.status(401).json({
         "error", "unauthorized",
         "hint", "Missing or invalid header",
@@ -108,7 +99,8 @@ int main()
       return; // block request
     }
 
-    next(); });
+    next();
+  });
 
   // Attach middleware ONLY to /api/ping
   middleware::app::install_exact(
@@ -116,11 +108,10 @@ int main()
       "/api/ping",
       middleware::app::adapt(require_demo_header));
 
-  // ------------------------------------------------------------
   // Route
-  // ------------------------------------------------------------
-  app.get("/api/ping", [](Request &, Response &res)
-          { res.json({"ok", true, "message", "pong"}); });
+  app.get("/api/ping", [](Request &, Response &res){
+    res.json({"ok", true, "message", "pong"});
+  });
 
   app.run(8080);
   return 0;
@@ -162,14 +153,12 @@ vix run server.cpp --log-format=json-pretty --log-level=debug --log-color=always
       desc: "Serve HTTP routes and typed WebSocket events from a single runtime.",
       code: `#include <vix.hpp>
 #include <vix/websocket/AttachedRuntime.hpp>
-
 using namespace vix;
 
 int main()
 {
   // Default config path "config/config.json" and port 8080
-  vix::serve_http_and_ws([](auto &app, auto &ws)
-                         {
+  vix::serve_http_and_ws([](auto &app, auto &ws){
     // Minimal HTTP route
     app.get("/api/ping", [](auto&, auto& res) {
       res.json({
@@ -182,8 +171,7 @@ int main()
     ws.on_typed_message(
       [&ws](auto& session,
             const std::string& type,
-            const vix::json::kvs& payload)
-      {
+            const vix::json::kvs& payload){
         (void)session;
 
         if (type == "chat.message") {

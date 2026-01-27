@@ -1,12 +1,12 @@
 const DEFAULTS = {
   siteName: "Vix.cpp",
-  title: "Vix.cpp — Modern C++ backend runtime",
+  title: "Vix.cpp A Modern C++ Backend Runtime",
   description:
-    "Vix.cpp is a modern C++ backend runtime focused on performance, clean DX, HTTP/WebSocket, middleware, and a practical registry workflow.",
-  // keep it as a stable root; later you can switch to https://vixcpp.com
+    "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun. It is designed for unreliable networks, offline-first workflows, peer-to-peer systems, and extreme native performance.",
   baseUrl: "https://vixcpp.com",
   twitter: "@vix_cpp",
-  image: "/og.png", // put an actual og image later
+  image:
+    "https://res.cloudinary.com/dwjbed2xb/image/upload/v1769499528/vix_banniere_zljwdt.png",
 };
 
 function ensureMeta(nameOrProp, value, isProperty) {
@@ -59,7 +59,7 @@ function ensureJsonLd(id, obj) {
  * Set SEO tags for the current route.
  *
  * @param {Object} opts
- * @param {string} [opts.title] - Page title (without site suffix).
+ * @param {string} [opts.title] - Page title (can be full title).
  * @param {string} [opts.description] - Meta description.
  * @param {string} [opts.path] - Route path for canonical (e.g. "/install").
  * @param {string} [opts.canonical] - Full canonical URL override.
@@ -69,11 +69,12 @@ function ensureJsonLd(id, obj) {
  */
 export function setSEO(opts = {}) {
   const siteName = DEFAULTS.siteName;
+  const rawTitle = (opts.title || DEFAULTS.title).trim();
 
-  const pageTitle = (opts.title || DEFAULTS.title).trim();
-  const fullTitle = pageTitle.includes(siteName)
-    ? pageTitle
-    : `${pageTitle} — ${siteName}`;
+  let fullTitle = rawTitle;
+  if (!rawTitle.includes(siteName) && rawTitle !== DEFAULTS.title) {
+    fullTitle = `${rawTitle} | ${siteName}`;
+  }
 
   const description = (opts.description || DEFAULTS.description).trim();
 
@@ -116,14 +117,10 @@ export function setSEO(opts = {}) {
   }
 }
 
-/**
- * Convenience presets for your pages.
- * You can call these inside each page component.
- */
 export const SEO_PRESETS = {
   home() {
     setSEO({
-      title: "Vix.cpp — Modern C++ backend runtime",
+      title: "Vix.cpp A Modern C++ Backend Runtime",
       description: DEFAULTS.description,
       path: "/",
       type: "website",

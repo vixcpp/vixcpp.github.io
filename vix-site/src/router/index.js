@@ -23,9 +23,9 @@ const routes = [
     component: Home,
     meta: {
       seo: {
-        title: "Vix.cpp — Modern C++ backend runtime",
+        title: "Vix.cpp A Modern C++ Backend Runtime",
         description:
-          "Vix.cpp is a modern C++ backend runtime focused on performance, clean DX, HTTP/WebSocket, middleware, and a practical registry workflow.",
+          "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun. It is designed for unreliable networks, offline-first workflows, peer-to-peer systems, and extreme native performance.",
         path: "/",
         type: "website",
         jsonLd: {
@@ -35,7 +35,7 @@ const routes = [
           applicationCategory: "DeveloperApplication",
           operatingSystem: "Linux, macOS, Windows",
           description:
-            "Vix.cpp is a modern C++ backend runtime focused on performance, clean DX, HTTP/WebSocket, middleware, and a practical registry workflow.",
+            "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun. It is designed for unreliable networks, offline-first workflows, peer-to-peer systems, and extreme native performance.",
           url: "https://vixcpp.com/",
         },
       },
@@ -65,7 +65,7 @@ const routes = [
         title: "Examples",
         description:
           "Copy/paste ready Vix.cpp examples: HTTP, middleware, JSON logs, WebSocket, registry workflow.",
-        path: "/examples",
+        path: "/docs/examples",
       },
     },
   },
@@ -206,7 +206,12 @@ router.afterEach((to) => {
   const seo = to.meta?.seo;
 
   if (!seo) {
-    setSEO({ title: "Vix.cpp", description: "Modern C++ backend runtime." });
+    setSEO({
+      title: "Vix.cpp A Modern C++ Backend Runtime",
+      description:
+        "Vix.cpp is a modern C++ runtime built as a serious alternative to Node.js, Deno, and Bun.",
+      path: "/",
+    });
     return;
   }
 

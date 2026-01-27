@@ -51,7 +51,6 @@ i Hint:    Ctrl+C to stop`,
     title: "It really is this simple",
     subtitle: "A tiny HTTP route you can run immediately.",
     code: `#include <vix.hpp>
-
 using namespace vix;
 
 int main() {
