@@ -1414,23 +1414,11 @@ td {
     max-width: 28ch;
   }
 }
-/* PWA toast actions: stack buttons on mobile */
+/* PWA toast: stack buttons vertically on mobile ONLY */
 @media (max-width: 640px) {
   .pwa-toast-actions {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .pwa-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Optionnel: laisse la zone texte respirer */
-  .pwa-toast {
-    align-items: flex-start;
+    gap: 8px;
   }
 }
