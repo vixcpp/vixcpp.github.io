@@ -96,7 +96,7 @@ function ctaClass(kind) {
 
 <style scoped>
 .hero {
-  padding: 4.5rem 0 3.5rem;
+  padding: 0;
 }
 
 .hero-inner {
