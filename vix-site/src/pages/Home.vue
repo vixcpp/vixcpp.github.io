@@ -59,12 +59,12 @@ onMounted(async () => {
       </div>
     </section>
 
-    <BatteriesIncluded
+    <!-- <BatteriesIncluded
       v-if="HOME?.batteries"
       :title="HOME.batteries.title"
       :subtitle="HOME.batteries.subtitle"
       :items="HOME.batteries.items || []"
-    />
+    /> -->
 
     <Section
       v-if="HOME?.getStarted"
