@@ -145,7 +145,16 @@ function normalizeShellText(raw) {
   const s = String(raw ?? "");
   return s
     .split("\n")
-    .map((line) => line.replace(/^\s*>\s?/, ""))
+    .map((line) => {
+      // 1) remove markdown quote at line start
+      let out = line.replace(/^\s*>\s?/, "");
+
+      // 2) remove weird " >:8080" prompt chunk (">:" with optional spaces)
+      //    turns "http >:8080/api/ping" into "http :8080/api/ping"
+      out = out.replace(/\s*>\s*:(\d{2,5})/g, " :$1");
+
+      return out;
+    })
     .join("\n");
 }
 
@@ -333,7 +342,7 @@ function highlightShell(raw) {
   s = s.replace(/(https?:\/\/[^\s]+)/g, `<span class="shell-url">$1</span>`);
   s = s.replace(/(\s(?:\.{0,2}\/[^\s]+))/g, `<span class="shell-path">$1</span>`);
   s = s.replace(/(:\d{2,5}\b)/g, `<span class="shell-port">$1</span>`);
-  s = s.replace(/(\s\|\s|\s\|\|\s|>\s*[^\s]+)/g, `<span class="shell-op">$1</span>`);
+s = s.replace(/(\s\|\|\s|\s\|\s)/g, `<span class="shell-op">$1</span>`);
   s = s.replace(/^(HTTP\/\d\.\d\s+\d+\s+.*)$/gm, `<span class="shell-http">$1</span>`);
   s = s.replace(/^([A-Za-z-]+:\s*)(.*)$/gm, `<span class="shell-hdr">$1</span><span class="shell-hdrv">$2</span>`);
 
@@ -388,6 +397,11 @@ async function copy(text) {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 18px 46px rgba(0,0,0,.55);
+}
+.code-card{
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
 }
 
 @media (max-width: 720px){

@@ -108,6 +108,31 @@ i Hint:  Ctrl+C to stop`,
     ],
   },
 
+  signals: {
+    title: "Project signals",
+    subtitle: "Live GitHub stats with safe fallback.",
+    items: [
+      {
+        title: "Stars",
+        kind: "github",
+        field: "stars",
+        meta: ["GitHub stars"],
+      },
+      {
+        title: "Forks",
+        kind: "github",
+        field: "forks",
+        meta: ["Community forks"],
+      },
+      {
+        title: "Open issues",
+        kind: "github",
+        field: "open_issues",
+        meta: ["Work in progress"],
+      },
+    ],
+  },
+
   batteries: {
     title: "What ships with Vix",
     items: [

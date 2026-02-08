@@ -1,11 +1,16 @@
 <script setup>
 import * as HomeData from "@/data/home";
+import { ref, onMounted } from "vue";
 
 // Core sections
 import Hero from "@/components/Hero.vue";
 import Section from "@/components/Section.vue";
 import CardGrid from "@/components/CardGrid.vue";
 import CodeBlock from "@/components/CodeBlock.vue";
+import SignalsGrid from "@/components/SignalsGrid.vue";
+
+// GitHub stats (safe: local first, async refresh)
+import { getInitialGithubStats, refreshGithubStats } from "@/lib/githubStats";
 
 /**
  * Supporte plusieurs formes d’export possibles.
@@ -18,6 +23,16 @@ const HOME =
   HomeData?.default?.default ??
   null;
 
+// GitHub stats state (never blocks render)
+const github = ref(null);
+
+onMounted(async () => {
+  github.value = await getInitialGithubStats();
+
+  const updated = await refreshGithubStats({ timeoutMs: 1200 });
+  if (updated) github.value = updated;
+});
+
 // Debug safe (tu peux enlever après)
 const _debugHomeType = HOME ? typeof HOME : "null";
 const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : [];
@@ -27,8 +42,8 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
   <div class="page">
     <!-- DEBUG (temporaire, safe, ne crash pas) -->
     <div v-if="!HOME" class="container loading">
-      <h2 style="margin:0 0 8px;">Loading…</h2>
-      <p style="margin:0; opacity:.85;">
+      <h2 style="margin: 0 0 8px">Loading…</h2>
+      <p style="margin: 0; opacity: 0.85">
         HOME is null. Check export in <code>@/data/home</code>.
       </p>
     </div>
@@ -44,32 +59,14 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
       :support="HOME.hero.support"
     />
 
-    <!-- WORKFLOW -->
+    <!-- SIGNALS -->
     <Section
-      v-if="HOME?.workflow"
-      :title="HOME.workflow.title"
-      :subtitle="HOME.workflow.subtitle"
+      v-if="HOME?.signals"
+      :title="HOME.signals.title"
+      :subtitle="HOME.signals.subtitle"
+      tight
     >
-      <CardGrid :items="HOME.workflow.items || []" />
-    </Section>
-
-    <!-- WHY -->
-    <Section
-      v-if="HOME?.why"
-      :title="HOME.why.title"
-      :subtitle="HOME.why.subtitle"
-      alt
-    >
-      <CardGrid :items="HOME.why.items || []" />
-    </Section>
-
-    <!-- PROOF -->
-    <Section
-      v-if="HOME?.proof"
-      :title="HOME.proof.title"
-      :subtitle="HOME.proof.subtitle"
-    >
-      <CardGrid :items="HOME.proof.items || []" />
+      <SignalsGrid :items="HOME.signals.items || []" :github="github" />
     </Section>
 
     <!-- BATTERIES -->

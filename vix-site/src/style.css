@@ -1543,3 +1543,11 @@ hr{
   border: 0 !important;
   background: none !important;
 }
+.section,
+.site-footer{
+  border: 0 !important;
+}
+
+hr{
+  display: none !important;
+}
