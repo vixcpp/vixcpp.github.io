@@ -41,6 +41,7 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
       :ctas="HOME.hero.ctas"
       :badges="HOME.hero.badges"
       :examples="HOME.hero.examples"
+      :support="HOME.hero.support"
     />
 
     <!-- WORKFLOW -->

@@ -28,6 +28,21 @@
           </template>
         </div>
 
+        <div v-if="props.support" class="hero-support">
+          <div class="hero-support-title">{{ props.support.title }}</div>
+
+          <div class="hero-support-text">{{ props.support.text }}</div>
+
+          <div v-if="props.support.meta?.length" class="hero-support-meta">
+            <span class="meta-dot"></span>
+
+            <template v-for="(m, i) in props.support.meta" :key="i">
+              <span>{{ m }}</span>
+              <span v-if="i < props.support.meta.length - 1" class="sep">•</span>
+            </template>
+          </div>
+        </div>
+
         <div v-if="badges?.length" class="hero-badges">
           <span v-for="b in badges" :key="b" class="pill">{{ b }}</span>
         </div>
@@ -114,7 +129,10 @@ const props = defineProps({
 
   ctas: { type: Array, default: () => [] },
   badges: { type: Array, default: () => [] },
-
+  support: {
+    type: Object,
+    default: null,
+  },
   // [{ key, label, lang: "cpp"|"shell", file?, code }]
   examples: { type: Array, default: () => [] },
 
@@ -479,6 +497,54 @@ async function copy(text) {
   gap: .45rem;
 }
 
+.hero-support{
+  margin-top: 0.95rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+
+  border: 1px solid rgba(148,163,184,.18);
+  background: linear-gradient(180deg, rgba(2,6,23,.28), rgba(2,6,23,.14));
+  box-shadow: 0 12px 26px rgba(0,0,0,.22);
+  max-width: 54ch;
+}
+
+.hero-support-title{
+  font-size: .86rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  color: rgba(255,255,255,.92);
+  margin: 0 0 .35rem;
+}
+
+.hero-support-text{
+  font-size: .92rem;
+  line-height: 1.55;
+  color: rgba(226,232,240,.82);
+  margin: 0 0 .55rem;
+}
+
+.hero-support-meta{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem;
+  font-size: .82rem;
+  color: rgba(226,232,240,.72);
+}
+
+.meta-dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(34,197,154,.85);
+  box-shadow: 0 0 0 3px rgba(34,197,154,.18);
+}
+
+.sep{
+  opacity: .5;
+}
+
+
 .dot-sep{
   opacity: .45;
   font-weight: 700;
@@ -731,6 +797,24 @@ async function copy(text) {
   flex-wrap: nowrap;
 }
 
+.code-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0; /* IMPORTANT */
+}
+
+.head-scroll{
+  min-width: 0; /* IMPORTANT */
+  flex: 1 1 auto;
+}
+
+.tabs{
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
 .head-left,
 .head-right{
   flex-shrink: 0;
@@ -816,6 +900,10 @@ async function copy(text) {
 .code-pre > code{
   display: inline-block;
   min-width: 100%;
+}
+.code-body{
+  height: 340px;
+  overflow: auto;
 }
 
 /* Scrollbars */

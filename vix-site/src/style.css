@@ -56,6 +56,30 @@ body {
 body {
   padding: 0; /* au lieu de 3.5rem 0 0 0 */
 }
+html, body {
+  min-height: 100%;
+  background: radial-gradient(
+    circle at top,
+    #064e3b 0,
+    var(--bg) 50%,
+    #011716 100%
+  );
+}
+
+#app {
+  min-height: 100vh;
+  background: transparent;
+}
+
+#app { background: transparent; min-height: 100vh; }
+
+.section.alt, .site-footer { background: transparent; }
+
+.card, .terminal, .code-card {
+  background: rgba(0,0,0,.22);
+  backdrop-filter: blur(10px);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -579,11 +603,18 @@ body.nav-open {
 .terminal {
   width: 100%;
   max-width: 430px;
-  background: radial-gradient(circle at top left, #064e3b, #011716);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   border: 1px solid rgba(15, 118, 110, 0.65);
   overflow: hidden;
+}
+
+.terminal{
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+}
+.terminal-body{
+  background: transparent;
 }
 
 .terminal-head {
@@ -659,10 +690,9 @@ body.nav-open {
   padding: 3.6rem 0;
 }
 
-.section.alt {
-  background: radial-gradient(circle at top, #033632 0, #021817 60%);
+.section.alt{
+  background: transparent;
 }
-
 .section.tight {
   padding: 2.6rem 0;
 }
@@ -709,6 +739,10 @@ body.nav-open {
   position: relative;
   overflow: hidden;
 }
+.card{
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+}
 
 .card-title {
   margin: 0 0 0.4rem 0;
@@ -738,7 +772,7 @@ td {
   border-top: 1px solid rgba(15, 118, 110, 0.5);
   padding: 1.2rem 0 1.6rem;
   margin-top: 1.4rem;
-  background: linear-gradient(to bottom, #011716, #000909);
+  background: transparent;
 }
 
 .footer-inner {
@@ -1421,4 +1455,91 @@ td {
     flex-direction: column;
     gap: 8px;
   }
+}
+
+/* 1) Page layers must be transparent */
+#app,
+main,
+section,
+.section,
+.section.alt,
+.site-footer{
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Cards: glass but NO separate background layer feeling
+      (keep border/shadow, but no hard fill) */
+.card{
+  background: rgba(255,255,255,.03) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* 3) Terminal / code card: keep its own dark surface for readability */
+.terminal,
+.code-card{
+  background: rgba(2,6,23,.78) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* 4) Terminal inner areas: slightly different shades (still dark) */
+.terminal-head,
+.code-head,
+.code-header{
+  background: rgba(2,6,23,.88) !important;
+  background-image: none !important;
+}
+
+.terminal-body,
+.code-body{
+  background: rgba(2,6,23,.68) !important;
+  background-image: none !important;
+}
+
+/* 5) Pre/code must not paint a new background */
+.terminal-body pre,
+.code-pre,
+.code-pre > code{
+  background: transparent !important;
+}
+
+/* ==========================================
+   REMOVE section separators (lines/dividers)
+   FINAL OVERRIDE
+========================================== */
+/* 1) Kill borders that create lines */
+.section,
+.section.alt,
+.site-footer,
+.card{
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* 2) Kill shadows that look like separators */
+.section,
+.section.alt,
+.site-footer{
+  box-shadow: none !important;
+}
+
+/* 3) Kill pseudo-elements used as dividers */
+.section::before,
+.section::after,
+.site-footer::before,
+.site-footer::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* 4) If a divider class exists somewhere */
+.divider,
+.section-divider,
+.hr,
+hr{
+  display: none !important;
+  height: 0 !important;
+  border: 0 !important;
+  background: none !important;
 }

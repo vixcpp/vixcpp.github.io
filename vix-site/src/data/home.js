@@ -13,6 +13,10 @@ export const HOME = {
       },
     ],
     badges: [],
+    support: {
+      title: "Production ready",
+      meta: ["Native C++ binaries", "MIT licensed"],
+    },
     examples: [
       {
         key: "http",
@@ -104,74 +108,15 @@ i Hint:  Ctrl+C to stop`,
     ],
   },
 
-  why: {
-    title: "Why Vix exists",
-    subtitle: "Most runtimes assume stable internet. That is not reality.",
-    items: [
-      {
-        title: "Built for real conditions",
-        text: "Designed for unstable networks, offline-first environments, edge deployments, and peer-to-peer systems.",
-      },
-      {
-        title: "Predictable performance",
-        text: "Native performance with control and consistency. No garbage collector pauses. No surprise overhead.",
-      },
-      {
-        title: "Developer experience",
-        text: "Clear errors, code frames, structured logs, and a CLI that behaves like a real tool.",
-      },
-    ],
-  },
-
-  proof: {
-    title: "Trust, not hype",
-    subtitle:
-      "Built to be verifiable in behavior, performance, and distribution.",
-    items: [
-      {
-        title: "Open-source",
-        text: "Developed in the open with a source-first workflow.",
-      },
-      {
-        title: "Reproducible",
-        text: "Benchmarks and behavior are tied to commits and can be reproduced.",
-      },
-      {
-        title: "Safe distribution",
-        text: "Packaging and verification make delivery deterministic and secure.",
-      },
-    ],
-  },
-
   batteries: {
-    title: "What you get",
-    subtitle:
-      "Everything needed to build, run, and ship backend services in one system.",
+    title: "What ships with Vix",
     items: [
+      { title: "Native runtime", text: "Compiled C++ binaries. No VM. No GC." },
       {
-        title: "Unified CLI",
-        text: "One workflow covering new, build, run, dev, check, tests, pack, verify, and registry.",
+        title: "HTTP + WebSocket",
+        text: "One execution model for APIs and realtime.",
       },
-      {
-        title: "Script mode",
-        text: "Run a single C++ file like a script using vix run file.cpp.",
-      },
-      {
-        title: "HTTP and WebSocket runtime",
-        text: "Build APIs and realtime systems with a shared execution model.",
-      },
-      {
-        title: "Middleware pipeline",
-        text: "Composable request handling with deterministic control flow.",
-      },
-      {
-        title: "Packaging and verification",
-        text: "Create distributable artifacts and verify them before installation.",
-      },
-      {
-        title: "Registry workflow",
-        text: "Discover, add, and publish reusable C++ libraries with an offline-friendly flow.",
-      },
+      { title: "CLI workflow", text: "build, run, dev, pack, verify." },
     ],
   },
 
