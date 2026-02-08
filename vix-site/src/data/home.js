@@ -105,8 +105,10 @@ i Hint:  Ctrl+C to stop`,
   },
 
   signals: {
-    title: "Project signals",
-    subtitle: "Live GitHub stats with safe fallback.",
+    title: "Open-source project signals",
+    subtitle:
+      "Vix.cpp is an open-source project developed in the open.\n" +
+      "These signals reflect real community activity and ongoing maintenance.",
     items: [
       {
         title: "Stars",
@@ -130,14 +132,54 @@ i Hint:  Ctrl+C to stop`,
   },
 
   batteries: {
-    title: "What ships with Vix",
+    title: "Batteries included",
+    subtitle:
+      "Vix ships a complete CLI workflow to create, build, develop, package, and verify C++ backend projects.",
     items: [
-      { title: "Native runtime", text: "Compiled C++ binaries. No VM. No GC." },
       {
-        title: "HTTP + WebSocket",
-        text: "One execution model for APIs and realtime.",
+        title: "Project workflow",
+        text: "Create projects and iterate fast with dev mode and one-command runs.",
+        href: "/docs/cli",
+        preview: {
+          title: "project",
+          lines: [
+            "$ vix new api",
+            "$ cd api && vix dev",
+            "$ vix run server.cpp",
+          ],
+        },
       },
-      { title: "CLI workflow", text: "build, run, dev, pack, verify." },
+      {
+        title: "Packaging & verification",
+        text: "Package builds and verify artifacts with a security-focused workflow.",
+        href: "/docs/packaging",
+        preview: {
+          title: "pack + verify",
+          lines: ["$ vix pack --version 1.0.0", "$ vix verify"],
+        },
+      },
+      {
+        title: "Modules system",
+        text: "Opt-in modules to keep projects minimal and explicit.",
+        href: "/docs/modules",
+        preview: {
+          title: "modules",
+          lines: ["$ vix modules init", "$ vix modules add websocket"],
+        },
+      },
+      {
+        title: "Offline registry",
+        text: "Sync once, search locally, and pin dependencies via vix.lock.",
+        href: "/docs/registry",
+        preview: {
+          title: "registry",
+          lines: [
+            "$ vix registry sync",
+            "$ vix search websocket",
+            "$ vix deps",
+          ],
+        },
+      },
     ],
   },
 

@@ -7,6 +7,7 @@ import Section from "@/components/Section.vue";
 import CardGrid from "@/components/CardGrid.vue";
 import CodeBlock from "@/components/CodeBlock.vue";
 import SignalsGrid from "@/components/SignalsGrid.vue";
+import BatteriesIncluded from "@/components/BatteriesIncluded.vue";
 
 import { getInitialGithubStats, refreshGithubStats } from "@/lib/githubStats";
 
@@ -58,14 +59,12 @@ onMounted(async () => {
       </div>
     </section>
 
-    <Section
+    <BatteriesIncluded
       v-if="HOME?.batteries"
       :title="HOME.batteries.title"
       :subtitle="HOME.batteries.subtitle"
-      alt
-    >
-      <CardGrid :items="HOME.batteries.items || []" />
-    </Section>
+      :items="HOME.batteries.items || []"
+    />
 
     <Section
       v-if="HOME?.getStarted"
@@ -130,7 +129,7 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: minmax(320px, 560px) minmax(260px, 420px);
   gap: 3rem;
-  align-items: start;
+  align-items: center;
 }
 
 .signals-left {
