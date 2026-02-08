@@ -38,7 +38,6 @@ async function main() {
       watchers: repo.subscribers_count ?? 0,
     };
   } catch (err) {
-    // Fallback: si le build n'a pas accès au net, on conserve l'ancien fichier si présent
     if (fs.existsSync(OUT)) {
       console.warn(
         `[github_stats] fetch failed, keeping existing file: ${err.message}`,
@@ -46,7 +45,6 @@ async function main() {
       return;
     }
 
-    // Dernier recours: fichier minimal
     console.warn(
       `[github_stats] fetch failed, writing fallback file: ${err.message}`,
     );

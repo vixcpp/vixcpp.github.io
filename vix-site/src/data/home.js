@@ -37,7 +37,6 @@ int main()
   app.run(8080);
 }`,
       },
-
       {
         key: "ws",
         label: "WebSocket",
@@ -56,7 +55,6 @@ int main()
   ws.listen_blocking(9090);
 }`,
       },
-
       {
         key: "p2p",
         label: "P2P",
@@ -73,7 +71,6 @@ int main()
   p2p.wait();
 }`,
       },
-
       {
         key: "async",
         label: "Async",
@@ -93,7 +90,6 @@ int main()
   async::run(main_task());
 }`,
       },
-
       {
         key: "run",
         label: "vix run",
@@ -116,7 +112,7 @@ i Hint:  Ctrl+C to stop`,
         title: "Stars",
         kind: "github",
         field: "stars",
-        meta: ["GitHub stars"],
+        meta: ["Stars on GitHub"],
       },
       {
         title: "Forks",
@@ -128,7 +124,7 @@ i Hint:  Ctrl+C to stop`,
         title: "Open issues",
         kind: "github",
         field: "open_issues",
-        meta: ["Work in progress"],
+        meta: ["Active issues"],
       },
     ],
   },

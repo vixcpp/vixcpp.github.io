@@ -2,20 +2,14 @@
 import * as HomeData from "@/data/home";
 import { ref, onMounted } from "vue";
 
-// Core sections
 import Hero from "@/components/Hero.vue";
 import Section from "@/components/Section.vue";
 import CardGrid from "@/components/CardGrid.vue";
 import CodeBlock from "@/components/CodeBlock.vue";
 import SignalsGrid from "@/components/SignalsGrid.vue";
 
-// GitHub stats (safe: local first, async refresh)
 import { getInitialGithubStats, refreshGithubStats } from "@/lib/githubStats";
 
-/**
- * Supporte plusieurs formes d’export possibles.
- * On tente plusieurs chemins courants.
- */
 const HOME =
   HomeData?.HOME ??
   HomeData?.default ??
@@ -23,32 +17,24 @@ const HOME =
   HomeData?.default?.default ??
   null;
 
-// GitHub stats state (never blocks render)
 const github = ref(null);
 
 onMounted(async () => {
   github.value = await getInitialGithubStats();
-
   const updated = await refreshGithubStats({ timeoutMs: 1200 });
   if (updated) github.value = updated;
 });
-
-// Debug safe (tu peux enlever après)
-const _debugHomeType = HOME ? typeof HOME : "null";
-const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : [];
 </script>
 
 <template>
   <div class="page">
-    <!-- DEBUG (temporaire, safe, ne crash pas) -->
     <div v-if="!HOME" class="container loading">
-      <h2 style="margin: 0 0 8px">Loading…</h2>
-      <p style="margin: 0; opacity: 0.85">
+      <h2 class="loading-title">Loading…</h2>
+      <p class="loading-sub">
         HOME is null. Check export in <code>@/data/home</code>.
       </p>
     </div>
 
-    <!-- HERO -->
     <Hero
       v-if="HOME?.hero"
       :title="HOME.hero.title"
@@ -59,17 +45,19 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
       :support="HOME.hero.support"
     />
 
-    <!-- SIGNALS -->
-    <Section
-      v-if="HOME?.signals"
-      :title="HOME.signals.title"
-      :subtitle="HOME.signals.subtitle"
-      tight
-    >
-      <SignalsGrid :items="HOME.signals.items || []" :github="github" />
-    </Section>
+    <section v-if="HOME?.signals" class="signals">
+      <div class="container signals-layout">
+        <div class="signals-left">
+          <h2 class="signals-title">{{ HOME.signals.title }}</h2>
+          <p class="signals-subtitle">{{ HOME.signals.subtitle }}</p>
+        </div>
 
-    <!-- BATTERIES -->
+        <div class="signals-right">
+          <SignalsGrid :items="HOME.signals.items || []" :github="github" />
+        </div>
+      </div>
+    </section>
+
     <Section
       v-if="HOME?.batteries"
       :title="HOME.batteries.title"
@@ -79,7 +67,6 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
       <CardGrid :items="HOME.batteries.items || []" />
     </Section>
 
-    <!-- GET STARTED -->
     <Section
       v-if="HOME?.getStarted"
       :title="HOME.getStarted.title"
@@ -113,12 +100,19 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
 }
 
 .loading {
-  padding: 48px 0;
-  opacity: 0.75;
+  padding: 56px 0;
+  opacity: 0.85;
 }
 
-.debug {
-  margin-bottom: 10px;
+.loading-title {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.loading-sub {
+  margin: 0;
+  opacity: 0.85;
 }
 
 .cta-row {
@@ -126,5 +120,50 @@ const _debugHomeKeys = HOME && typeof HOME === "object" ? Object.keys(HOME) : []
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.signals {
+  padding: 3.2rem 0;
+}
+
+.signals-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 560px) minmax(260px, 420px);
+  gap: 3rem;
+  align-items: start;
+}
+
+.signals-left {
+  padding-top: 0.2rem;
+}
+
+.signals-title {
+  margin: 0;
+  font-size: 2.35rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.signals-subtitle {
+  margin: 0.95rem 0 0;
+  max-width: 62ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.82;
+}
+
+.signals-right {
+  width: 100%;
+}
+
+@media (max-width: 980px) {
+  .signals-layout {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  .signals-title {
+    font-size: 1.9rem;
+  }
 }
 </style>

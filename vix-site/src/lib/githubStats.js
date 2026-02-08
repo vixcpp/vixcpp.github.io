@@ -28,7 +28,6 @@ function writeCache(data) {
   } catch {}
 }
 
-// ✅ no Vite import resolution, no crash
 async function loadBuildStats() {
   try {
     const url = new URL("../data/github_stats.json", import.meta.url);

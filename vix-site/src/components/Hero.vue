@@ -802,11 +802,11 @@ async function copy(text) {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  min-width: 0; /* IMPORTANT */
+  min-width: 0;
 }
 
 .head-scroll{
-  min-width: 0; /* IMPORTANT */
+  min-width: 0;
   flex: 1 1 auto;
 }
 
