@@ -29,24 +29,39 @@
             </button>
 
             <div class="dd-menu" :class="{ open: isOpen(item.label) }" role="menu">
-              <RouterLink
-                v-for="child in item.items"
-                :key="child.to"
-                class="dd-item"
-                :to="child.to"
-                @click="closeAll()"
-              >
-                {{ child.label }}
-              </RouterLink>
+              <!-- Dropdown children: support href (docs) OR to (vue routes) -->
+              <template v-for="child in item.items" :key="childKey(child)">
+                <!-- External / href (same-domain docs or external) -->
+                <a
+                  v-if="isExternal(child)"
+                  class="dd-item"
+                  :href="child.href"
+                  :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
+                  rel="noreferrer"
+                  @click="closeAll()"
+                >
+                  {{ child.label }}
+                </a>
+
+                <!-- Internal vue-router link -->
+                <RouterLink
+                  v-else
+                  class="dd-item"
+                  :to="child.to"
+                  @click="closeAll()"
+                >
+                  {{ child.label }}
+                </RouterLink>
+              </template>
             </div>
           </div>
 
-          <!-- External -->
+          <!-- External top-level (GitHub etc.) -->
           <a
-            v-else-if="isExternal(item) && !isGithub(item)"
+            v-else-if="isExternal(item)"
             class="link"
             :href="item.href"
-            target="_blank"
+            :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
             rel="noreferrer"
           >
             {{ item.label }}
@@ -54,7 +69,7 @@
 
           <!-- Internal -->
           <RouterLink
-            v-else-if="!isExternal(item)"
+            v-else
             class="link"
             :to="item.to"
             active-class="is-active"
@@ -66,7 +81,7 @@
 
         <div class="spacer"></div>
 
-        <!-- Desktop search -->
+        <!-- Desktop search (docs) -->
         <form class="search" role="search" @submit.prevent="submitSearch('desktop')">
           <span class="s-ico" aria-hidden="true">⌕</span>
           <input
@@ -79,7 +94,6 @@
           />
           <button class="s-btn" type="submit" :disabled="!qDesktop">Search</button>
         </form>
-
       </nav>
 
       <!-- Mobile toggle -->
@@ -123,24 +137,38 @@
           </button>
 
           <div v-if="isMobileGroupOpen(item.label)" class="mdd-menu">
-            <RouterLink
-              v-for="child in item.items"
-              :key="'m-' + child.to"
-              class="mdd-item"
-              :to="child.to"
-              @click="closeMobile()"
-            >
-              {{ child.label }}
-            </RouterLink>
+            <template v-for="child in item.items" :key="'m-' + childKey(child)">
+              <!-- External / href -->
+              <a
+                v-if="isExternal(child)"
+                class="mdd-item"
+                :href="child.href"
+                :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
+                rel="noreferrer"
+                @click="closeMobile()"
+              >
+                {{ child.label }}
+              </a>
+
+              <!-- Internal vue-router link -->
+              <RouterLink
+                v-else
+                class="mdd-item"
+                :to="child.to"
+                @click="closeMobile()"
+              >
+                {{ child.label }}
+              </RouterLink>
+            </template>
           </div>
         </div>
 
         <!-- External -->
         <a
-          v-else-if="isExternal(item) && !isGithub(item)"
+          v-else-if="isExternal(item)"
           class="mlink"
           :href="item.href"
-          target="_blank"
+          :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
           rel="noreferrer"
           @click="closeMobile()"
         >
@@ -149,7 +177,7 @@
 
         <!-- Internal -->
         <RouterLink
-          v-else-if="!isExternal(item)"
+          v-else
           class="mlink"
           :to="item.to"
           @click="closeMobile()"
@@ -157,44 +185,42 @@
           {{ item.label }}
         </RouterLink>
       </template>
-
-      <div class="msep"></div>
-
-      <a
-        v-if="github"
-        class="mlink cta"
-        :href="github.href"
-        target="_blank"
-        rel="noreferrer"
-        @click="closeMobile()"
-      >
-        <span>{{ github.label }}</span>
-        <small class="pill">Source</small>
-      </a>
     </div>
   </header>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 import { NAV } from "@/data/nav";
 
-const router = useRouter();
-
 const navItems = computed(() => NAV);
-const github = computed(() => navItems.value.find(i => i?.label === "GitHub" && i?.href) || null);
 
 function isExternal(item) {
   return !!item?.external || !!item?.href;
 }
-function isGithub(item) {
-  return item?.label === "GitHub" && !!item?.href;
+
+// Same-origin helper: docs are same-domain (/docs/...)
+function isSameOrigin(href) {
+  if (!href) return false;
+  // relative paths like "/docs/..." are same-origin
+  if (href.startsWith("/")) return true;
+  try {
+    const u = new URL(href, window.location.origin);
+    return u.origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }
+
 function itemKey(item) {
   if (item.kind === "dropdown") return `dd:${item.label}`;
   if (isExternal(item)) return `href:${item.href}`;
   return `to:${item.to}`;
+}
+
+function childKey(child) {
+  if (isExternal(child)) return `href:${child.href}`;
+  return `to:${child.to}`;
 }
 
 /* Desktop dropdown */
@@ -248,7 +274,7 @@ onBeforeUnmount(() => {
   document.documentElement.classList.remove("nav-open");
 });
 
-/* Search */
+/* Search (docs via VitePress) */
 const qDesktop = ref("");
 const qMobile = ref("");
 
@@ -263,7 +289,11 @@ function submitSearch(which) {
 
   closeAll();
   closeMobile();
-  router.push({ path: "/docs/search", query: { q } });
+
+  // VitePress docs:
+  // - simplest: go to /docs/ and let VitePress search handle it
+  // - we also pass query param so you can read it later if you want
+  window.location.href = `/docs/?q=${encodeURIComponent(q)}`;
 }
 </script>
 

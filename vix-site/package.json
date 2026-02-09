@@ -8,7 +8,11 @@
     "dev": "vite",
     "prebuild": "node scripts/fetch_github_stats.mjs",
     "build": "vite build",
-    "deploy": "npm run build && node scripts/deploy.js",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "release": "npm run build && npm run docs:build && node scripts/deploy.js",
+    "deploy": "npm run release",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -18,6 +22,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "vite": "^7.2.4",
-    "vite-plugin-pwa": "^1.2.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "vitepress": "^1.6.4"
   }
 }

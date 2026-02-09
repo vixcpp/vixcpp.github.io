@@ -7,15 +7,15 @@ export const NAV = [
     label: "Docs",
     kind: "dropdown",
     items: [
-      { label: "Quick Start", to: "/docs/quick-start" },
-      { label: "Guide", to: "/docs/guide" },
-      { label: "Tutorial", to: "/docs/tutorial" },
-      { label: "Examples", to: "/docs/examples" },
-      { label: "API Reference", to: "/docs/api" },
+      { label: "Docs Home", href: "/docs/", external: true },
+      { label: "Quick Start", href: "/docs/quick-start", external: true },
+      { label: "Guide", href: "/docs/guide", external: true },
+      { label: "Tutorial", href: "/docs/tutorial", external: true },
+      { label: "API Reference", href: "/docs/api", external: true },
+      { label: "Examples", href: "/docs/examples", external: true },
     ],
   },
 
-  // Registry = page produit interne
   { label: "Registry", to: "/registry" },
 
   {
@@ -30,6 +30,5 @@ export const NAV = [
     ],
   },
 
-  // GitHub reste visible mais pas central
   { label: "GitHub", href: "https://github.com/vixcpp/vix", external: true },
 ];

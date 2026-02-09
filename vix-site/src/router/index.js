@@ -1,8 +1,8 @@
+// src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "../pages/Home.vue";
 import Install from "../pages/Install.vue";
-import Examples from "../pages/Examples.vue";
 import Community from "../pages/Community.vue";
 import Blog from "../pages/Blog.vue";
 import Post from "../pages/Post.vue";
@@ -13,6 +13,8 @@ import Releases from "../pages/about/Releases.vue";
 import Team from "../pages/about/Team.vue";
 import FAQ from "../pages/about/FAQ.vue";
 import Documentary from "../pages/about/Documentary.vue";
+
+import Registry from "../pages/Registry.vue";
 
 import { setSEO } from "../utils/seo";
 
@@ -56,20 +58,26 @@ const routes = [
     },
   },
 
+  // -------------------------
+  // Registry (internal SPA page)
+  // -------------------------
   {
-    path: "/docs/examples",
-    name: "examples",
-    component: Examples,
+    path: "/registry",
+    name: "registry",
+    component: Registry,
     meta: {
       seo: {
-        title: "Examples",
+        title: "Registry",
         description:
-          "Copy/paste ready Vix.cpp examples: HTTP, middleware, JSON logs, WebSocket, registry workflow.",
-        path: "/docs/examples",
+          "Discover Vix packages. Search repositories under vixcpp and explore here.",
+        path: "/registry",
       },
     },
   },
 
+  // -------------------------
+  // Community
+  // -------------------------
   {
     path: "/community",
     name: "community",
@@ -84,7 +92,9 @@ const routes = [
     },
   },
 
-  // Optional blog
+  // -------------------------
+  // Blog
+  // -------------------------
   {
     path: "/blog",
     name: "blog",
@@ -99,7 +109,6 @@ const routes = [
     },
   },
 
-  // Post: SEO dynamique (slug)
   {
     path: "/blog/:slug",
     name: "post",
@@ -114,6 +123,9 @@ const routes = [
     },
   },
 
+  // -------------------------
+  // About
+  // -------------------------
   {
     path: "/about/community-guide",
     name: "community_guide",
@@ -180,16 +192,13 @@ const routes = [
     },
   },
 
+  // 404
   {
     path: "/:pathMatch(.*)*",
     name: "notfound",
     component: NotFound,
     meta: {
-      seo: {
-        title: "404",
-        description: "Page not found.",
-        path: "/404",
-      },
+      seo: { title: "404", description: "Page not found.", path: "/404" },
     },
   },
 ];
@@ -216,7 +225,6 @@ router.afterEach((to) => {
     setSEO(seo);
   }
 
-  // Google Analytics (SPA page view)
   if (window.gtag) {
     window.gtag("event", "page_view", {
       page_path: to.fullPath,
