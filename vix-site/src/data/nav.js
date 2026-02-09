@@ -3,10 +3,6 @@ export const NAV = [
   { label: "Home", to: "/" },
   { label: "Install", to: "/install" },
 
-  // API page (internal)
-  { label: "API", to: "/api" },
-
-  // Dropdown: Docs
   {
     label: "Docs",
     kind: "dropdown",
@@ -15,10 +11,13 @@ export const NAV = [
       { label: "Guide", to: "/docs/guide" },
       { label: "Tutorial", to: "/docs/tutorial" },
       { label: "Examples", to: "/docs/examples" },
+      { label: "API Reference", to: "/docs/api" },
     ],
   },
 
-  // Dropdown: About
+  // Registry = page produit interne
+  { label: "Registry", to: "/registry" },
+
   {
     label: "About",
     kind: "dropdown",
@@ -30,19 +29,7 @@ export const NAV = [
       { label: "The Documentary", to: "/about/documentary" },
     ],
   },
-];
 
-export const EXTERNAL = {
-  registry: {
-    label: "Registry",
-    href: "https://github.com/vixcpp/registry",
-    badge: "Git",
-    note: "Git-based package index",
-  },
-  github: {
-    label: "GitHub",
-    href: "https://github.com/vixcpp/vix",
-    badge: "Source",
-    note: "Source-first docs",
-  },
-};
+  // GitHub reste visible mais pas central
+  { label: "GitHub", href: "https://github.com/vixcpp/vix", external: true },
+];
