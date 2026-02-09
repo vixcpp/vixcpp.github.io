@@ -1,0 +1,163 @@
+/* Modular-like docs hero */
+.vix-docs-hero{
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 44px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.vix-docs-h1{
+  font-size: 64px;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  margin: 0 0 18px;
+}
+
+.vix-docs-lead{
+  color: rgba(255,255,255,.72);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  max-width: 50ch;
+}
+
+.vix-docs-body{
+  color: rgba(255,255,255,.62);
+  font-size: 15px;
+  line-height: 1.75;
+  margin: 0 0 18px;
+  max-width: 58ch;
+}
+
+/* CTA like Modular */
+.actions{
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.actions .primary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  background: #4f6fff;
+  color: #0b0e14;
+  border: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 10px 26px rgba(79,111,255,.18);
+}
+
+.actions .primary .cta-arrow{
+  font-weight: 900;
+  transform: translateY(-1px);
+}
+
+/* Right panel annotation: handwritten */
+.vix-docs-hero__right{
+  position: relative;
+  padding-top: 30px;
+}
+
+.vix-hero-annot{
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  color: rgba(255,255,255,.86);
+  font-size: 14px;
+  line-height: 1.25;
+  font-family: ui-rounded, "Comic Sans MS", "Segoe Print", "Bradley Hand", "Apple Chancery", cursive;
+  transform: rotate(-3deg);
+  opacity: .95;
+  pointer-events: none;
+}
+
+.vix-hero-annot__arrow{
+  width: 260px;
+  height: 150px;
+  margin-top: 8px;
+  margin-left: 22px;
+  opacity: .9;
+}
+
+/* Code card: flatter + closer to Modular */
+.vix-hero-code{
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(14,18,24,.92);
+  box-shadow: 0 22px 60px rgba(0,0,0,.40);
+  margin-top: 18px;
+}
+
+.vix-hero-code__top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(46,52,66,.55);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.vix-hero-code__pill{
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,.92);
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.vix-hero-code__copy{
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  color: rgba(255,255,255,.92);
+  cursor: pointer;
+}
+
+.vix-hero-code__body{
+  padding: 14px 16px 16px;
+}
+
+.vix-hero-code__body pre{
+  margin: 0;
+  background: transparent;
+}
+
+/* Make code text feel like Modular */
+.vix-hero-code__body code{
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+
+/* Responsive */
+@media (max-width: 960px){
+  .vix-docs-hero{
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .vix-docs-h1{
+    font-size: 44px;
+  }
+  .vix-docs-hero__right{
+    padding-top: 42px;
+  }
+  .vix-hero-annot{
+    left: 2px;
+  }
+  .vix-hero-annot__arrow{
+    margin-left: 18px;
+    width: 220px;
+  }
+}

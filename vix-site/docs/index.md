@@ -1,13 +1,6 @@
 ---
-title: Docs
+title: Vix.cpp Documentation
+layout: home
 ---
 
-# Vix.cpp Docs
-
-Welcome to the official Vix.cpp documentation.
-
-- [Quick Start](/quick-start)
-- [Guide](/guide)
-- [Tutorial](/tutorial)
-- [API Reference](/api)
-- [Examples](/examples)
+<DocsHomeHero />

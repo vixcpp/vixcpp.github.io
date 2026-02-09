@@ -7,14 +7,15 @@ export default defineConfig({
   description:
     "Modern C++ backend runtime for offline-first, P2P, and high-performance applications.",
 
-  // IMPORTANT: docs served at https://vixcpp.com/docs/
   base: "/docs/",
 
-  // Extra head tags for docs (optional but nice)
+  markdown: {
+    html: true,
+  },
+
   head: [
     ["link", { rel: "icon", href: "/assets/pwa/icon-192.png" }],
     ["meta", { name: "theme-color", content: "#0b0e14" }],
-    // if you ever add standalone web-app meta, prefer the modern one:
     ["meta", { name: "mobile-web-app-capable", content: "yes" }],
   ],
 
@@ -46,7 +47,6 @@ export default defineConfig({
     search: {
       provider: "local",
       options: {
-        // keeps UI clean; you can tweak later
         miniSearch: {
           searchOptions: {
             fuzzy: 0.2,
