@@ -1551,3 +1551,25 @@ hr{
 hr{
   display: none !important;
 }
+/* Default app background (existing) */
+#app {
+  background: linear-gradient(
+    to bottom,
+    #003a2f,
+    #021b16
+  );
+}
+
+/* ===============================
+   Registry override
+   =============================== */
+body.is-registry #app {
+  background: #ffffff !important;
+  padding: 0 !important;
+}
+body.is-registry #app {
+  background: #fafafa;
+}
+body.is-registry .main {
+  padding-top: 0 !important;
+}

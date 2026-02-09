@@ -14,7 +14,11 @@ import Team from "../pages/about/Team.vue";
 import FAQ from "../pages/about/FAQ.vue";
 import Documentary from "../pages/about/Documentary.vue";
 
-import Registry from "../pages/Registry.vue";
+import RegistryLayout from "../pages/registry/RegistryLayout.vue";
+import RegistryHome from "../pages/registry/RegistryHome.vue";
+import RegistryBrowse from "../pages/registry/RegistryBrowse.vue";
+import RegistryDocs from "../pages/registry/RegistryDocs.vue";
+import RegistryPublish from "../pages/registry/RegistryPublish.vue";
 
 import { setSEO } from "../utils/seo";
 
@@ -63,18 +67,58 @@ const routes = [
   // -------------------------
   {
     path: "/registry",
-    name: "registry",
-    component: Registry,
-    meta: {
-      seo: {
-        title: "Registry",
-        description:
-          "Discover Vix packages. Search repositories under vixcpp and explore here.",
-        path: "/registry",
+    component: RegistryLayout,
+    children: [
+      {
+        path: "",
+        name: "registry_home",
+        component: RegistryHome,
+        meta: {
+          seo: {
+            title: "Vix Registry",
+            description: "Discover Vix packages. Search, browse, and publish.",
+            path: "/registry",
+          },
+        },
       },
-    },
+      {
+        path: "browse",
+        name: "registry_browse",
+        component: RegistryBrowse,
+        meta: {
+          seo: {
+            title: "Browse packages",
+            description: "Browse packages in the Vix Registry.",
+            path: "/registry/browse",
+          },
+        },
+      },
+      {
+        path: "docs",
+        name: "registry_docs",
+        component: RegistryDocs,
+        meta: {
+          seo: {
+            title: "Registry docs",
+            description: "How the Vix Registry works.",
+            path: "/registry/docs",
+          },
+        },
+      },
+      {
+        path: "publish",
+        name: "registry_publish",
+        component: RegistryPublish,
+        meta: {
+          seo: {
+            title: "Publish a package",
+            description: "Publish packages to the Vix Registry.",
+            path: "/registry/publish",
+          },
+        },
+      },
+    ],
   },
-
   // -------------------------
   // Community
   // -------------------------

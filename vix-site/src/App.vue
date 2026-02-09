@@ -1,12 +1,13 @@
 <template>
   <div class="app">
-    <SiteHeader />
+    <!-- Main site header/footer only (hide for /registry sub-site) -->
+    <SiteHeader v-if="!isRegistry" />
 
-    <main class="main">
+    <main class="main" :class="{ 'main--registry': isRegistry }">
       <router-view />
     </main>
 
-    <SiteFooter />
+    <SiteFooter v-if="!isRegistry" />
 
     <!-- PWA install prompt toast -->
     <PwaInstallToast
@@ -30,6 +31,7 @@
 
 <script setup>
 import { inject, computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { useRoute } from "vue-router";
 
 import SiteHeader from "./components/SiteHeader.vue";
 import SiteFooter from "./components/SiteFooter.vue";
@@ -37,7 +39,14 @@ import SiteFooter from "./components/SiteFooter.vue";
 import PwaUpdateToast from "./components/PwaUpdateToast.vue";
 import PwaInstallToast from "./components/PwaInstallToast.vue";
 
-//PWA Update Toast (existing)
+const route = useRoute();
+
+// Hide global header/footer for the registry sub-site
+const isRegistry = computed(() => route.path === "/registry" || route.path.startsWith("/registry/"));
+
+// ---------------------------
+// PWA Update Toast (existing)
+// ---------------------------
 const store = inject("pwaToast");
 const showPwaToast = computed(() => store?.show?.value === true);
 
@@ -51,11 +60,9 @@ function dismiss() {
   window.__vix_pwa_dismiss__?.();
 }
 
-/* ===========================
-   PWA Install Toast (new)
-   - uses beforeinstallprompt
-   - cooldown on "Not now"
-=========================== */
+// ---------------------------
+// PWA Install Toast (existing)
+// ---------------------------
 const showInstallToast = ref(false);
 const canInstall = ref(false);
 
@@ -87,14 +94,12 @@ async function triggerInstall() {
 
   try {
     deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice; // { outcome: 'accepted'|'dismissed' }
+    const choice = await deferredPrompt.userChoice;
 
-    // one-shot: reset
     deferredPrompt = null;
     canInstall.value = false;
     showInstallToast.value = false;
 
-    // if dismissed, avoid spamming
     if (choice?.outcome !== "accepted") setDismissCooldown(7);
   } catch {
     deferredPrompt = null;
@@ -105,7 +110,6 @@ async function triggerInstall() {
 }
 
 function onBeforeInstallPrompt(e) {
-  // prevent Chrome mini-infobar
   e.preventDefault();
 
   deferredPrompt = e;
@@ -113,9 +117,7 @@ function onBeforeInstallPrompt(e) {
 
   if (!shouldShowInstallToast()) return;
 
-  // small delay so it feels intentional (after initial paint)
   setTimeout(() => {
-    // still eligible?
     if (deferredPrompt && canInstall.value) showInstallToast.value = true;
   }, 900);
 }
@@ -124,8 +126,6 @@ function onAppInstalled() {
   deferredPrompt = null;
   canInstall.value = false;
   showInstallToast.value = false;
-
-  // long cooldown (or you can clear it)
   setDismissCooldown(365);
 }
 
@@ -148,6 +148,12 @@ onBeforeUnmount(() => {
 .main {
   padding-top: calc(var(--header-h) + 18px);
   min-height: calc(100vh - var(--header-h));
+}
+
+/* Registry sub-site manages its own header spacing */
+.main--registry {
+  padding-top: 0;
+  min-height: 100vh;
 }
 
 @media (max-width: 900px) {
