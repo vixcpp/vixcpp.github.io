@@ -1316,19 +1316,21 @@ td {
   background: radial-gradient(circle at top left, #064e3b, #011816);
   border: 1px solid rgba(34, 197, 154, 0.55);
   box-shadow: 0 0 18px rgba(34, 197, 154, 0.22);
-  display: grid;
-  place-items: center;
-  gap: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
-.pwa-dot {
+.pwa-dot{
   display: inline-block;
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  margin: 0 1px;
+  margin: 0;
 }
-
 .pwa-dot-red {
   background: #f97316;
 }
@@ -1583,4 +1585,13 @@ body.is-registry .main {
 }
 .batteries .container{
   padding: 0 !important;
+}
+html.is-registry main,
+html.is-registry #app{
+  padding-top: 0 !important;
+}
+html.is-registry .container{
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
