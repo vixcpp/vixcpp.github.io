@@ -17,6 +17,9 @@
     "registry:build": "node tools/build_registry_index.js"
   },
   "dependencies": {
+    "dompurify": "^3.3.1",
+    "marked": "^17.0.1",
+    "shiki": "^3.22.0",
     "vue": "^3.5.24",
     "vue-router": "^4.6.4"
   },

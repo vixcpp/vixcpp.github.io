@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { loadRegistryIndex } from "@/lib/loadRegistryIndex";
 import RegistrySearchWorker from "@/workers/registrySearch.worker.js?worker";
 
-const route = useRoute();
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { createHighlighter } from "shiki";
 
+const route = useRoute();
 const worker = new RegistrySearchWorker();
 
 const loading = ref(true);
@@ -18,6 +21,84 @@ const id = computed(() => {
   const name = (route.params.name || "").toString().trim();
   return ns && name ? `${ns}/${name}` : "";
 });
+
+const readmeHtml = ref("");
+
+let highlighter = null;
+
+function guessLang(lang) {
+  const s = (lang || "").toString().trim().toLowerCase();
+  if (!s) return "txt";
+  if (s === "c++") return "cpp";
+  if (s === "shell") return "bash";
+  return s;
+}
+
+async function ensureHighlighter() {
+  if (highlighter) return highlighter;
+
+  highlighter = await createHighlighter({
+    themes: ["github-dark"],
+    langs: [
+      "cpp",
+      "c",
+      "bash",
+      "json",
+      "yaml",
+      "toml",
+      "ini",
+      "cmake",
+      "xml",
+      "html",
+      "css",
+      "js",
+      "ts",
+      "diff",
+      "md",
+      "txt",
+    ],
+  });
+
+  return highlighter;
+}
+
+async function renderReadme(md) {
+  const source = (md || "").toString();
+  if (!source) {
+    readmeHtml.value = "";
+    return;
+  }
+
+  const hl = await ensureHighlighter();
+
+  const renderer = new marked.Renderer();
+
+  renderer.code = (code, infostring) => {
+    const text =
+      typeof code === "string" ? code : (code && code.text) ? code.text : "";
+    const info =
+      typeof infostring === "string"
+        ? infostring
+        : (code && code.lang) ? code.lang : "";
+
+    const lang = guessLang(info);
+
+    try {
+      return hl.codeToHtml(text, { lang, theme: "github-dark" });
+    } catch {
+      return hl.codeToHtml(text, { lang: "txt", theme: "github-dark" });
+    }
+  };
+
+  marked.setOptions({
+    gfm: true,
+    breaks: false,
+    renderer,
+  });
+
+  const rawHtml = marked.parse(source);
+  readmeHtml.value = DOMPurify.sanitize(rawHtml);
+}
 
 function askPackage() {
   if (!id.value) return;
@@ -41,11 +122,14 @@ onMounted(async () => {
       if (!msg.ok) {
         error.value = msg.error || "cannot_load_package";
         pkg.value = null;
+        readmeHtml.value = "";
         return;
       }
 
       pkg.value = msg.pkg || null;
       error.value = "";
+
+      renderReadme(pkg.value?.readme || "");
       return;
     }
 
@@ -67,6 +151,20 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   worker.terminate();
 });
+
+watch(
+  () => id.value,
+  () => {
+    if (!loading.value && !error.value) askPackage();
+  }
+);
+
+watch(
+  () => pkg.value?.readme,
+  (md) => {
+    renderReadme(md || "");
+  }
+);
 
 const statsRows = computed(() => {
   const s = pkg.value?.stats || {};
@@ -142,7 +240,7 @@ const statsRows = computed(() => {
 
             <div class="card" v-if="pkg.readme">
               <div class="card-title">Readme</div>
-              <pre class="readme"><code>{{ pkg.readme }}</code></pre>
+              <div class="readme-md" v-html="readmeHtml"></div>
             </div>
 
             <div class="card" v-else>
@@ -359,4 +457,164 @@ const statsRows = computed(() => {
   .right{ min-width: 0; width: 100%; grid-template-columns: 1fr 1fr; }
   .grid{ grid-template-columns: 1fr; }
 }
+
+.readme-md{
+  color: rgba(226,232,240,.92);
+  line-height: 1.65;
+}
+
+/* titles */
+.readme-md :deep(h1),
+.readme-md :deep(h2),
+.readme-md :deep(h3){
+  color: rgba(229,249,246,.95);
+  font-weight: 950;
+  margin: 18px 0 10px;
+}
+
+.readme-md :deep(h1){ font-size: 1.25rem; }
+.readme-md :deep(h2){ font-size: 1.10rem; }
+.readme-md :deep(h3){ font-size: 1.02rem; }
+
+/* paragraphs + lists */
+.readme-md :deep(p){ margin: 10px 0; }
+.readme-md :deep(ul),
+.readme-md :deep(ol){ padding-left: 18px; margin: 10px 0; }
+
+.readme-md :deep(li){ margin: 6px 0; }
+
+/* links */
+.readme-md :deep(a){
+  color: #1a73e8;
+  text-decoration: none;
+}
+.readme-md :deep(a:hover){
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* inline code */
+.readme-md :deep(code){
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: .92em;
+  padding: .15em .35em;
+  border-radius: 8px;
+  border: 1px solid rgba(148,163,184,.14);
+  background: rgba(15,23,42,.35);
+}
+
+/* code blocks */
+.readme-md :deep(pre){
+  margin: 12px 0;
+  overflow: auto;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(148,163,184,.12);
+  background: rgba(15,23,42,.25);
+}
+.readme-md :deep(pre code){
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: .92rem;
+  line-height: 1.55;
+  display: block;
+}
+
+/* blockquote */
+.readme-md :deep(blockquote){
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 4px solid rgba(94,234,212,.55);
+  background: rgba(15,23,42,.20);
+  border-radius: 10px;
+}
+
+/* tables */
+.readme-md :deep(table){
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.readme-md :deep(th),
+.readme-md :deep(td){
+  border: 1px solid rgba(148,163,184,.14);
+  padding: 8px 10px;
+  text-align: left;
+}
+.readme-md :deep(th){
+  background: rgba(15,23,42,.25);
+  color: rgba(229,249,246,.95);
+}
+.readme-md{
+  color: rgba(226,232,240,.92);
+  line-height: 1.7;
+  font-size: .98rem;
+}
+
+/* GitHub-like spacing */
+.readme-md :deep(h1),
+.readme-md :deep(h2),
+.readme-md :deep(h3){
+  color: rgba(229,249,246,.95);
+  font-weight: 950;
+  margin: 18px 0 10px;
+}
+
+.readme-md :deep(h1){ font-size: 1.35rem; padding-bottom: 8px; border-bottom: 1px solid rgba(148,163,184,.14); }
+.readme-md :deep(h2){ font-size: 1.15rem; padding-bottom: 6px; border-bottom: 1px solid rgba(148,163,184,.12); }
+.readme-md :deep(h3){ font-size: 1.05rem; }
+
+.readme-md :deep(p){ margin: 10px 0; }
+.readme-md :deep(ul),
+.readme-md :deep(ol){ margin: 10px 0; padding-left: 22px; }
+.readme-md :deep(li){ margin: 6px 0; }
+
+.readme-md :deep(a){
+  color: #1a73e8;
+  text-decoration: none;
+}
+.readme-md :deep(a:hover){
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Blockquote */
+.readme-md :deep(blockquote){
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 4px solid rgba(148,163,184,.35);
+  background: rgba(15,23,42,.20);
+  border-radius: 10px;
+}
+
+/* Tables */
+.readme-md :deep(table){
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.readme-md :deep(th),
+.readme-md :deep(td){
+  border: 1px solid rgba(148,163,184,.14);
+  padding: 8px 10px;
+  text-align: left;
+}
+.readme-md :deep(th){
+  background: rgba(15,23,42,.25);
+  color: rgba(229,249,246,.95);
+}
+
+/* Shiki output fits your cards */
+.readme-md :deep(pre.shiki){
+  margin: 12px 0;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.12);
+}
+.readme-md :deep(pre.shiki code){
+  font-size: .92rem;
+  line-height: 1.55;
+}
+
 </style>
