@@ -541,3 +541,141 @@ html:not(.dark) .actions .primary{
 .VPNavBar{
   background: var(--vp-c-bg) !important;
 }
+
+/* =========================
+   RESPONSIVE (single block)
+   ========================= */
+
+@media (max-width: 960px){
+  /* HERO layout */
+  .vix-docs-hero{
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-top: 18px;
+  }
+
+  .vix-docs-h1{
+    font-size: 44px;
+    line-height: 1.08;
+  }
+
+  .vix-docs-lead{
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .vix-docs-body{
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  /* CTA */
+  .actions{
+    margin-top: 14px;
+  }
+
+  .actions .primary{
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  /* Right panel + hint */
+  .vix-docs-hero__right{
+    padding-top: 10px;
+  }
+
+  .vix-hint{
+    position: static;
+    margin: 0 0 10px;
+    max-width: 52ch;
+  }
+
+  .vix-hint::after{
+    width: 44px;
+  }
+
+  .vix-docs-hero__right .vix-hint + *{
+    margin-top: 0;
+  }
+
+  /* Code block sizing */
+  .vix-hero-code{
+    border-radius: 10px;
+  }
+
+  .vix-hero-code__top{
+    padding: 8px 10px;
+  }
+
+  .vix-hero-code__body{
+    padding: 12px;
+  }
+
+  .vix-hero-code__body code{
+    font-size: 12.5px;
+    line-height: 1.65;
+  }
+
+  /* Feature cards */
+  .vix-hero-cards{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .vix-hero-card{
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .vix-hero-card__title{
+    font-size: 15px;
+  }
+
+  .vix-hero-card__desc{
+    font-size: 13px;
+  }
+
+  /* Footer */
+  .vix-footerbar{
+    height: 52px;
+  }
+
+  .vix-footerbar__inner{
+    padding: 0 14px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vix-footerbar__nav{
+    display: none;
+  }
+
+  .vix-footerbar__brand{
+    font-size: 14px;
+  }
+
+  .vix-footerbar__icon{
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Prevent mobile horizontal scroll */
+  html, body,
+  .VPContent{
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 560px){
+  /* Cards go single column */
+  .vix-hero-cards{
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vix-docs-h1{
+    font-size: 34px;
+    line-height: 1.1;
+  }
+}
+

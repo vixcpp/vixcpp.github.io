@@ -1,1 +1,0 @@
-import{_ as t,o as e,c as a}from"./chunks/framework.jUmBZPH5.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/routing.md","filePath":"guide/routing.md","lastUpdated":null}'),r={name:"guide/routing.md"};function o(n,i,s,c,d,p){return e(),a("div")}const l=t(r,[["render",o]]);export{_ as __pageData,l as default};

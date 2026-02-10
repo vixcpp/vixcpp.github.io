@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as s}from"./chunks/framework.jUmBZPH5.js";const l=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/websockets.md","filePath":"guide/websockets.md","lastUpdated":null}'),a={name:"guide/websockets.md"};function o(c,r,n,d,i,p){return t(),s("div")}const m=e(a,[["render",o]]);export{l as __pageData,m as default};
