@@ -1573,3 +1573,14 @@ body.is-registry #app {
 body.is-registry .main {
   padding-top: 0 !important;
 }
+
+.main{
+  padding-top: 30px !important;
+}
+.signals{
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+.batteries .container{
+  padding: 0 !important;
+}

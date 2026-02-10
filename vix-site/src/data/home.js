@@ -6,8 +6,8 @@ export const HOME = {
     ctas: [
       { label: "Get Vix.cpp", to: "/install", kind: "primary" },
       {
-        label: "View on GitHub",
-        href: "https://github.com/vixcpp/vix",
+        label: "Get started",
+        href: "/docs/",
         kind: "secondary",
         external: true,
       },
@@ -102,6 +102,28 @@ int main()
 i Hint:  Ctrl+C to stop`,
       },
     ],
+  },
+
+  registry: {
+    title: "Registry built for unreliable networks",
+    subtitle:
+      "Sync once, search locally, and pin dependencies with vix.lock. The registry is designed for offline-first workflows.",
+    note: "Local search works even when your connection is unstable.",
+    ctas: [
+      { label: "Registry docs", to: "/registry", kind: "primary" },
+      {
+        label: "Try vix search",
+        to: "/registry#search",
+        kind: "secondary",
+      },
+    ],
+    preview: {
+      title: "registry",
+      code: `$ vix registry sync
+$ vix search websocket
+$ vix deps
+$ cat vix.lock`,
+    },
   },
 
   signals: {

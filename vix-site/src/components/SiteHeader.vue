@@ -1,4 +1,3 @@
-<!-- src/components/SiteHeader.vue -->
 <template>
   <header class="hdr">
     <div class="wrap">
@@ -9,9 +8,9 @@
       <!-- Desktop nav -->
       <nav class="nav" aria-label="Primary">
         <template v-for="item in navItems" :key="itemKey(item)">
-          <!-- Dropdown -->
+          <!-- Dropdown: only when item has children (About) -->
           <div
-            v-if="item.kind === 'dropdown'"
+            v-if="Array.isArray(item.items) && item.items.length"
             class="dd"
             @mouseenter="openDropdown(item.label)"
             @mouseleave="closeDropdown(item.label)"
@@ -19,7 +18,10 @@
             <button
               type="button"
               class="link dd-btn"
-              :class="{ 'is-open': isOpen(item.label) }"
+              :class="{
+                'is-open': isOpen(item.label),
+                'is-active': isActive(item) || item.items.some(isChildActive),
+              }"
               @click="toggleDropdown(item.label)"
               aria-haspopup="menu"
               :aria-expanded="String(isOpen(item.label))"
@@ -29,12 +31,12 @@
             </button>
 
             <div class="dd-menu" :class="{ open: isOpen(item.label) }" role="menu">
-              <!-- Dropdown children: support href (docs) OR to (vue routes) -->
               <template v-for="child in item.items" :key="childKey(child)">
-                <!-- External / href (same-domain docs or external) -->
+                <!-- External child -->
                 <a
                   v-if="isExternal(child)"
                   class="dd-item"
+                  :class="{ 'is-active': isChildActive(child) }"
                   :href="child.href"
                   :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
                   rel="noreferrer"
@@ -43,10 +45,11 @@
                   {{ child.label }}
                 </a>
 
-                <!-- Internal vue-router link -->
+                <!-- Internal child -->
                 <RouterLink
                   v-else
                   class="dd-item"
+                  :class="{ 'is-active': isChildActive(child) }"
                   :to="child.to"
                   @click="closeAll()"
                 >
@@ -56,23 +59,25 @@
             </div>
           </div>
 
-          <!-- External top-level (GitHub etc.) -->
+          <!-- External top-level: Docs (href) -->
           <a
             v-else-if="isExternal(item)"
             class="link"
+            :class="{ 'is-active': isActive(item) }"
             :href="item.href"
             :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
             rel="noreferrer"
+            @click="closeAll()"
           >
             {{ item.label }}
           </a>
 
-          <!-- Internal -->
+          <!-- Internal top-level: Install, Registry -->
           <RouterLink
             v-else
             class="link"
+            :class="{ 'is-active': isActive(item) }"
             :to="item.to"
-            active-class="is-active"
             @click="closeAll()"
           >
             {{ item.label }}
@@ -124,11 +129,12 @@
       </form>
 
       <template v-for="item in navItems" :key="'m-' + itemKey(item)">
-        <!-- Dropdown -->
-        <div v-if="item.kind === 'dropdown'" class="mdd">
+        <!-- Dropdown: only when item has children (About) -->
+        <div v-if="Array.isArray(item.items) && item.items.length" class="mdd">
           <button
             type="button"
             class="mlink mdd-btn"
+            :class="{ 'is-active': isActive(item) || item.items.some(isChildActive) }"
             @click="toggleMobileGroup(item.label)"
             :aria-expanded="String(isMobileGroupOpen(item.label))"
           >
@@ -138,10 +144,11 @@
 
           <div v-if="isMobileGroupOpen(item.label)" class="mdd-menu">
             <template v-for="child in item.items" :key="'m-' + childKey(child)">
-              <!-- External / href -->
+              <!-- External child -->
               <a
                 v-if="isExternal(child)"
                 class="mdd-item"
+                :class="{ 'is-active': isChildActive(child) }"
                 :href="child.href"
                 :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
                 rel="noreferrer"
@@ -150,10 +157,11 @@
                 {{ child.label }}
               </a>
 
-              <!-- Internal vue-router link -->
+              <!-- Internal child -->
               <RouterLink
                 v-else
                 class="mdd-item"
+                :class="{ 'is-active': isChildActive(child) }"
                 :to="child.to"
                 @click="closeMobile()"
               >
@@ -163,10 +171,11 @@
           </div>
         </div>
 
-        <!-- External -->
+        <!-- External top-level: Docs -->
         <a
           v-else-if="isExternal(item)"
           class="mlink"
+          :class="{ 'is-active': isActive(item) }"
           :href="item.href"
           :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
           rel="noreferrer"
@@ -175,10 +184,11 @@
           {{ item.label }}
         </a>
 
-        <!-- Internal -->
+        <!-- Internal top-level -->
         <RouterLink
           v-else
           class="mlink"
+          :class="{ 'is-active': isActive(item) }"
           :to="item.to"
           @click="closeMobile()"
         >
@@ -189,20 +199,52 @@
   </header>
 </template>
 
+
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { NAV } from "@/data/nav";
 
+const route = useRoute();
 const navItems = computed(() => NAV);
 
 function isExternal(item) {
   return !!item?.external || !!item?.href;
 }
 
+function normalizePath(p) {
+  if (!p) return "";
+  // keep only pathname (ignore query/hash)
+  const q = p.indexOf("?");
+  const h = p.indexOf("#");
+  const cut = Math.min(q === -1 ? p.length : q, h === -1 ? p.length : h);
+  return p.slice(0, cut);
+}
+
+function isActive(item) {
+  const match = item?.match || "";
+  if (!match) return false;
+
+  const current = normalizePath(route.path);
+  // exact or prefix match
+  return current === match || current.startsWith(match + "/");
+}
+
+function isChildActive(child) {
+  // internal vue route
+  if (child?.to) return normalizePath(route.path).startsWith(normalizePath(child.to));
+  // same origin href: docs is external:true but same site, so compare path
+  if (child?.href && isSameOrigin(child.href)) {
+    const path = normalizePath(new URL(child.href, window.location.origin).pathname);
+    const current = normalizePath(route.path);
+    return current === path || current.startsWith(path + "/");
+  }
+  return false;
+}
+
 // Same-origin helper: docs are same-domain (/docs/...)
 function isSameOrigin(href) {
   if (!href) return false;
-  // relative paths like "/docs/..." are same-origin
   if (href.startsWith("/")) return true;
   try {
     const u = new URL(href, window.location.origin);
@@ -213,7 +255,7 @@ function isSameOrigin(href) {
 }
 
 function itemKey(item) {
-  if (item.kind === "dropdown") return `dd:${item.label}`;
+  if (item.items?.length) return `dd:${item.label}`;
   if (isExternal(item)) return `href:${item.href}`;
   return `to:${item.to}`;
 }
@@ -274,7 +316,7 @@ onBeforeUnmount(() => {
   document.documentElement.classList.remove("nav-open");
 });
 
-/* Search (docs via VitePress) */
+/* Search */
 const qDesktop = ref("");
 const qMobile = ref("");
 
@@ -289,13 +331,10 @@ function submitSearch(which) {
 
   closeAll();
   closeMobile();
-
-  // VitePress docs:
-  // - simplest: go to /docs/ and let VitePress search handle it
-  // - we also pass query param so you can read it later if you want
   window.location.href = `/docs/?q=${encodeURIComponent(q)}`;
 }
 </script>
+
 
 <style scoped>
 /* === Header shell === */
