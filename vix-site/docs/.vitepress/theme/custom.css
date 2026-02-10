@@ -1,10 +1,75 @@
-/* Modular-like docs hero */
+/* =========================
+   THEME TOKENS (LIGHT/DARK)
+   ========================= */
+
+/* LIGHT (quand html n'a PAS .dark) */
+html:not(.dark){
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f6f7f9;
+  --vp-c-bg-alt: #eef0f3;
+
+  --vp-c-divider: rgba(0,0,0,.08);
+
+  --vp-c-text-1: rgba(0,0,0,.92);
+  --vp-c-text-2: rgba(0,0,0,.70);
+
+  /* Local tokens for the hero card */
+  --vix-card-bg: rgba(255,255,255,.92);
+  --vix-card-top-bg: rgba(245,246,248,.92);
+  --vix-card-border: rgba(0,0,0,.10);
+  --vix-card-divider: rgba(0,0,0,.08);
+  --vix-card-shadow: 0 18px 50px rgba(0,0,0,.10);
+
+  --vix-chip-bg: rgba(0,0,0,.04);
+  --vix-chip-border: rgba(0,0,0,.10);
+  --vix-chip-text: rgba(0,0,0,.78);
+
+  --vix-annot-line: rgba(0,0,0,.10);
+}
+
+/* DARK (VitePress met html.dark automatiquement) */
+html.dark{
+  --vp-c-bg: #181c1f;
+  --vp-c-bg-soft: #262c30;
+  --vp-c-bg-alt: #353d42;
+
+  --vp-c-divider: rgba(255,255,255,.06);
+
+  --vp-c-text-1: rgba(255,255,255,.92);
+  --vp-c-text-2: rgba(255,255,255,.70);
+
+  --vix-card-bg: rgba(26,27,30,.92);
+  --vix-card-top-bg: rgba(37,38,43,.75);
+  --vix-card-border: rgba(255,255,255,.10);
+  --vix-card-divider: rgba(255,255,255,.08);
+  --vix-card-shadow: 0 22px 60px rgba(0,0,0,.40);
+
+  --vix-chip-bg: rgba(0,0,0,.22);
+  --vix-chip-border: rgba(255,255,255,.10);
+  --vix-chip-text: rgba(255,255,255,.92);
+
+  --vix-annot-line: rgba(255,255,255,.10);
+}
+
+/* Assure que la page respecte bien les tokens VitePress */
+.VPDoc,
+.VPContent,
+.VPNavBar,
+.VPFooter{
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+
+/* =========================
+   DOCS HERO
+   ========================= */
+
 .vix-docs-hero{
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 44px;
   align-items: start;
-  margin-top: 24px;
+  margin-top: 28px;
 }
 
 .vix-docs-h1{
@@ -12,25 +77,26 @@
   letter-spacing: -0.03em;
   line-height: 1.02;
   margin: 0 0 18px;
+  color: var(--vp-c-text-1);
 }
 
 .vix-docs-lead{
-  color: rgba(255,255,255,.72);
+  color: var(--vp-c-text-2);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0 0 18px;
-  max-width: 50ch;
+  max-width: 52ch;
 }
 
 .vix-docs-body{
-  color: rgba(255,255,255,.62);
+  color: var(--vp-c-text-2);
   font-size: 15px;
   line-height: 1.75;
   margin: 0 0 18px;
-  max-width: 58ch;
+  max-width: 60ch;
 }
 
-/* CTA like Modular */
+/* CTA */
 .actions{
   margin-top: 18px;
   display: flex;
@@ -46,10 +112,19 @@
   border-radius: 12px;
   font-weight: 700;
   text-decoration: none;
+
   background: #4f6fff;
-  color: #0b0e14;
-  border: 1px solid rgba(255,255,255,.06);
-  box-shadow: 0 10px 26px rgba(79,111,255,.18);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 10px 26px rgba(79,111,255,.22);
+
+  transition: transform .10s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.actions .primary:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+  box-shadow: 0 14px 34px rgba(79,111,255,.28);
 }
 
 .actions .primary .cta-arrow{
@@ -57,41 +132,52 @@
   transform: translateY(-1px);
 }
 
-/* Right panel annotation: handwritten */
+/* Right panel */
 .vix-docs-hero__right{
   position: relative;
-  padding-top: 30px;
+  padding-top: 18px;
 }
 
+/* Annotation text only */
 .vix-hero-annot{
   position: absolute;
   top: -8px;
-  left: 8px;
-  color: rgba(255,255,255,.86);
+  left: 10px;
+
+  color: var(--vp-c-text-2);
   font-size: 14px;
   line-height: 1.25;
-  font-family: ui-rounded, "Comic Sans MS", "Segoe Print", "Bradley Hand", "Apple Chancery", cursive;
-  transform: rotate(-3deg);
+
+  font-family: var(--vp-font-family-base);
+  letter-spacing: .01em;
+
   opacity: .95;
   pointer-events: none;
 }
 
-.vix-hero-annot__arrow{
-  width: 260px;
-  height: 150px;
+/* Small underline to “attach” the note to the card */
+.vix-hero-annot::after{
+  content: "";
+  display: block;
+  width: 56px;
+  height: 2px;
   margin-top: 8px;
-  margin-left: 22px;
-  opacity: .9;
+  margin-left: 2px;
+  background: var(--vix-annot-line);
+  border-radius: 999px;
 }
 
-/* Code card: flatter + closer to Modular */
+/* =========================
+   HERO CODE BLOCK (CARD)
+   ========================= */
+
 .vix-hero-code{
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(14,18,24,.92);
-  box-shadow: 0 22px 60px rgba(0,0,0,.40);
-  margin-top: 18px;
+  border: 1px solid var(--vix-card-border);
+  background: var(--vix-card-bg);
+  box-shadow: var(--vix-card-shadow);
+  margin-top: 16px;
 }
 
 .vix-hero-code__top{
@@ -99,8 +185,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  background: rgba(46,52,66,.55);
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: var(--vix-card-top-bg);
+  border-bottom: 1px solid var(--vix-card-divider);
 }
 
 .vix-hero-code__pill{
@@ -110,9 +196,9 @@
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  color: rgba(255,255,255,.92);
-  background: rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.10);
+  color: var(--vix-chip-text);
+  background: var(--vix-chip-bg);
+  border: 1px solid var(--vix-chip-border);
 }
 
 .vix-hero-code__copy{
@@ -120,10 +206,16 @@
   font-weight: 700;
   border-radius: 10px;
   padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.22);
-  color: rgba(255,255,255,.92);
+  border: 1px solid var(--vix-chip-border);
+  background: var(--vix-chip-bg);
+  color: var(--vix-chip-text);
   cursor: pointer;
+  transition: transform .08s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
+}
+
+.vix-hero-code__copy:hover{
+  transform: translateY(-1px);
+  opacity: .95;
 }
 
 .vix-hero-code__body{
@@ -135,29 +227,38 @@
   background: transparent;
 }
 
-/* Make code text feel like Modular */
 .vix-hero-code__body code{
   font-size: 13.5px;
   line-height: 1.75;
 }
 
-/* Responsive */
+/* =========================
+   RESPONSIVE
+   ========================= */
+
 @media (max-width: 960px){
   .vix-docs-hero{
     grid-template-columns: 1fr;
     gap: 22px;
   }
+
   .vix-docs-h1{
     font-size: 44px;
   }
+
   .vix-docs-hero__right{
-    padding-top: 42px;
+    padding-top: 10px;
   }
+
+  /* Note becomes normal block above the code card on mobile */
   .vix-hero-annot{
-    left: 2px;
+    position: static;
+    margin: 0 0 10px;
+    left: auto;
+    top: auto;
   }
-  .vix-hero-annot__arrow{
-    margin-left: 18px;
-    width: 220px;
+
+  .vix-hero-annot::after{
+    width: 44px;
   }
 }

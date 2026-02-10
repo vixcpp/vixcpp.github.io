@@ -22,6 +22,7 @@ export default defineConfig({
   themeConfig: {
     siteTitle: "Vix.cpp Docs",
     logo: "/assets/pwa/icon-192.png",
+    appearance: true,
 
     nav: [
       { text: "Home", link: "https://vixcpp.com/" },
