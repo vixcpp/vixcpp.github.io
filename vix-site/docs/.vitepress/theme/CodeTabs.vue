@@ -112,18 +112,19 @@ const blockChips = computed(() => (Array.isArray(current.value?.chips) ? current
 
 <style scoped>
 .vix-code-tabs{
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-soft);
 }
 
+/* ===== HEAD ===== */
 .vix-code-tabs__head{
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 12px 10px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg);
 }
@@ -131,18 +132,20 @@ const blockChips = computed(() => (Array.isArray(current.value?.chips) ? current
 .vix-code-tabs__title{
   font-weight: 800;
   line-height: 1.2;
+  font-size: 14px;
   color: var(--vp-c-text-1);
 }
 
 .vix-code-tabs__subtitle{
-  margin-top: 2px;
-  font-size: 13px;
+  margin-top: 1px;
+  font-size: 12.5px;
   color: var(--vp-c-text-2);
 }
 
+/* ===== TABS ===== */
 .vix-code-tabs__tabs{
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
@@ -151,16 +154,18 @@ const blockChips = computed(() => (Array.isArray(current.value?.chips) ? current
   border: 1px solid var(--vp-c-divider);
   background: transparent;
   color: var(--vp-c-text-2);
-  padding: 6px 10px;
+
+  padding: 4px 8px;
   border-radius: 999px;
-  font-size: 13px;
+
+  font-size: 12.5px;
   cursor: pointer;
-  transition: transform .08s ease, border-color .12s ease, background .12s ease, color .12s ease, box-shadow .12s ease;
   outline: none;
+
+  transition: border-color .12s ease, background .12s ease, color .12s ease;
 }
 
 .vix-code-tabs__tab:hover{
-  transform: translateY(-1px);
   color: var(--vp-c-text-1);
 }
 
@@ -168,37 +173,43 @@ const blockChips = computed(() => (Array.isArray(current.value?.chips) ? current
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg-soft);
   border-color: var(--vp-c-divider);
-  box-shadow: 0 8px 22px rgba(0,0,0,.14);
 }
 
 .vix-code-tabs__tab:focus-visible{
-  box-shadow: 0 0 0 3px rgba(79,111,255,.35);
   border-color: rgba(79,111,255,.55);
+  box-shadow: 0 0 0 2px rgba(79,111,255,.30);
 }
 
+/* ===== BODY ===== */
 .vix-code-tabs__body{
-  padding: 12px 12px 14px;
+  padding: 8px 10px 10px;
 }
 
+/* ===== FILE INFO ===== */
 .vix-code-tabs__file{
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  margin-bottom: 10px;
+  gap: 8px;
+
+  padding: 6px 8px;
+  margin-bottom: 8px;
+
   border: 1px dashed var(--vp-c-divider);
-  border-radius: 12px;
+  border-radius: 10px;
+
   color: var(--vp-c-text-2);
-  font-size: 13px;
+  font-size: 12.5px;
   background: var(--vp-c-bg);
 }
 
 .vix-code-tabs__badge{
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 11px;
-  padding: 2px 8px;
+  font-size: 10px;
+
+  padding: 1px 6px;
   border-radius: 999px;
+
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-soft);
   color: var(--vp-c-text-1);
@@ -206,15 +217,20 @@ const blockChips = computed(() => (Array.isArray(current.value?.chips) ? current
 
 .vix-code-tabs__filename{
   font-family: var(--vp-font-family-mono);
+  font-size: 12.5px;
 }
 
+/* ===== RESPONSIVE ===== */
 @media (max-width: 720px){
   .vix-code-tabs__head{
     flex-direction: column;
     align-items: flex-start;
+    gap: 6px;
   }
+
   .vix-code-tabs__tabs{
     justify-content: flex-start;
   }
 }
 </style>
+
