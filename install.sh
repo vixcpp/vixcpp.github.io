@@ -2,7 +2,7 @@
 set -eu
 
 # minisign public key (ONLY the base64 key, without the comment line)
-MINISIGN_PUBKEY="RWTB+/RzT24X6uPqrPGKrqODmbchU4N1G00fWzQSUc+qkz7pBUnEys58"
+MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
 REPO="${VIX_REPO:-vixcpp/vix}"
 VERSION="${VIX_VERSION:-latest}"   # "latest" or "v1.20.1"
