@@ -26,21 +26,100 @@ export default defineConfig({
 
     nav: [
       { text: "Home", link: "https://vixcpp.com/" },
-      { text: "Install", link: "https://vixcpp.com/install" },
-      { text: "Registry", link: "https://vixcpp.com/registry" },
-      { text: "GitHub", link: "https://github.com/vixcpp/vix" },
+      { text: "Docs", link: "/docs" },
+      { text: "Guides", link: "/docs/guide" },
+      { text: "Registry", link: "/registry" },
+      { text: "Examples", link: "/docs/examples" },
+      { text: "Services", link: "https://vixcpp.com/services" },
     ],
 
     sidebar: [
       {
-        text: "Docs",
+        text: "Get started",
+        collapsed: false,
         items: [
           { text: "Docs Home", link: "/" },
           { text: "Quick Start", link: "/quick-start" },
-          { text: "Guide", link: "/guide" },
-          { text: "Tutorial", link: "/tutorial" },
-          { text: "API Reference", link: "/api" },
-          { text: "Examples", link: "/examples" },
+          { text: "Installation", link: "/install" },
+          { text: "Project Setup", link: "/project-setup" },
+        ],
+      },
+
+      {
+        text: "Guides",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/guide" },
+          { text: "Routing", link: "/guide/routing" },
+          { text: "Requests and Responses", link: "/guide/http" },
+          { text: "Middleware", link: "/guide/middleware" },
+          { text: "WebSockets", link: "/guide/websockets" },
+          { text: "Async Tasks", link: "/guide/async" },
+          { text: "P2P", link: "/guide/p2p" },
+          { text: "Config and Env", link: "/guide/config" },
+          { text: "Deployment", link: "/guide/deploy" },
+        ],
+      },
+
+      {
+        text: "Fundamentals",
+        collapsed: true,
+        items: [
+          { text: "Core Concepts", link: "/fundamentals" },
+          { text: "App Lifecycle", link: "/fundamentals/lifecycle" },
+          { text: "Error Handling", link: "/fundamentals/errors" },
+          { text: "Logging", link: "/fundamentals/logging" },
+          { text: "Performance", link: "/fundamentals/performance" },
+          { text: "Security", link: "/fundamentals/security" },
+        ],
+      },
+
+      {
+        text: "Inference",
+        collapsed: true,
+        items: [
+          { text: "Overview", link: "/inference" },
+          { text: "Providers", link: "/inference/providers" },
+          { text: "Routing and Policies", link: "/inference/routing" },
+          { text: "Streaming", link: "/inference/streaming" },
+          { text: "Reliability", link: "/inference/reliability" },
+        ],
+      },
+
+      {
+        text: "API Reference",
+        collapsed: true,
+        items: [
+          { text: "Overview", link: "/api" },
+          { text: "HTTP", link: "/api/http" },
+          { text: "WebSocket", link: "/api/websocket" },
+          { text: "Async", link: "/api/async" },
+          { text: "P2P", link: "/api/p2p" },
+          { text: "Config", link: "/api/config" },
+        ],
+      },
+
+      {
+        text: "Examples",
+        collapsed: true,
+        items: [
+          { text: "All Examples", link: "/examples" },
+          { text: "Hello HTTP", link: "/examples/hello-http" },
+          { text: "Auth Middleware", link: "/examples/auth" },
+          { text: "WebSocket Chat", link: "/examples/ws-chat" },
+          { text: "Async Worker", link: "/examples/async-worker" },
+          { text: "P2P Ping", link: "/examples/p2p-ping" },
+        ],
+      },
+
+      {
+        text: "Services",
+        collapsed: true,
+        items: [
+          { text: "Overview", link: "/services" },
+          { text: "Support", link: "/services/support" },
+          { text: "Consulting", link: "/services/consulting" },
+          { text: "Training", link: "/services/training" },
         ],
       },
     ],
@@ -57,7 +136,7 @@ export default defineConfig({
       },
     },
 
-    socialLinks: [{ icon: "github", link: "https://github.com/vixcpp/vix" }],
+    socialLinks: [],
 
     outline: "deep",
     returnToTopLabel: "Back to top",
@@ -73,8 +152,8 @@ export default defineConfig({
     },
 
     footer: {
-      message: "Built for reliability under real network conditions.",
-      copyright: "Copyright © 2026 Vix.cpp",
+      message: "",
+      copyright: "",
     },
   },
 });

@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as a}from"./chunks/framework.jUmBZPH5.js";const p=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/middleware.md","filePath":"guide/middleware.md","lastUpdated":null}'),d={name:"guide/middleware.md"};function r(i,o,s,n,c,l){return t(),a("div")}const _=e(d,[["render",r]]);export{p as __pageData,_ as default};

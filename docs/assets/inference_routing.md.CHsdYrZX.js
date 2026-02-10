@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as n}from"./chunks/framework.jUmBZPH5.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"inference/routing.md","filePath":"inference/routing.md","lastUpdated":null}'),r={name:"inference/routing.md"};function a(o,c,i,s,d,p){return t(),n("div")}const l=e(r,[["render",a]]);export{_ as __pageData,l as default};
