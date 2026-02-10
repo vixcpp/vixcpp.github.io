@@ -678,16 +678,26 @@ html:not(.dark) .actions .primary{
     line-height: 1.1;
   }
 }
+/* =========================
+   GLOBAL CONTENT WIDTH
+   ========================= */
+/* VitePress: doc container adds big side padding on desktop */
+.vp-doc-container,
+.VPDoc .container,
+.VPDoc .content-container{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure our main container owns horizontal spacing */
 .container{
+  max-width: 1120px !important;
   margin-left: auto;
   margin-right: auto;
-  width: 100%;
-  max-width: 1180px;
-
-  /* single source of truth */
-  padding-left: clamp(12px, 3vw, 18px);
-  padding-right: clamp(12px, 3vw, 18px);
+  padding-left: clamp(12px, 2.5vw, 18px) !important;
+  padding-right: clamp(12px, 2.5vw, 18px) !important;
 }
+
 
 /* =========================
    EXTRA SMALL DEVICES (≤ 400px)
