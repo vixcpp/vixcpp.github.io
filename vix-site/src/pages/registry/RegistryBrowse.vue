@@ -20,13 +20,15 @@ const searchEl = ref(null);
 const worker = new RegistrySearchWorker();
 
 function doSearch() {
+  const isEmpty = !q.value || !q.value.trim();
+
   worker.postMessage({
     type: "search",
-    query: q.value || "",
-    limit: q.value ? 30 : 50
+    query: isEmpty ? "" : q.value.trim(),
+    limit: isEmpty ? 50 : 30,
+    sort: isEmpty ? "latest" : "score"
   });
 }
-
 function goSearch(next) {
   const s = (next ?? q.value ?? "").toString().trim();
 
@@ -175,7 +177,12 @@ watch(
             <li v-for="h in hits" :key="h.id" class="item">
               <div class="row">
                 <div class="left">
-                  <div class="id">{{ h.id }}</div>
+                <RouterLink
+                  class="id id-link"
+                  :to="`/registry/pkg/${h.namespace}/${h.name}`"
+                >
+                  {{ h.id }}
+                </RouterLink>
                   <div v-if="h.description" class="desc">{{ h.description }}</div>
                 </div>
 
@@ -457,6 +464,21 @@ watch(
   padding: 12px 14px 14px;
   border-top: 1px solid rgba(148,163,184,.10);
 }
+.id-link{
+  color: #1a73e8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.id-link:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.id-link:visited{
+  color: #1a73e8;
+}
+
 
 /* Mobile */
 @media (max-width: 920px){

@@ -19,6 +19,7 @@ import RegistryHome from "../pages/registry/RegistryHome.vue";
 import RegistryBrowse from "../pages/registry/RegistryBrowse.vue";
 import RegistryDocs from "../pages/registry/RegistryDocs.vue";
 import RegistryPublish from "../pages/registry/RegistryPublish.vue";
+import RegistryPkgShow from "../pages/registry/RegistryPkgShow.vue";
 
 import { setSEO } from "../utils/seo";
 
@@ -90,6 +91,18 @@ const routes = [
             title: "Browse packages",
             description: "Browse packages in the Vix Registry.",
             path: "/registry/browse",
+          },
+        },
+      },
+      {
+        path: "pkg/:namespace/:name",
+        name: "registry_pkg_show",
+        component: RegistryPkgShow,
+        meta: {
+          seo: {
+            title: "Package",
+            description: "Package details and stats in the Vix Registry.",
+            path: "/registry/pkg",
           },
         },
       },
