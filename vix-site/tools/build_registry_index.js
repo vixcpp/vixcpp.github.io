@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 
 function readJson(p) {
   return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -12,33 +13,86 @@ function listJsonFiles(dir) {
     .map((f) => path.join(dir, f));
 }
 
-function main() {
-  const root = process.cwd();
+function sh(cmd, cwd) {
+  return execSync(cmd, { cwd, stdio: "pipe" }).toString("utf8").trim();
+}
 
-  // repo "registry" cloné à côté, exemple:
-  // vixcpp.github.io/registry (ou vixcpp/registry)
-  // on tente plusieurs chemins
+function ensureRegistryRepo({ root }) {
   const candidates = [
-    path.join(root, "..", "..", "registry"), // vix-site -> vixcpp.github.io -> registry
-    path.join(root, "..", "registry"), // vix-site -> registry
-    path.join(root, "registry"), // vix-site -> registry (si copié)
+    path.join(root, "..", "..", "registry"),
+    path.join(root, "..", "registry"),
+    path.join(root, "registry"),
   ];
 
-  let registryRoot = "";
   for (const c of candidates) {
     if (
       fs.existsSync(path.join(c, "registry.json")) &&
-      fs.existsSync(path.join(c, "index"))
+      fs.existsSync(path.join(c, "index")) &&
+      fs.existsSync(path.join(c, ".git"))
     ) {
-      registryRoot = c;
-      break;
+      try {
+        sh("git fetch origin --prune", c);
+        sh("git checkout main", c);
+        sh("git pull --rebase origin main", c);
+      } catch {}
+      return c;
     }
   }
+
+  const vixClone = path.join(
+    process.env.HOME || "",
+    ".vix",
+    "registry",
+    "index",
+  );
+
+  if (
+    vixClone &&
+    fs.existsSync(path.join(vixClone, "registry.json")) &&
+    fs.existsSync(path.join(vixClone, "index"))
+  ) {
+    return vixClone;
+  }
+
+  const cacheDir = path.join(root, "tools", ".cache");
+  const cloneDir = path.join(cacheDir, "registry");
+
+  fs.mkdirSync(cacheDir, { recursive: true });
+
+  if (!fs.existsSync(path.join(cloneDir, ".git"))) {
+    sh(
+      "git clone --depth=1 https://github.com/vixcpp/registry.git registry",
+      cacheDir,
+    );
+  } else {
+    try {
+      sh("git fetch origin --prune", cloneDir);
+      sh("git checkout main", cloneDir);
+      sh("git pull --rebase origin main", cloneDir);
+    } catch {
+      // ignore
+    }
+  }
+
+  if (
+    fs.existsSync(path.join(cloneDir, "registry.json")) &&
+    fs.existsSync(path.join(cloneDir, "index"))
+  ) {
+    return cloneDir;
+  }
+
+  return "";
+}
+
+function main() {
+  const root = process.cwd();
+
+  const registryRoot = ensureRegistryRepo({ root });
 
   if (!registryRoot) {
     console.error("build_registry_index: registry repo not found.");
     console.error(
-      "Expected a folder containing registry.json and index/ near vix-site.",
+      "Looked for ../registry, ../../registry, ./registry, ~/.vix/registry/index, or a cached clone.",
     );
     process.exit(1);
   }
@@ -54,9 +108,7 @@ function main() {
     try {
       const e = readJson(file);
       entries.push(e);
-    } catch {
-      // ignore broken entries
-    }
+    } catch {}
   }
 
   const out = {
@@ -64,7 +116,7 @@ function main() {
       registryId: registryMeta.id || "vixcpp-registry",
       specVersion: registryMeta.specVersion || "1.0.0",
       generatedAt: new Date().toISOString(),
-      sourceRepo: registryMeta.homepage || "",
+      sourceRepo: registryMeta.homepage || "https://github.com/vixcpp/registry",
       indexFormat: registryMeta.index?.format || "json-per-package",
       entryCount: entries.length,
     },
@@ -77,7 +129,16 @@ function main() {
   const outPath = path.join(outDir, "all.min.json");
   fs.writeFileSync(outPath, JSON.stringify(out), "utf8");
 
-  console.log("registry index built:", outPath, "entries:", entries.length);
+  const has071 = JSON.stringify(out).includes('"0.7.1"');
+  console.log(
+    "registry index built:",
+    outPath,
+    "entries:",
+    entries.length,
+    "has_0.7.1:",
+    has071,
+  );
+  console.log("registry source:", registryRoot);
 }
 
 main();
