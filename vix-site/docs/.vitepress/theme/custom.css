@@ -678,4 +678,279 @@ html:not(.dark) .actions .primary{
     line-height: 1.1;
   }
 }
+.container{
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1180px;
 
+  /* single source of truth */
+  padding-left: clamp(12px, 3vw, 18px);
+  padding-right: clamp(12px, 3vw, 18px);
+}
+
+/* =========================
+   EXTRA SMALL DEVICES (≤ 400px)
+   ========================= */
+
+@media (max-width: 400px){
+
+  /* Global safety */
+  html, body,
+  .VPContent{
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .vix-docs-hero{
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .vix-docs-h1{
+    font-size: 28px;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+
+  .vix-docs-lead{
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .vix-docs-body{
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  /* CTA */
+  .actions{
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actions .primary{
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* Hint */
+  .vix-hint{
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .vix-hint::after{
+    width: 36px;
+  }
+
+  /* CODE BLOCK */
+  .vix-hero-code{
+    border-radius: 8px;
+  }
+
+  .vix-hero-code__top{
+    padding: 6px 8px;
+  }
+
+  .vix-hero-code__pill{
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .vix-hero-code__copy{
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .vix-hero-code__body{
+    padding: 10px;
+  }
+
+  .vix-hero-code__body code{
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+
+  /* FEATURE CARDS */
+  .vix-hero-cards{
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .vix-hero-card{
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .vix-hero-card__icon{
+    width: 30px;
+    height: 30px;
+  }
+
+  .vix-hero-card__title{
+    font-size: 14px;
+  }
+
+  .vix-hero-card__desc{
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  /* FOOTER */
+  .vix-footerbar{
+    height: 44px;
+  }
+
+  .vix-footerbar__inner{
+    padding: 0 12px;
+  }
+
+  .vix-footerbar__brand{
+    font-size: 13px;
+  }
+
+  .vix-footerbar__icon{
+    width: 24px;
+    height: 24px;
+  }
+}
+/* =========================
+   EXTRA SMALL FIX (≤ 400px)
+   ========================= */
+@media (max-width: 400px){
+
+  /* HARD STOP overflow */
+  html, body,
+  .VPApp,
+  .VPContent,
+  .VPDoc{
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* VitePress container padding fix */
+  .VPContent{
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* HERO layout */
+  .vix-docs-hero{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 12px;
+    max-width: 100%;
+  }
+
+  .vix-docs-hero__left,
+  .vix-docs-hero__right{
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Titles */
+  .vix-docs-h1{
+    font-size: 28px;
+    line-height: 1.12;
+  }
+
+  /* CTA full width */
+  .actions{
+    flex-direction: column;
+  }
+  .actions .primary{
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* CODE BLOCK CONSTRAINT */
+  .vix-hero-code{
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .vix-hero-code__body{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vix-hero-code__body pre{
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .vix-hero-code__body code{
+    font-size: 11.5px;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  /* Hint becomes inline */
+  .vix-hint{
+    position: static;
+    margin-bottom: 8px;
+    max-width: 100%;
+  }
+
+  .vix-hint::after{
+    width: 32px;
+  }
+}
+/* =========================
+   EXTRA SMALL PADDING FIX
+   ========================= */
+@media (max-width: 400px){
+
+  /* Reduce global horizontal padding */
+  .VPContent,
+  .VPDoc,
+  .VPDoc.has-aside{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Also tighten hero internal spacing */
+  .vix-docs-hero{
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Cards align better on small screens */
+  .vix-hero-card{
+    padding: 14px;
+  }
+
+  /* Footer inner spacing */
+  .vix-footerbar__inner{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+/* =========================
+   CONTAINER PADDING (SMALL)
+   ========================= */
+
+/* Phones */
+@media (max-width: 640px){
+  .container{
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* Small phones (≤ 400px) */
+@media (max-width: 400px){
+  .container{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
+@media (max-width: 360px){
+  .container{
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
