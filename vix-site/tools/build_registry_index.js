@@ -18,40 +18,45 @@ function sh(cmd, cwd) {
 }
 
 function ensureRegistryRepo({ root }) {
-  const candidates = [
-    path.join(root, "..", "..", "registry"),
-    path.join(root, "..", "registry"),
-    path.join(root, "registry"),
-  ];
+  const FORCE_REMOTE = process.env.VIX_REGISTRY_SOURCE === "remote";
 
-  for (const c of candidates) {
-    if (
-      fs.existsSync(path.join(c, "registry.json")) &&
-      fs.existsSync(path.join(c, "index")) &&
-      fs.existsSync(path.join(c, ".git"))
-    ) {
-      try {
-        sh("git fetch origin --prune", c);
-        sh("git checkout main", c);
-        sh("git pull --rebase origin main", c);
-      } catch {}
-      return c;
+  if (!FORCE_REMOTE) {
+    const candidates = [
+      path.join(root, "..", "..", "registry"),
+      path.join(root, "..", "registry"),
+      path.join(root, "registry"),
+    ];
+
+    for (const c of candidates) {
+      if (
+        fs.existsSync(path.join(c, "registry.json")) &&
+        fs.existsSync(path.join(c, "index")) &&
+        fs.existsSync(path.join(c, ".git"))
+      ) {
+        try {
+          sh("git fetch origin --prune", c);
+          sh("git checkout main", c);
+          sh("git pull --rebase origin main", c);
+        } catch {
+          // ignore update errors, still usable locally
+        }
+        return c;
+      }
     }
-  }
 
-  const vixClone = path.join(
-    process.env.HOME || "",
-    ".vix",
-    "registry",
-    "index",
-  );
-
-  if (
-    vixClone &&
-    fs.existsSync(path.join(vixClone, "registry.json")) &&
-    fs.existsSync(path.join(vixClone, "index"))
-  ) {
-    return vixClone;
+    const vixClone = path.join(
+      process.env.HOME || "",
+      ".vix",
+      "registry",
+      "index",
+    );
+    if (
+      vixClone &&
+      fs.existsSync(path.join(vixClone, "registry.json")) &&
+      fs.existsSync(path.join(vixClone, "index"))
+    ) {
+      return vixClone;
+    }
   }
 
   const cacheDir = path.join(root, "tools", ".cache");
@@ -84,15 +89,29 @@ function ensureRegistryRepo({ root }) {
   return "";
 }
 
+function safeReadEntry(file) {
+  try {
+    const e = readJson(file);
+    if (!e || typeof e !== "object") return null;
+
+    const ns = typeof e.namespace === "string" ? e.namespace : "";
+    const nm = typeof e.name === "string" ? e.name : "";
+    if (!ns || !nm) return null;
+
+    return e;
+  } catch {
+    return null;
+  }
+}
+
 function main() {
   const root = process.cwd();
 
   const registryRoot = ensureRegistryRepo({ root });
-
   if (!registryRoot) {
     console.error("build_registry_index: registry repo not found.");
     console.error(
-      "Looked for ../registry, ../../registry, ./registry, ~/.vix/registry/index, or a cached clone.",
+      "Looked for ../../registry, ../registry, ./registry, ~/.vix/registry/index, or tools/.cache/registry.",
     );
     process.exit(1);
   }
@@ -100,16 +119,33 @@ function main() {
   const registryMetaPath = path.join(registryRoot, "registry.json");
   const indexDir = path.join(registryRoot, "index");
 
+  if (!fs.existsSync(registryMetaPath)) {
+    console.error(
+      "build_registry_index: missing registry.json at:",
+      registryMetaPath,
+    );
+    process.exit(1);
+  }
+  if (!fs.existsSync(indexDir)) {
+    console.error("build_registry_index: missing index dir at:", indexDir);
+    process.exit(1);
+  }
+
   const registryMeta = readJson(registryMetaPath);
   const files = listJsonFiles(indexDir);
 
   const entries = [];
   for (const file of files) {
-    try {
-      const e = readJson(file);
-      entries.push(e);
-    } catch {}
+    const e = safeReadEntry(file);
+    if (e) entries.push(e);
   }
+
+  // deterministic output for diffs
+  entries.sort((a, b) => {
+    const ida = `${a.namespace}/${a.name}`.toLowerCase();
+    const idb = `${b.namespace}/${b.name}`.toLowerCase();
+    return ida.localeCompare(idb);
+  });
 
   const out = {
     meta: {
@@ -129,16 +165,23 @@ function main() {
   const outPath = path.join(outDir, "all.min.json");
   fs.writeFileSync(outPath, JSON.stringify(out), "utf8");
 
-  const has071 = JSON.stringify(out).includes('"0.7.1"');
+  // Helpful debug, not hardcoded to a single version
+  const sample = entries
+    .slice(0, 5)
+    .map(
+      (e) =>
+        `${e.namespace}/${e.name}@${typeof e.latest === "string" ? e.latest : "?"}`,
+    );
+
   console.log(
     "registry index built:",
     outPath,
     "entries:",
     entries.length,
-    "has_0.7.1:",
-    has071,
+    "source:",
+    registryRoot,
   );
-  console.log("registry source:", registryRoot);
+  if (sample.length) console.log("registry sample:", sample.join(", "));
 }
 
 main();

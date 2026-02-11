@@ -37,12 +37,24 @@ function toLower(s) {
   return (s || "").toLowerCase().trim();
 }
 
-const nsLower = computed(() => toLower(namespace.value));
-const nameLower = computed(() => toLower(name.value));
+function sanitizeId(s) {
+  return (s || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\//g, "-")
+    .replace(/[^a-z0-9._-]/g, "");
+}
+
+const nsLower = computed(() => sanitizeId(namespace.value));
+const nameLower = computed(() => sanitizeId(name.value));
 
 const tag = computed(() => {
   const v = (version.value || "").trim();
   return v ? `v${v}` : "";
+});
+
+const invalidId = computed(() => {
+  return /[\\/]/.test(namespace.value) || /[\\/]/.test(name.value);
 });
 
 const pkgId = computed(() => {
@@ -249,6 +261,7 @@ const canPublish = computed(() => {
   if (!previewJson.value) return false;
   if (requiredMissing.value.length) return false;
   if (versionAlreadyExists.value) return false;
+  if (invalidId.value) return false;
   return true;
 });
 
@@ -311,7 +324,7 @@ onMounted(async () => {
 
       <pre class="cmd">
     vix new tree --lib
-    vix publish 0.2.0 --notes "Add count_leaves helper"
+    vix publish 0.2.0 --notes ""
       </pre>
 
       <a
@@ -467,6 +480,10 @@ onMounted(async () => {
 
           <div v-if="versionAlreadyExists" class="err">
             This version already exists in the registry entry.
+          </div>
+
+          <div v-if="invalidId" class="err">
+            Namespace and name must not contain "/"
           </div>
 
           <div v-if="existingEntry" class="hint">
