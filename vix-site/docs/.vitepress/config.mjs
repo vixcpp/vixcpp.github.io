@@ -52,6 +52,7 @@ export default defineConfig({
               { text: "Overview", link: "/modules/cli/index" },
 
               { text: "vix repl", link: "/modules/cli/repl" },
+              { text: "vix modules", link: "/modules/cli/modules" },
 
               {
                 text: "Project",
@@ -75,6 +76,7 @@ export default defineConfig({
                   { text: "vix list", link: "/modules/cli/list" },
                   { text: "vix publish", link: "/modules/cli/publish" },
                   { text: "vix registry", link: "/modules/cli/registry" },
+                  { text: "vix deps", link: "/modules/cli/deps" },
                 ],
               },
 
@@ -217,13 +219,26 @@ export default defineConfig({
           {
             text: "utils",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/utils/" }],
+            items: [
+              { text: "Overview", link: "/modules/utils/" },
+              { text: "Logger", link: "/modules/utils/logger" },
+              { text: "UUID", link: "/modules/utils/uuid" },
+              { text: "String", link: "/modules/utils/string" },
+              { text: "Env", link: "/modules/utils/env" },
+              { text: "Time", link: "/modules/utils/time" },
+              { text: "Result", link: "/modules/utils/result" },
+              { text: "Pretty Logs", link: "/modules/utils/prettylogs" },
+              { text: "Validation", link: "/modules/utils/validation" },
+            ],
           },
 
           {
             text: "webrpc",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/webrpc/" }],
+            items: [
+              { text: "Overview", link: "/modules/webrpc/" },
+              { text: "Examples", link: "/modules/webrpc/examples" },
+            ],
           },
 
           {
