@@ -964,3 +964,317 @@ html:not(.dark) .actions .primary{
     padding-right: 8px !important;
   }
 }
+
+/* =========================
+   DOCS HEADER + SIDEBAR TEXT ONLY
+   + Sidebar scrollbar
+   (no boxes, no shadows, no outlines)
+   ========================= */
+
+/* -------- Header (navbar) text sizing -------- */
+.VPNavBar{
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+}
+
+/* Site title */
+.VPNavBarTitle .title{
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* Top nav links */
+.VPNavBarMenuLink,
+.VPNavBarMenuLink > a{
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* Search button text */
+.VPNavBarSearch .DocSearch-Button,
+.VPNavBarSearch .VPNavBarSearchButton{
+  font-size: 13px;
+}
+
+/* -------- Sidebar text sizing -------- */
+
+/* Section/group titles in sidebar */
+.VPSidebarGroup .title{
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Sidebar links */
+.VPSidebarItem .link{
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.35;
+}
+
+/* Deeper levels slightly smaller */
+.VPSidebarItem.level-2 .link{ font-size: 12.8px; }
+.VPSidebarItem.level-3 .link{ font-size: 12.6px; }
+.VPSidebarItem.level-4 .link{ font-size: 12.4px; }
+
+/* Active item only via font weight (no box) */
+.VPSidebarItem.is-active .link{
+  font-weight: 800;
+}
+
+/* -------- Sidebar scrollbar styling -------- */
+
+/* Firefox */
+.VPSidebar .nav{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-divider) transparent;
+}
+
+/* Chromium / WebKit */
+.VPSidebar .nav::-webkit-scrollbar{
+  width: 10px;
+}
+.VPSidebar .nav::-webkit-scrollbar-track{
+  background: transparent;
+}
+.VPSidebar .nav::-webkit-scrollbar-thumb{
+  background: var(--vp-c-divider);
+  border-radius: 999px;
+
+  /* makes the thumb look slimmer without a box effect */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.VPSidebar .nav::-webkit-scrollbar-thumb:hover{
+  border-width: 2px;
+}
+
+/* -------- Mobile tighter -------- */
+@media (max-width: 960px){
+  .VPNavBarTitle .title{ font-size: 13.5px; }
+  .VPNavBarMenuLink,
+  .VPNavBarMenuLink > a{ font-size: 12.8px; }
+
+  .VPSidebarItem .link{ font-size: 12.8px; }
+}
+
+/* =========================
+   SEARCH BAR + SEARCH POPUP (VitePress local search)
+   no color changes, only layout/typography/borders
+   ========================= */
+
+/* Search button in header (local search) */
+.VPNavBarSearch .VPNavBarSearchButton,
+.VPNavBarSearch .DocSearch-Button{
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 10px;
+
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* Hide "Search" label if you prefer icon-only, keep shortcut visible */
+/*
+.VPNavBarSearch .VPNavBarSearchButton span:first-child,
+.VPNavBarSearch .DocSearch-Button span:first-child{
+  display: none;
+}
+*/
+
+/* Make the shortcut chip smaller */
+.VPNavBarSearch .DocSearch-Button-Keys,
+.VPNavBarSearch kbd{
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+
+/* Input inside popup */
+.VPLocalSearchBox input,
+.VPDocSearch input{
+  height: 42px;
+  border-radius: 12px;
+
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* Popup container */
+.VPLocalSearchBox,
+.VPDocSearch,
+.VPNavBarSearch .DocSearch-Modal{
+  border-radius: 14px;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* Popup header spacing */
+.VPLocalSearchBox .header,
+.VPNavBarSearch .DocSearch-SearchBar{
+  padding: 12px 12px 10px;
+}
+
+/* Results list */
+.VPLocalSearchBox .results,
+.VPNavBarSearch .DocSearch-Dropdown{
+  padding: 8px 8px 10px;
+}
+
+/* Result item typography only (no boxes) */
+.VPLocalSearchBox .result,
+.VPNavBarSearch .DocSearch-Hit{
+  border-radius: 10px;
+  padding: 10px 10px;
+}
+
+/* Title and excerpt sizes */
+.VPLocalSearchBox .result .title,
+.VPNavBarSearch .DocSearch-Hit-title{
+  font-size: 13.5px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: var(--vp-c-text-1);
+}
+
+.VPLocalSearchBox .result .excerpt,
+.VPNavBarSearch .DocSearch-Hit-path{
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--vp-c-text-2);
+}
+
+/* Divider between groups if present */
+.VPLocalSearchBox .divider,
+.VPNavBarSearch .DocSearch-Dropdown-Container{
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* Popup scrollbar (results area) */
+.VPLocalSearchBox .results,
+.VPNavBarSearch .DocSearch-Dropdown{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-divider) transparent;
+}
+
+.VPLocalSearchBox .results::-webkit-scrollbar,
+.VPNavBarSearch .DocSearch-Dropdown::-webkit-scrollbar{
+  width: 10px;
+}
+.VPLocalSearchBox .results::-webkit-scrollbar-track,
+.VPNavBarSearch .DocSearch-Dropdown::-webkit-scrollbar-track{
+  background: transparent;
+}
+.VPLocalSearchBox .results::-webkit-scrollbar-thumb,
+.VPNavBarSearch .DocSearch-Dropdown::-webkit-scrollbar-thumb{
+  background: var(--vp-c-divider);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.VPLocalSearchBox .results::-webkit-scrollbar-thumb:hover,
+.VPNavBarSearch .DocSearch-Dropdown::-webkit-scrollbar-thumb:hover{
+  border-width: 2px;
+}
+
+/* Mobile sizing */
+@media (max-width: 960px){
+  .VPNavBarSearch .VPNavBarSearchButton,
+  .VPNavBarSearch .DocSearch-Button{
+    height: 32px;
+    font-size: 12.8px;
+  }
+
+  .VPLocalSearchBox input,
+  .VPDocSearch input{
+    height: 40px;
+    font-size: 13.5px;
+  }
+}
+/* =========================
+   REMOVE SEARCH DARK OVERLAY
+   ========================= */
+
+/* Local search overlay */
+.VPLocalSearchBox .backdrop,
+.VPLocalSearchBox .overlay,
+.VPNavBarSearch .backdrop,
+.VPNavBarSearch .overlay,
+.VPNavBarSearch .DocSearch-Overlay {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+/* Si VitePress utilise VPBackdrop */
+.VPBackdrop {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+/* =========================
+   FIX: SEARCH SHOULD NOT HIDE THE SITE
+   wrapper transparent, panel only has background
+   ========================= */
+
+/* Full-screen wrapper must be transparent */
+.VPLocalSearchBox,
+.VPDocSearch,
+.VPNavBarSearch .DocSearch-Modal{
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Keep the actual panel styled (try multiple selectors for VitePress versions) */
+.VPLocalSearchBox :where(.box, .modal, .dialog, .panel, .container),
+.VPNavBarSearch .DocSearch-Modal :where(.DocSearch-Modal-Container, .DocSearch-Container){
+  background: var(--vp-c-bg) !important;
+  border: 1px solid var(--vp-c-divider) !important;
+  border-radius: 14px !important;
+}
+
+/* Keep overlay transparent (your previous rule is ok, we keep it stronger) */
+.VPBackdrop,
+.VPNavBarSearch .DocSearch-Overlay,
+.VPLocalSearchBox .backdrop,
+.VPLocalSearchBox .overlay{
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+/* =========================
+   LAYOUT FIX
+   ========================= */
+
+/* App takes full viewport height */
+html, body,
+#app,
+.VPApp{
+  min-height: 100vh;
+}
+
+/* Main VitePress layout = flex column */
+.VPApp{
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content area grows */
+.VPContent{
+  flex: 1 0 auto;
+}
+
+/* Footer stays at bottom */
+.vix-footerbar{
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}

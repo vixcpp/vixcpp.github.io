@@ -1,4 +1,3 @@
-// docs/.vitepress/config.mjs
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
@@ -7,6 +6,7 @@ export default defineConfig({
   description:
     "Modern C++ backend runtime for offline-first, P2P, and high-performance applications.",
 
+  // Published at https://vixcpp.com/docs/
   base: "/docs/",
 
   markdown: {
@@ -20,17 +20,13 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    siteTitle: "Vix.cpp Docs",
+    siteTitle: "Vix.cpp",
     logo: "/assets/pwa/icon-192.png",
     appearance: true,
 
     nav: [
       { text: "Home", link: "https://vixcpp.com/" },
-      { text: "Docs", link: "/docs" },
-      { text: "Guides", link: "/docs/guide" },
-      { text: "Registry", link: "/registry" },
-      { text: "Examples", link: "/docs/examples" },
-      { text: "Services", link: "https://vixcpp.com/services" },
+      { text: "Registry", link: "https://vixcpp.com/registry/" },
     ],
 
     sidebar: [
@@ -41,86 +37,200 @@ export default defineConfig({
           { text: "Quick Start", link: "/quick-start" },
           { text: "Installation", link: "/install" },
           { text: "Project Setup", link: "/project-setup" },
+          { text: "Guides", link: "/guide" }, // docs/guide.md
         ],
       },
 
       {
-        text: "CLI",
+        text: "Modules",
         collapsed: false,
         items: [
-          { text: "Overview", link: "/cli/overview" },
-
           {
-            text: "Project",
-            collapsed: false,
+            text: "cli",
+            collapsed: true,
             items: [
-              { text: "vix new", link: "/cli/new" },
-              { text: "vix build", link: "/cli/build" },
-              { text: "vix run", link: "/cli/run" },
-              { text: "vix dev", link: "/cli/dev" },
-              { text: "vix tests", link: "/cli/tests" },
-              { text: "vix repl", link: "/cli/repl" },
+              { text: "Overview", link: "/modules/cli/index" },
+
+              { text: "vix repl", link: "/modules/cli/repl" },
+
+              {
+                text: "Project",
+                collapsed: true,
+                items: [
+                  { text: "vix new", link: "/modules/cli/new" },
+                  { text: "vix build", link: "/modules/cli/build" },
+                  { text: "vix run", link: "/modules/cli/run" },
+                  { text: "vix dev", link: "/modules/cli/dev" },
+                  { text: "vix tests", link: "/modules/cli/tests" },
+                ],
+              },
+
+              {
+                text: "Registry",
+                collapsed: true,
+                items: [
+                  { text: "vix search", link: "/modules/cli/search" },
+                  { text: "vix add", link: "/modules/cli/add" },
+                  { text: "vix remove", link: "/modules/cli/remove" },
+                  { text: "vix list", link: "/modules/cli/list" },
+                  { text: "vix publish", link: "/modules/cli/publish" },
+                  { text: "vix registry", link: "/modules/cli/registry" },
+                ],
+              },
+
+              {
+                text: "Packaging",
+                collapsed: true,
+                items: [
+                  { text: "vix pack", link: "/modules/cli/pack" },
+                  { text: "vix verify", link: "/modules/cli/verify" },
+                  { text: "vix install", link: "/modules/cli/install" },
+                ],
+              },
+
+              {
+                text: "Database",
+                collapsed: true,
+                items: [{ text: "vix orm", link: "/modules/cli/orm" }],
+              },
+
+              {
+                text: "Network",
+                collapsed: true,
+                items: [{ text: "vix p2p", link: "/modules/cli/p2p" }],
+              },
             ],
           },
 
           {
-            text: "Registry",
+            text: "core",
             collapsed: true,
             items: [
-              { text: "vix search", link: "/cli/search" },
-              { text: "vix add", link: "/cli/add" },
-              { text: "vix remove", link: "/cli/remove" },
-              { text: "vix list", link: "/cli/list" },
-              { text: "vix publish", link: "/cli/publish" },
-              { text: "vix registry", link: "/cli/registry" },
+              { text: "Overview", link: "/modules/core/" },
+              { text: "App", link: "/modules/core/app" },
+              { text: "HTTP", link: "/modules/core/http" },
+              { text: "Router", link: "/modules/core/router" },
+              { text: "Server", link: "/modules/core/server" },
+              { text: "Session", link: "/modules/core/session" },
+              { text: "Middleware", link: "/modules/core/middleware" },
+              { text: "ThreadPool", link: "/modules/core/threadpool" },
+              { text: "Timers", link: "/modules/core/timers" },
+              { text: "Executor", link: "/modules/core/executor" },
+              { text: "OpenAPI", link: "/modules/core/openapi" },
+              { text: "Config", link: "/modules/core/config" },
+              { text: "Console", link: "/modules/core/console" },
+              { text: "Examples", link: "/modules/core/example" },
+              { text: "Guide", link: "/modules/core/guide" },
             ],
           },
 
           {
-            text: "Packaging",
+            text: "net",
             collapsed: true,
-            items: [
-              { text: "vix pack", link: "/cli/pack" },
-              { text: "vix verify", link: "/cli/verify" },
-              { text: "vix install", link: "/cli/install" },
-            ],
+            items: [{ text: "Overview", link: "/modules/net/" }],
           },
 
           {
-            text: "ORM",
+            text: "json",
             collapsed: true,
-            items: [{ text: "vix orm", link: "/cli/orm" }],
+            items: [{ text: "Overview", link: "/modules/json/" }],
           },
 
           {
-            text: "Network",
+            text: "middleware",
             collapsed: true,
-            items: [{ text: "vix p2p", link: "/cli/p2p" }],
+            items: [{ text: "Overview", link: "/modules/middleware/" }],
           },
-        ],
-      },
 
-      {
-        text: "Guides",
-        collapsed: false,
-        items: [
-          { text: "Overview", link: "/guide" },
-          { text: "Routing", link: "/guide/routing" },
-          { text: "Json", link: "/guide/json" },
-          { text: "Requests and Responses", link: "/guide/http" },
-          { text: "Middleware", link: "/guide/middleware" },
-          { text: "Db", link: "/guide/db" },
-          { text: "ORM", link: "/guide/orm" },
-          { text: "WebSockets", link: "/guide/websockets" },
-          { text: "Async Tasks", link: "/guide/async" },
-          { text: "P2P", link: "/guide/p2p" },
-          { text: "Console.log", link: "/guide/console" },
-          { text: "Conversion", link: "/guide/conversion" },
-          { text: "Crypto", link: "/guide/crypto" },
-          { text: "Time", link: "/guide/time" },
-          { text: "Config and Env", link: "/guide/config" },
-          { text: "Repl", link: "/guide/repl" },
-          { text: "Deployment", link: "/guide/deploy" },
+          {
+            text: "db",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/db/" }],
+          },
+
+          {
+            text: "orm",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/orm/" }],
+          },
+
+          {
+            text: "websocket",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/websocket/" }],
+          },
+
+          {
+            text: "async",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/async/" }],
+          },
+
+          {
+            text: "p2p",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/p2p/" }],
+          },
+
+          {
+            text: "p2p_http",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/p2p_http/" }],
+          },
+
+          {
+            text: "crypto",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/crypto/" }],
+          },
+
+          {
+            text: "time",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/time/" }],
+          },
+
+          {
+            text: "conversion",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/conversion/" }],
+          },
+
+          {
+            text: "validation",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/validation/" }],
+          },
+
+          {
+            text: "cache",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/cache/" }],
+          },
+
+          {
+            text: "sync",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/sync/" }],
+          },
+
+          {
+            text: "utils",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/utils/" }],
+          },
+
+          {
+            text: "webrpc",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/webrpc/" }],
+          },
+
+          {
+            text: "deploy",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/deploy/" }],
+          },
         ],
       },
 
@@ -153,7 +263,7 @@ export default defineConfig({
         text: "API Reference",
         collapsed: true,
         items: [
-          { text: "Overview", link: "/api" },
+          { text: "Overview", link: "/api/" },
           { text: "HTTP", link: "/api/http" },
           { text: "WebSocket", link: "/api/websocket" },
           { text: "Json", link: "/api/json" },
@@ -168,23 +278,11 @@ export default defineConfig({
         text: "Examples",
         collapsed: true,
         items: [
-          { text: "All Examples", link: "/examples" },
+          { text: "All Examples", link: "/examples/" },
           { text: "Hello HTTP", link: "/examples/hello-http" },
           { text: "Auth Middleware", link: "/examples/auth" },
           { text: "WebSocket Chat", link: "/examples/ws-chat" },
           { text: "Async Worker", link: "/examples/async" },
-          { text: "P2P Ping", link: "/examples/p2p-ping" },
-        ],
-      },
-
-      {
-        text: "Services",
-        collapsed: true,
-        items: [
-          { text: "Overview", link: "/services" },
-          { text: "Support", link: "/services/support" },
-          { text: "Consulting", link: "/services/consulting" },
-          { text: "Training", link: "/services/training" },
         ],
       },
     ],
