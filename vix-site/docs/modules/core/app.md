@@ -1,5 +1,3 @@
-# App
-
 `vix::App` is the main entry point for building an HTTP server with Vix.
 
 It owns and wires together:

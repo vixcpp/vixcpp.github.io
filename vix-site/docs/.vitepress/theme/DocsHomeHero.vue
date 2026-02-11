@@ -20,25 +20,25 @@ const features = [
     title: "HTTP APIs",
     desc: "Build fast endpoints with explicit routing, predictable performance, and zero hidden magic.",
     icon: "swap",
-    href: "/docs/api",
+    href: "/docs/modules/core/example.html",
   },
   {
     title: "WebSockets",
     desc: "Real time channels with robust connection handling and backpressure friendly design.",
     icon: "bolt",
-    href: "/docs/guide",
+    href: "/docs/modules/websocket",
   },
   {
     title: "Async Tasks",
     desc: "A unified runtime for scheduling, timers, and concurrency in performance critical workloads.",
     icon: "chip",
-    href: "/docs/tutorial",
+    href: "/docs/modules/async",
   },
   {
     title: "P2P",
     desc: "Peer to peer communication primitives designed for unstable networks and local first systems.",
     icon: "p2p",
-    href: "/docs/p2p",
+    href: "/docs/modules/p2p",
   },
 ];
 
