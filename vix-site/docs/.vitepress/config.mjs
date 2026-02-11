@@ -38,10 +38,65 @@ export default defineConfig({
         text: "Get started",
         collapsed: false,
         items: [
-          { text: "Docs Home", link: "/" },
           { text: "Quick Start", link: "/quick-start" },
           { text: "Installation", link: "/install" },
           { text: "Project Setup", link: "/project-setup" },
+        ],
+      },
+
+      {
+        text: "CLI",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/cli/overview" },
+
+          {
+            text: "Project",
+            collapsed: false,
+            items: [
+              { text: "vix new", link: "/cli/new" },
+              { text: "vix build", link: "/cli/build" },
+              { text: "vix run", link: "/cli/run" },
+              { text: "vix dev", link: "/cli/dev" },
+              { text: "vix tests", link: "/cli/tests" },
+              { text: "vix repl", link: "/cli/repl" },
+            ],
+          },
+
+          {
+            text: "Registry",
+            collapsed: true,
+            items: [
+              { text: "vix search", link: "/cli/search" },
+              { text: "vix add", link: "/cli/add" },
+              { text: "vix remove", link: "/cli/remove" },
+              { text: "vix list", link: "/cli/list" },
+              { text: "vix publish", link: "/cli/publish" },
+              { text: "vix registry", link: "/cli/registry" },
+            ],
+          },
+
+          {
+            text: "Packaging",
+            collapsed: true,
+            items: [
+              { text: "vix pack", link: "/cli/pack" },
+              { text: "vix verify", link: "/cli/verify" },
+              { text: "vix install", link: "/cli/install" },
+            ],
+          },
+
+          {
+            text: "ORM",
+            collapsed: true,
+            items: [{ text: "vix orm", link: "/cli/orm" }],
+          },
+
+          {
+            text: "Network",
+            collapsed: true,
+            items: [{ text: "vix p2p", link: "/cli/p2p" }],
+          },
         ],
       },
 
@@ -51,12 +106,20 @@ export default defineConfig({
         items: [
           { text: "Overview", link: "/guide" },
           { text: "Routing", link: "/guide/routing" },
+          { text: "Json", link: "/guide/json" },
           { text: "Requests and Responses", link: "/guide/http" },
           { text: "Middleware", link: "/guide/middleware" },
+          { text: "Db", link: "/guide/db" },
+          { text: "ORM", link: "/guide/orm" },
           { text: "WebSockets", link: "/guide/websockets" },
           { text: "Async Tasks", link: "/guide/async" },
           { text: "P2P", link: "/guide/p2p" },
+          { text: "Console.log", link: "/guide/console" },
+          { text: "Conversion", link: "/guide/conversion" },
+          { text: "Crypto", link: "/guide/crypto" },
+          { text: "Time", link: "/guide/time" },
           { text: "Config and Env", link: "/guide/config" },
+          { text: "Repl", link: "/guide/repl" },
           { text: "Deployment", link: "/guide/deploy" },
         ],
       },
@@ -93,8 +156,10 @@ export default defineConfig({
           { text: "Overview", link: "/api" },
           { text: "HTTP", link: "/api/http" },
           { text: "WebSocket", link: "/api/websocket" },
+          { text: "Json", link: "/api/json" },
           { text: "Async", link: "/api/async" },
           { text: "P2P", link: "/api/p2p" },
+          { text: "Middleware", link: "/api/middleware" },
           { text: "Config", link: "/api/config" },
         ],
       },
@@ -107,7 +172,7 @@ export default defineConfig({
           { text: "Hello HTTP", link: "/examples/hello-http" },
           { text: "Auth Middleware", link: "/examples/auth" },
           { text: "WebSocket Chat", link: "/examples/ws-chat" },
-          { text: "Async Worker", link: "/examples/async-worker" },
+          { text: "Async Worker", link: "/examples/async" },
           { text: "P2P Ping", link: "/examples/p2p-ping" },
         ],
       },
