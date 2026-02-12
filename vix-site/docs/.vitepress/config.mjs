@@ -165,7 +165,10 @@ export default defineConfig({
           {
             text: "async",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/async/" }],
+            items: [
+              { text: "Overview", link: "/modules/async/" },
+              { text: "Examples", link: "/modules/async/example" },
+            ],
           },
 
           {
