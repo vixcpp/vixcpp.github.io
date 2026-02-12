@@ -1,283 +1,438 @@
-# ORM
+# ORM Guide
 
-This page is a guide to the Vix ORM module with minimal, explicit examples.
+This document covers the Vix ORM module at a practical level.
 
-Assumptions:
-- MySQL is running locally
-- Database: `vixdb`
-- Table `users(id, name, email, age)` exists
+It is split in two parts:
 
-Run any example with:
+1) ORM C++ API (entities, mappers, repositories, unit of work)
+2) `vix orm` CLI (migrations and schema evolution)
 
-```bash
-vix run examples/orm/<file>.cpp
-```
-
-## Concepts
-
-Vix ORM is built on top of the `vix::db` layer and keeps everything explicit:
-
-- Connection pools
-- Transactions (RAII)
-- Prepared statements
-- Small helpers for mapping rows to C++ types
-
-Nothing is hidden. SQL stays visible.
+The ORM is intentionally minimal:
+- explicit SQL
+- predictable behavior
+- small abstractions only where they remove boilerplate
 
 ---
 
-## 1) Connection pool + basic insert (transaction)
+## Include
+
+Most users include the umbrella header:
 
 ```cpp
 #include <vix/orm/orm.hpp>
-#include <iostream>
-
 using namespace vix::orm;
+```
 
-int main()
+Internally, it includes:
+- `QueryBuilder.hpp`
+- `Entity.hpp`
+- `Mapper.hpp`
+- `Repository.hpp`
+- `UnitOfWork.hpp`
+- `db_compat.hpp`
+
+---
+
+# 1) ORM C++ API
+
+## Core building blocks
+
+### Entity
+
+`Entity` is a semantic base class for ORM-managed types.
+
+```cpp
+struct Entity
 {
-  auto factory = make_mysql_factory(
-    "tcp://127.0.0.1:3306",
-    "root",
-    "",
-    "vixdb"
-  );
+  virtual ~Entity() = default;
+};
+```
 
-  PoolConfig cfg;
-  cfg.min = 1;
-  cfg.max = 8;
+It contains no data and no behavior.
+It exists to:
+- provide a clear extension point
+- allow polymorphic handling when needed
 
-  ConnectionPool pool{factory, cfg};
-  pool.warmup();
+You do not need to inherit from it for the ORM to work, but it can be useful for consistency.
 
-  try
+---
+
+## Mapper
+
+`Mapper<T>` defines how an entity is mapped to and from the database.
+
+It is a template that you fully specialize per entity type.
+
+It has three responsibilities:
+
+- `fromRow(row)`
+  Build `T` from a database result row
+
+- `toInsertParams(v)`
+  Produce column/value pairs for INSERT
+
+- `toUpdateParams(v)`
+  Produce column/value pairs for UPDATE
+
+All values are stored as `std::any` to keep the mapper flexible.
+The ORM later converts them into `vix::db::DbValue`.
+
+Example specialization:
+
+```cpp
+struct User
+{
+  std::int64_t id = 0;
+  std::string name;
+  std::int64_t age = 0;
+};
+
+template<>
+struct vix::orm::Mapper<User>
+{
+  static User fromRow(const vix::db::ResultRow& row)
   {
-    Transaction tx(pool);
-    auto &c = tx.conn();
-
-    auto st = c.prepare("INSERT INTO users(name,email,age) VALUES(?,?,?)");
-    st->bind(1, "Alice");
-    st->bind(2, "alice@example.com");
-    st->bind(3, 25);
-    st->exec();
-
-    tx.commit();
-    std::cout << "Inserted\n";
-    return 0;
+    User u;
+    u.id = row.i64("id").value_or(0);
+    u.name = row.str("name").value_or("");
+    u.age = row.i64("age").value_or(0);
+    return u;
   }
-  catch (const std::exception &e)
+
+  static std::vector<std::pair<std::string, std::any>>
+  toInsertParams(const User& u)
   {
-    std::cerr << e.what() << "\n";
-    return 1;
+    return {
+      {"name", u.name},
+      {"age",  u.age}
+    };
   }
-}
+
+  static std::vector<std::pair<std::string, std::any>>
+  toUpdateParams(const User& u)
+  {
+    return {
+      {"name", u.name},
+      {"age",  u.age}
+    };
+  }
+};
 ```
 
 Notes:
-- `Transaction` rolls back automatically if you do not call `commit()`.
-- Binding is positional and 1-based (1, 2, 3...).
+- `toInsertParams` usually excludes `"id"` (auto-increment).
+- `toUpdateParams` usually excludes immutable fields.
 
 ---
 
-## 2) QueryBuilder UPDATE
+## Repository: BaseRepository
 
-Use `QueryBuilder` when you want to build SQL with parameters, while keeping parameters separate from the SQL string.
+`BaseRepository<T>` is a minimal generic CRUD repository for a single table.
+
+Assumptions:
+- the table primary key column is named `"id"`
+- `Mapper<T>` is specialized for your entity
+
+### Constructor
 
 ```cpp
-#include <vix/orm/orm.hpp>
-#include <iostream>
+BaseRepository(vix::db::ConnectionPool& pool, std::string table);
+```
 
-using namespace vix::orm;
+### Create
 
-int main()
-{
-  auto factory = make_mysql_factory(
-    "tcp://127.0.0.1:3306",
-    "root",
-    "",
-    "vixdb"
-  );
+```cpp
+std::uint64_t create(const T& v);
+```
 
-  ConnectionPool pool{factory, {1, 8}};
-  pool.warmup();
+- Uses `Mapper<T>::toInsertParams`
+- Builds:
 
-  try
-  {
-    QueryBuilder qb;
-    qb.raw("UPDATE users SET age=? WHERE email=?")
-      .param(29)
-      .param(std::string("alice@example.com"));
+```sql
+INSERT INTO table (col1,col2,...) VALUES (?,?,...)
+```
 
-    PooledConn pc(pool);
-    auto st = pc.get().prepare(qb.sql());
+- Returns last insert id
 
-    const auto &ps = qb.params();
-    for (std::size_t i = 0; i < ps.size(); ++i)
-      st->bind(i + 1, ps[i]);
+### Find by id
 
-    std::cout << "Affected rows: " << st->exec() << "\n";
-    return 0;
-  }
-  catch (const std::exception &e)
-  {
-    std::cerr << e.what() << "\n";
-    return 1;
-  }
-}
+```cpp
+std::optional<T> findById(std::int64_t id);
+```
+
+- Executes:
+
+```sql
+SELECT * FROM table WHERE id = ? LIMIT 1
+```
+
+- Returns `std::nullopt` if not found
+
+### Update by id
+
+```cpp
+std::uint64_t updateById(std::int64_t id, const T& v);
+```
+
+- Uses `Mapper<T>::toUpdateParams`
+- Builds:
+
+```sql
+UPDATE table SET a=?,b=?,... WHERE id=?
+```
+
+- Returns affected rows
+
+### Delete by id
+
+```cpp
+std::uint64_t removeById(std::int64_t id);
+```
+
+- Executes:
+
+```sql
+DELETE FROM table WHERE id = ?
 ```
 
 ---
 
-## 3) Repository CRUD
+## UnitOfWork
 
-To use the repository, define:
-- Your entity struct
-- A `Mapper<T>` specialization (row to entity, entity to params)
+`UnitOfWork` groups operations in a transaction, using RAII:
+
+- transaction begins at construction
+- rollback happens on destruction unless committed
 
 ```cpp
-#include <vix/orm/orm.hpp>
-#include <iostream>
-#include <string>
+vix::orm::UnitOfWork uow(pool);
 
-struct User
+try
 {
-  std::int64_t id{};
-  std::string name;
-  std::string email;
-  int age{};
-};
-
-namespace vix::orm
-{
-  template <>
-  struct Mapper<User>
-  {
-    static User fromRow(const ResultRow &row)
-    {
-      User u{};
-      u.id = row.getInt64Or(0, 0);
-      u.name = row.getStringOr(1, "");
-      u.email = row.getStringOr(2, "");
-      u.age = static_cast<int>(row.getInt64Or(3, 0));
-      return u;
-    }
-
-    static std::vector<std::pair<std::string, std::any>>
-    toInsertParams(const User &u)
-    {
-      return {
-        {"name", u.name},
-        {"email", u.email},
-        {"age", u.age},
-      };
-    }
-
-    static std::vector<std::pair<std::string, std::any>>
-    toUpdateParams(const User &u)
-    {
-      return {
-        {"name", u.name},
-        {"email", u.email},
-        {"age", u.age},
-      };
-    }
-  };
+  // do work using uow.conn() or repositories
+  uow.commit();
 }
-
-int main()
+catch (...)
 {
-  using namespace vix::orm;
-
-  auto factory = make_mysql_factory(
-    "tcp://127.0.0.1:3306",
-    "root",
-    "",
-    "vixdb"
-  );
-
-  ConnectionPool pool{factory, {1, 8}};
-  pool.warmup();
-
-  BaseRepository<User> repo{pool, "users"};
-
-  try
-  {
-    auto id = repo.create(User{0, "Bob", "bob@example.com", 30});
-    std::cout << "Created id=" << id << "\n";
-
-    repo.updateById(static_cast<std::int64_t>(id),
-                    User{static_cast<std::int64_t>(id), "Bobby", "bob@example.com", 31});
-
-    if (auto u = repo.findById(static_cast<std::int64_t>(id)))
-      std::cout << "Found: " << u->name << "\n";
-
-    repo.removeById(static_cast<std::int64_t>(id));
-    std::cout << "Deleted\n";
-    return 0;
-  }
-  catch (const std::exception &e)
-  {
-    std::cerr << e.what() << "\n";
-    return 1;
-  }
+  // optional explicit rollback
+  uow.rollback();
+  throw;
 }
+```
+
+### Access the transaction connection
+
+```cpp
+vix::db::Connection& c = uow.conn();
+```
+
+Use this for:
+- multiple repositories in one transaction
+- custom SQL in the same transaction scope
+
+---
+
+## QueryBuilder
+
+`QueryBuilder` is a tiny helper to build SQL + parameter list.
+
+It keeps:
+- `sql_` as a string
+- `params_` as `std::vector<vix::db::DbValue>`
+
+Example:
+
+```cpp
+QueryBuilder q;
+q.raw("SELECT * FROM users WHERE age > ?").param(18);
+
+auto st = conn.prepare(q.sql());
+const auto& ps = q.params();
+for (std::size_t i = 0; i < ps.size(); ++i)
+  st->bind(i + 1, ps[i]);
+
+auto rs = st->query();
+```
+
+This is intentionally minimal. It does not try to validate SQL.
+
+---
+
+## db_compat.hpp
+
+This header is a compatibility layer that re-exports the DB module types into `vix::orm`.
+
+It also provides:
+
+### `any_to_dbvalue_or_throw(const std::any&)`
+
+The ORM uses `std::any` in mappers. This function converts runtime values into `vix::db::DbValue`.
+
+Supported types include:
+- empty `std::any` / `nullptr_t` -> NULL
+- `vix::db::DbValue` -> passthrough
+- bool
+- integral types -> int64 (best-effort narrowing)
+- float/double -> double
+- std::string / std::string_view / const char* -> string
+- `vix::db::Blob` -> blob
+
+If the type is not supported, it throws `vix::db::DBError`.
+
+Practical rule:
+- keep mapper fields to basic scalar types and strings
+- use `vix::db::Blob` for binary data
+- avoid custom structs inside `std::any`
+
+---
+
+# 2) CLI: vix orm
+
+`vix orm` manages:
+- database migrations
+- schema evolution
+- migration history
+- rollback operations
+
+It keeps schema changes explicit and versioned.
+
+## Usage
+
+```bash
+vix orm migrate   [options]
+vix orm rollback  --steps <n> [options]
+vix orm status    [options]
+vix orm makemigrations --new <schema.json> [options]
 ```
 
 ---
 
-## 4) UnitOfWork
+## Commands
 
-When you want a short transactional scope without writing SQL in every place, use `UnitOfWork`.
+### migrate
 
-```cpp
-#include <vix/orm/orm.hpp>
-#include <iostream>
+Apply pending migrations.
 
-using namespace vix::orm;
-
-int main()
-{
-  auto factory = make_mysql_factory(
-    "tcp://127.0.0.1:3306",
-    "root",
-    "",
-    "vixdb"
-  );
-
-  ConnectionPool pool{factory, {1, 8}};
-  pool.warmup();
-
-  try
-  {
-    UnitOfWork uow{pool};
-    auto &c = uow.conn();
-
-    c.prepare("INSERT INTO users(name,email,age) VALUES(?,?,?)")
-      ->bind(1, "Charlie")
-      ->bind(2, "charlie@example.com")
-      ->bind(3, 22)
-      ->exec();
-
-    uow.commit();
-    std::cout << "Committed\n";
-    return 0;
-  }
-  catch (const std::exception &e)
-  {
-    std::cerr << e.what() << "\n";
-    return 1;
-  }
-}
+```bash
+vix orm migrate
 ```
 
 ---
 
-## Common errors
+### rollback
 
-- Cannot connect: verify host, port, user, password, and database name
-- Missing table: create the table or run migrations first
-- Bind mismatch: bind integers as `std::int64_t` when in doubt
+Rollback last N applied migrations.
 
-Vix ORM stays minimal: explicit SQL, predictable transactions, clear failures.
+```bash
+vix orm rollback --steps 1
+```
 
+Required:
+- `--steps <n>`
+
+---
+
+### status
+
+Show applied and pending migrations.
+
+```bash
+vix orm status
+```
+
+---
+
+### makemigrations
+
+Generate a migration from a schema diff.
+
+```bash
+vix orm makemigrations --new ./schema.new.json
+```
+
+Options:
+- `--new <path>`          New schema (required)
+- `--snapshot <path>`     Previous schema snapshot (default: `schema.json`)
+- `--name <label>`        Migration label (default: auto)
+- `--dialect <mysql|sqlite>`  SQL dialect (default: mysql)
+
+---
+
+## Common options
+
+```bash
+--db <name>           Database name
+--dir <path>          Migrations directory
+--host <uri>          MySQL URI
+--user <name>         Database user
+--pass <pass>         Database password
+--project-dir <path>  Force project root detection
+--tool <path>         Override migrator executable path
+```
+
+---
+
+## Environment defaults
+
+If you prefer env configuration:
+
+```bash
+VIX_ORM_HOST
+VIX_ORM_USER
+VIX_ORM_PASS
+VIX_ORM_DB
+VIX_ORM_DIR
+VIX_ORM_TOOL
+```
+
+Example:
+
+```bash
+VIX_ORM_DB=blog_db VIX_ORM_DIR=./migrations vix orm migrate
+```
+
+---
+
+## Examples
+
+Apply migrations:
+
+```bash
+vix orm migrate --db blog_db --dir ./migrations
+```
+
+Rollback:
+
+```bash
+vix orm rollback --steps 1 --db blog_db --dir ./migrations
+```
+
+Status:
+
+```bash
+vix orm status --db blog_db
+```
+
+Generate migration:
+
+```bash
+vix orm makemigrations \
+  --new ./schema.new.json \
+  --snapshot ./schema.json \
+  --dir ./migrations \
+  --name create_users \
+  --dialect mysql
+```
+
+---
+
+# Summary
+
+The Vix ORM is a thin, explicit layer over `vix::db`:
+
+- `Mapper<T>` defines the mapping
+- `BaseRepository<T>` gives minimal CRUD
+- `UnitOfWork` groups operations transactionally
+- `QueryBuilder` builds SQL + params with no magic
+- `vix orm` CLI manages migrations and schema evolution
 

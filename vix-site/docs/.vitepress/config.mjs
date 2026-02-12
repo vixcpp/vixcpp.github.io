@@ -182,7 +182,10 @@ export default defineConfig({
           {
             text: "orm",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/orm/" }],
+            items: [
+              { text: "Overview", link: "/modules/orm/" },
+              { text: "Examples", link: "/modules/orm/examples" },
+            ],
           },
 
           {

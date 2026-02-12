@@ -1,0 +1,14 @@
+[1/2] Building CXX object CMakeFiles/main.dir/home/softadastra/vixcpp/vixcpp.github.io/main.cpp.o
+In file included from /usr/include/string.h:548,
+                 from /usr/include/c++/13/cstring:42,
+                 from /home/softadastra/vixcpp/vixcpp.github.io/main.cpp:2:
+In function ‘char* strcpy(char*, const char*)’,
+    inlined from ‘int main()’ at /home/softadastra/vixcpp/vixcpp.github.io/main.cpp:8:14:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:79:33: warning: ‘void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)’ forming offset [8, 11] is out of the bounds [0, 8] of object ‘buf’ with type ‘char [8]’ [-Warray-bounds=]
+   79 |   return __builtin___strcpy_chk (__dest, __src, __glibc_objsize (__dest));
+      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/softadastra/vixcpp/vixcpp.github.io/main.cpp: In function ‘int main()’:
+/home/softadastra/vixcpp/vixcpp.github.io/main.cpp:6:8: note: ‘buf’ declared here
+    6 |   char buf[8] = {};
+      |        ^~~
+[2/2] Linking CXX executable main

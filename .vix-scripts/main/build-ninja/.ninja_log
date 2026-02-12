@@ -1,0 +1,6 @@
+# ninja log v5
+518	603	1770915918352695384	main	721ae6031b1cd498
+2	518	1770915918264145607	CMakeFiles/main.dir/home/softadastra/vixcpp/vixcpp.github.io/main.cpp.o	bf24702f8d5e89a7
+1	32	1770915938012122188	build.ninja	ee792a88bfb4f67b
+1	586	1770915938608279264	CMakeFiles/main.dir/home/softadastra/vixcpp/vixcpp.github.io/main.cpp.o	a76013ab13ff90d0
+586	681	1770915938709737797	main	b6cd160cdd662c7e

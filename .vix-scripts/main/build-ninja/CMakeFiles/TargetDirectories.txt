@@ -1,0 +1,3 @@
+/home/softadastra/vixcpp/vixcpp.github.io/.vix-scripts/main/build-ninja/CMakeFiles/main.dir
+/home/softadastra/vixcpp/vixcpp.github.io/.vix-scripts/main/build-ninja/CMakeFiles/edit_cache.dir
+/home/softadastra/vixcpp/vixcpp.github.io/.vix-scripts/main/build-ninja/CMakeFiles/rebuild_cache.dir
