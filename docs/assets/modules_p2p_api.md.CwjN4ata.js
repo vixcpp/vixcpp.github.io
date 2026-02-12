@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as a}from"./chunks/framework.jUmBZPH5.js";const l=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"modules/p2p/api.md","filePath":"modules/p2p/api.md","lastUpdated":1770805184000}'),p={name:"modules/p2p/api.md"};function o(s,r,c,d,n,i){return t(),a("div")}const _=e(p,[["render",o]]);export{l as __pageData,_ as default};

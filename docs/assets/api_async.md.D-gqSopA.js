@@ -1,1 +1,0 @@
-import{_ as a,o as e,c as t}from"./chunks/framework.jUmBZPH5.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"api/async.md","filePath":"api/async.md","lastUpdated":1770717352000}'),s={name:"api/async.md"};function c(n,r,o,p,i,d){return e(),t("div")}const f=a(s,[["render",c]]);export{m as __pageData,f as default};

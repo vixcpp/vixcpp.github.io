@@ -19,6 +19,27 @@ export default defineConfig({
     ["meta", { name: "mobile-web-app-capable", content: "yes" }],
   ],
 
+  vite: {
+    optimizeDeps: {
+      include: ["mark.js", "minisearch"],
+    },
+    ssr: {
+      noExternal: ["mark.js"],
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes("node_modules")) return;
+            if (id.includes("minisearch")) return "minisearch";
+            if (id.includes("mark.js")) return "markjs";
+            return "vendor";
+          },
+        },
+      },
+    },
+  },
+
   themeConfig: {
     siteTitle: "Vix.cpp",
     logo: "/assets/pwa/icon-192.png",
@@ -135,7 +156,15 @@ export default defineConfig({
           {
             text: "json",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/json/" }],
+            items: [
+              { text: "Overview", link: "/modules/json/" },
+              { text: "Simple", link: "/modules/json/simple" },
+              { text: "Build", link: "/modules/json/build" },
+              { text: "Convert", link: "/modules/json/convert" },
+              { text: "Dumps", link: "/modules/json/dumps" },
+              { text: "JPath", link: "/modules/json/jpath" },
+              { text: "Loads", link: "/modules/json/loads" },
+            ],
           },
 
           {
