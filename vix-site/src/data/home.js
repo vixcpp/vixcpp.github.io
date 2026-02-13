@@ -183,7 +183,7 @@ $ cat vix.lock`,
       {
         title: "Modules system",
         text: "Opt-in modules to keep projects minimal and explicit.",
-        href: "/docs/modules",
+        href: "/docs/modules/cli/modules",
         preview: {
           title: "modules",
           lines: ["$ vix modules init", "$ vix modules add websocket"],
