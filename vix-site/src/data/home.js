@@ -161,7 +161,7 @@ $ cat vix.lock`,
       {
         title: "Project workflow",
         text: "Create projects and iterate fast with dev mode and one-command runs.",
-        href: "/docs/cli",
+        href: "/docs/modules/cli/new",
         preview: {
           title: "project",
           lines: [
@@ -174,7 +174,7 @@ $ cat vix.lock`,
       {
         title: "Packaging & verification",
         text: "Package builds and verify artifacts with a security-focused workflow.",
-        href: "/docs/packaging",
+        href: "/docs/modules/cli/pack",
         preview: {
           title: "pack + verify",
           lines: ["$ vix pack --version 1.0.0", "$ vix verify"],
@@ -192,7 +192,7 @@ $ cat vix.lock`,
       {
         title: "Offline registry",
         text: "Sync once, search locally, and pin dependencies via vix.lock.",
-        href: "/docs/registry",
+        href: "/docs/modules/cli/registry",
         preview: {
           title: "registry",
           lines: [
