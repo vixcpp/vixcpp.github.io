@@ -1,20 +1,27 @@
-# Logging
+# Logging (Core)
 
-Logging in Vix is explicit.
+Logging in Vix is **explicit and layered**.
 
 Vix does not automatically log every request. You decide:
 
--   What to log
--   When to log
--   How detailed logs should be
+- What to log
+- When to log
+- Whether it is **dev output** (`vix::console`)
+- Or **production logging** (`vix::utils::Logger`)
 
-------------------------------------------------------------------------
+Vix intentionally separates:
 
-## Minimal logging example
+- **Console** → developer-facing runtime output
+- **Logger** → structured, production-grade logging
 
-``` cpp
+---
+
+## 1. Development logging (vix::console)
+
+For quick debugging and local feedback, use:
+
+```cpp
 #include <vix.hpp>
-#include <iostream>
 
 using namespace vix;
 
@@ -23,8 +30,7 @@ int main()
   App app;
 
   app.get("/", [](Request&, Response& res) {
-    std::cout << "Incoming request on /" << std::endl;
-
+    console.info("Incoming request on /");
     res.json({"message", "Hello"});
   });
 
@@ -32,42 +38,45 @@ int main()
 }
 ```
 
-This logs each request to standard output.
+### Why use console instead of std::cout?
 
-------------------------------------------------------------------------
+- Thread-safe atomic lines
+- Level filtering (`debug` off by default)
+- Proper stdout/stderr routing
+- Near-zero cost when filtered
+- Environment-controlled verbosity
 
-## Logging request data
+Console is designed for **developer ergonomics**, not ingestion pipelines.
 
-``` cpp
-#include <vix.hpp>
-#include <iostream>
+---
 
-using namespace vix;
+## 2. Logging request data
 
-int main()
-{
-  App app;
+```cpp
+app.get("/inspect", [](Request& req, Response& res) {
 
-  app.get("/inspect", [](Request& req, Response& res) {
-    std::cout << "Path: /inspect" << std::endl;
-    std::cout << "User-Agent: " << req.header("User-Agent") << std::endl;
+  console.debug("Path:", "/inspect");
+  console.debug("User-Agent:", req.header("User-Agent"));
 
-    res.json({"ok", true});
-  });
-
-  app.run(8080);
-}
+  res.json({"ok", true});
+});
 ```
 
-Be careful not to log sensitive data.
+Be careful not to log:
 
-------------------------------------------------------------------------
+- Authorization headers
+- Tokens
+- Passwords
+- Personal data
 
-## Logging errors
+---
 
-``` cpp
+## 3. Logging errors (dev mode)
+
+```cpp
 app.get("/error", [](Request&, Response& res) {
-  std::cerr << "Simulated error occurred" << std::endl;
+
+  console.error("Simulated error occurred");
 
   res.status(500).json({
     "error", "Internal server error"
@@ -75,64 +84,104 @@ app.get("/error", [](Request&, Response& res) {
 });
 ```
 
-Use error streams for failures.
+Console automatically routes:
 
-------------------------------------------------------------------------
+- `warn` / `error` → stderr
+- `log` / `info` / `debug` → stdout
 
-## Structured logging pattern
+---
 
-Instead of free text logs:
+## 4. Production logging (vix::utils::Logger)
 
-``` cpp
-std::cout << "User login failed" << std::endl;
+For real systems, do **not** rely on console.
+
+Use `vix::utils::Logger` for:
+
+- Structured logs (JSON / key-value)
+- File outputs
+- Ingestion pipelines
+- Production observability
+- Rotating logs
+- Persistent storage
+
+Example (illustrative):
+
+```cpp
+#include <vix/utils/logger.hpp>
+
+using namespace vix::utils;
+
+int main()
+{
+  Logger logger;
+
+  logger.info({
+    {"event", "request_received"},
+    {"path", "/inspect"}
+  });
+}
 ```
 
-Prefer structured logs:
+Console and Logger serve different purposes by design.
 
-``` cpp
-std::cout << "{"
-          << ""event":"login_failed","
-          << ""user":"unknown""
-          << "}" << std::endl;
+---
+
+## 5. Structured logging pattern
+
+Instead of:
+
+```cpp
+console.info("User login failed");
 ```
 
-Structured logs are easier to parse and analyze.
+Prefer structured logging in production:
 
-------------------------------------------------------------------------
+```cpp
+logger.warn({
+  {"event", "login_failed"},
+  {"user", "unknown"}
+});
+```
 
-## Production logging
+Structured logs are easier to:
 
-For real applications:
+- Parse
+- Filter
+- Aggregate
+- Send to ELK / Loki / OpenTelemetry
 
--   Use a proper logging library
--   Write logs to rotating files
--   Avoid blocking I/O in hot paths
--   Avoid logging secrets
+---
 
-------------------------------------------------------------------------
-
-## Performance considerations
+## 6. Performance considerations
 
 Logging is I/O.
 
-Heavy logging can reduce throughput.
-
 Best practices:
 
--   Log only what is necessary
--   Avoid logging inside tight loops
--   Use async logging in production setups
+- Do not log inside hot loops
+- Avoid per-request heavy logs under high load
+- Keep debug logs disabled in production
+- Use sampling if traffic is extreme
+- Avoid blocking file I/O in request threads
 
-------------------------------------------------------------------------
+Remember:
 
-## Philosophy
+- Console is cheap when filtered
+- Logger is more powerful but must be configured responsibly
 
-Logging should be:
+---
 
--   Intentional
--   Clear
--   Minimal
--   Secure
+## 7. Philosophy
 
-In Vix, nothing is logged unless you log it.
+Logging in Vix is:
+
+- Explicit
+- Layered
+- Predictable
+- Performance-aware
+
+Nothing is logged unless you log it.
+
+Console is for developers.
+Logger is for systems.
 

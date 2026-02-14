@@ -126,24 +126,32 @@ export default defineConfig({
           },
 
           {
-            text: "core",
+            text: "Core",
             collapsed: true,
             items: [
               { text: "Overview", link: "/modules/core/" },
+
+              // Application Layer
               { text: "App", link: "/modules/core/app" },
+              { text: "Configuration", link: "/modules/core/config" },
+              { text: "Console", link: "/modules/core/console" },
+
+              // HTTP Layer
               { text: "HTTP", link: "/modules/core/http" },
               { text: "Router", link: "/modules/core/router" },
-              { text: "Server", link: "/modules/core/server" },
-              { text: "Session", link: "/modules/core/session" },
               { text: "Middleware", link: "/modules/core/middleware" },
-              { text: "ThreadPool", link: "/modules/core/threadpool" },
-              { text: "Timers", link: "/modules/core/timers" },
-              { text: "Executor", link: "/modules/core/executor" },
+              { text: "Session", link: "/modules/core/session" },
               { text: "OpenAPI", link: "/modules/core/openapi" },
-              { text: "Config", link: "/modules/core/config" },
-              { text: "Console", link: "/modules/core/console" },
-              { text: "Examples", link: "/modules/core/example" },
+
+              // Runtime & Execution
+              { text: "Server", link: "/modules/core/server" },
+              { text: "Executor", link: "/modules/core/executor" },
+              { text: "Thread Pool", link: "/modules/core/threadpool" },
+              { text: "Timers", link: "/modules/core/timers" },
+
+              // Learning
               { text: "Guide", link: "/modules/core/guide" },
+              { text: "Examples", link: "/modules/core/example" },
             ],
           },
 
@@ -154,16 +162,25 @@ export default defineConfig({
           },
 
           {
-            text: "json",
+            text: "JSON",
             collapsed: true,
             items: [
               { text: "Overview", link: "/modules/json/" },
-              { text: "Simple", link: "/modules/json/simple" },
-              { text: "Build", link: "/modules/json/build" },
-              { text: "Convert", link: "/modules/json/convert" },
-              { text: "Dumps", link: "/modules/json/dumps" },
-              { text: "JPath", link: "/modules/json/jpath" },
-              { text: "Loads", link: "/modules/json/loads" },
+
+              // Core Usage
+              {
+                text: "Quick Start (Simple API)",
+                link: "/modules/json/simple",
+              },
+              { text: "Building JSON", link: "/modules/json/build" },
+              { text: "Parsing JSON (Loads)", link: "/modules/json/loads" },
+
+              // Serialization
+              { text: "Serialization (Dumps)", link: "/modules/json/dumps" },
+              { text: "Type Conversion", link: "/modules/json/convert" },
+
+              // Advanced
+              { text: "JPath (Querying)", link: "/modules/json/jpath" },
             ],
           },
 
@@ -195,24 +212,38 @@ export default defineConfig({
           },
 
           {
-            text: "async",
+            text: "Async",
             collapsed: true,
             items: [
               { text: "Overview", link: "/modules/async/" },
-              { text: "Cancel", link: "/modules/async/cancel" },
-              { text: "Error", link: "/modules/async/error" },
-              { text: "IO", link: "/modules/async/io" },
-              { text: "Scheduler", link: "/modules/async/scheduler" },
-              { text: "Signal", link: "/modules/async/signal" },
+
+              // Core Primitives
               { text: "Task", link: "/modules/async/task" },
+              { text: "Scheduler", link: "/modules/async/scheduler" },
+              { text: "IO Context", link: "/modules/async/io" },
+
+              // Concurrency & Execution
               { text: "Thread Pool", link: "/modules/async/threadpool" },
-              { text: "Spawn", link: "/modules/async/spawn" },
-              { text: "When", link: "/modules/async/when" },
+              { text: "Spawn (Detached Tasks)", link: "/modules/async/spawn" },
+              {
+                text: "When (when_all / when_any)",
+                link: "/modules/async/when",
+              },
+
+              // Timing & Signals
               { text: "Timer", link: "/modules/async/timer" },
+              { text: "Signal Handling", link: "/modules/async/signal" },
+
+              // Cancellation & Errors
+              { text: "Cancellation", link: "/modules/async/cancel" },
+              { text: "Async Errors", link: "/modules/async/error" },
+
+              // Networking
               { text: "TCP", link: "/modules/async/tcp" },
               { text: "UDP", link: "/modules/async/udp" },
-              { text: "DNS", link: "/modules/async/dns" },
-              { text: "Asio IO", link: "/modules/async/asio" },
+              { text: "DNS Resolver", link: "/modules/async/dns" },
+              { text: "Asio Network Service", link: "/modules/async/asio" },
+
               { text: "Examples", link: "/modules/async/example" },
             ],
           },
@@ -242,9 +273,38 @@ export default defineConfig({
           },
 
           {
-            text: "conversion",
+            text: "Conversion",
             collapsed: true,
-            items: [{ text: "Overview", link: "/modules/conversion/" }],
+            items: [
+              { text: "Overview", link: "/modules/conversion/" },
+
+              { text: "Parsing API", link: "/modules/conversion/parse" },
+
+              {
+                text: "Boolean Parsing (to_bool)",
+                link: "/modules/conversion/to_bool",
+              },
+              {
+                text: "Integer Parsing (to_int)",
+                link: "/modules/conversion/to_int",
+              },
+              {
+                text: "Floating-Point Parsing (to_float)",
+                link: "/modules/conversion/to_float",
+              },
+
+              {
+                text: "String Conversion (to_string)",
+                link: "/modules/conversion/to_string",
+              },
+              {
+                text: "Enum Conversion (to_enum)",
+                link: "/modules/conversion/to_enum",
+              },
+
+              { text: "Expected<T>", link: "/modules/conversion/expected" },
+              { text: "ConversionError", link: "/modules/conversion/error" },
+            ],
           },
 
           {
@@ -266,18 +326,26 @@ export default defineConfig({
           },
 
           {
-            text: "utils",
+            text: "Utils",
             collapsed: true,
             items: [
               { text: "Overview", link: "/modules/utils/" },
+
+              // Logging
               { text: "Logger", link: "/modules/utils/logger" },
-              { text: "UUID", link: "/modules/utils/uuid" },
-              { text: "String", link: "/modules/utils/string" },
-              { text: "Env", link: "/modules/utils/env" },
-              { text: "Time", link: "/modules/utils/time" },
-              { text: "Result", link: "/modules/utils/result" },
               { text: "Pretty Logs", link: "/modules/utils/prettylogs" },
+
+              // Core Utilities
+              { text: "Result", link: "/modules/utils/result" },
               { text: "Validation", link: "/modules/utils/validation" },
+
+              // System & Environment
+              { text: "Environment", link: "/modules/utils/env" },
+              { text: "Time", link: "/modules/utils/time" },
+
+              // Data & Helpers
+              { text: "String", link: "/modules/utils/string" },
+              { text: "UUID", link: "/modules/utils/uuid" },
             ],
           },
 
