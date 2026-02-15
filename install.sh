@@ -1,208 +1,189 @@
-# Vix.cpp installer (Windows PowerShell) + install.json
-# Usage:
-#   irm https://vixcpp.com/install.ps1 | iex
-# Optional:
-#   $env:VIX_VERSION="v1.20.1"
-#   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"
-#   $env:VIX_REPO="vixcpp/vix"
+#!/usr/bin/env bash
+set -euo pipefail
 
-$ErrorActionPreference = "Stop"
-$ProgressPreference = "SilentlyContinue"
+info() { echo "vix install: $*"; }
+die()  { echo "vix install: $*" >&2; exit 1; }
 
-function Info([string]$msg) { Write-Host "vix install: $msg" }
-function Die([string]$msg)  { throw "vix install: $msg" }
+REPO="${VIX_REPO:-vixcpp/vix}"
+VERSION="${VIX_VERSION:-latest}"
+INSTALL_DIR="${VIX_INSTALL_DIR:-$HOME/.local/bin}"
+BIN_NAME="vix"
 
-$Repo       = if ($env:VIX_REPO)        { $env:VIX_REPO }        else { "vixcpp/vix" }
-$Version    = if ($env:VIX_VERSION)     { $env:VIX_VERSION }     else { "latest" }
-$InstallDir = if ($env:VIX_INSTALL_DIR) { $env:VIX_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "Vix\bin" }
-$BinName    = "vix.exe"
+STATS_DIR="$HOME/.local/share/vix"
+STATS_FILE="$STATS_DIR/install.json"
 
-$StatsDir  = Join-Path $env:LOCALAPPDATA "Vix"
-$StatsFile = Join-Path $StatsDir "install.json"
+need_cmd() { command -v "$1" >/dev/null 2>&1; }
 
-function Normalize-Dir([string]$p) {
-  if (-not $p) { return $p }
-  try { return ([System.IO.Path]::GetFullPath($p)).TrimEnd('\') } catch { return $p.TrimEnd('\') }
+detect_os() {
+  case "$(uname -s)" in
+    Linux)  echo "linux" ;;
+    Darwin) echo "macos" ;;
+    *) die "unsupported OS: $(uname -s)" ;;
+  esac
 }
 
-function Resolve-LatestTag([string]$repo) {
-  $api = "https://api.github.com/repos/$repo/releases/latest"
-  try {
-    $resp = Invoke-RestMethod -Uri $api -Headers @{ "User-Agent" = "vix-installer" }
-    if (-not $resp.tag_name) { Die "could not resolve latest tag. Set VIX_VERSION=vX.Y.Z" }
-    return [string]$resp.tag_name
-  } catch {
-    Die "could not resolve latest tag (GitHub API). Set VIX_VERSION=vX.Y.Z"
-  }
+detect_arch() {
+  case "$(uname -m)" in
+    x86_64|amd64) echo "x86_64" ;;
+    aarch64|arm64) echo "aarch64" ;;
+    *) die "unsupported arch: $(uname -m)" ;;
+  esac
 }
 
-function Get-RemoteContentLength([string]$url) {
-  try {
-    $req = [System.Net.HttpWebRequest]::Create($url)
-    $req.Method = "HEAD"
-    $req.UserAgent = "vix-installer"
-    $req.AllowAutoRedirect = $true
-    $resp = $req.GetResponse()
-    try {
-      if ($resp.ContentLength -gt 0) { return [int64]$resp.ContentLength }
-      return $null
-    } finally { $resp.Close() }
-  } catch { return $null }
+http_get() {
+  local url="$1"
+  if need_cmd curl; then
+    curl -fsSL "$url"
+  elif need_cmd wget; then
+    wget -qO- "$url"
+  else
+    die "need curl or wget"
+  fi
 }
 
-function Format-Bytes([Int64]$bytes) {
-  if ($bytes -lt 1024) { return "$bytes B" }
-  $units = @("KB","MB","GB","TB")
-  $v = [double]$bytes
-  $i = 0
-  while ($v -ge 1024 -and $i -lt $units.Length) { $v /= 1024; $i++ }
-  return ("{0:N2} {1}" -f $v, $units[[Math]::Max(0,$i-1)])
+resolve_latest_tag() {
+  local api="https://api.github.com/repos/$REPO/releases/latest"
+  local body
+  body="$(http_get "$api" || true)"
+  [[ -n "$body" ]] || die "could not resolve latest tag (GitHub API). Set VIX_VERSION=vX.Y.Z"
+
+  # extract "tag_name":"vX.Y.Z"
+  local tag
+  tag="$(printf "%s" "$body" | tr -d '\r' | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]\+\)".*/\1/p' | head -n 1)"
+  [[ -n "$tag" ]] || die "could not resolve latest tag. Set VIX_VERSION=vX.Y.Z"
+  echo "$tag"
 }
 
-function Extract-VersionToken([string]$verText) {
-  if (-not $verText) { return $null }
-  $m = [regex]::Match($verText, 'v\d+\.\d+\.\d+([-.+][0-9A-Za-z\.-]+)?')
-  if ($m.Success) { return $m.Value }
-  return $null
+parse_sha_expected() {
+  # accepts: "<sha>  file" OR "SHA256 (file) = <sha>"
+  local line="$1"
+  line="$(echo "$line" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  if echo "$line" | grep -Eq '^[0-9a-fA-F]{64}'; then
+    echo "$line" | awk '{print $1}'
+    return
+  fi
+  echo "$line" | sed -n 's/.*=\s*\([0-9a-fA-F]\{64\}\)\s*$/\1/p'
 }
 
-function Get-InstalledVersion([string]$exePath) {
-  if (-not (Test-Path -LiteralPath $exePath)) { return $null }
-  try {
-    $raw = & $exePath --version 2>$null
-    return (Extract-VersionToken ([string]$raw))
-  } catch { return $null }
+sha256_file() {
+  local file="$1"
+  if need_cmd sha256sum; then
+    sha256sum "$file" | awk '{print $1}'
+  elif need_cmd shasum; then
+    shasum -a 256 "$file" | awk '{print $1}'
+  else
+    die "need sha256sum (Linux) or shasum (macOS)"
+  fi
 }
 
-function Write-InstallStats([string]$repo, [string]$tag, [string]$arch, [string]$installDir, [Nullable[Int64]]$downloadBytes, [string]$installedVersion) {
-  New-Item -ItemType Directory -Force -Path $StatsDir | Out-Null
-  $obj = [ordered]@{
-    repo              = $repo
-    version           = $tag
-    installed_version = $installedVersion
-    installed_at      = [DateTime]::UtcNow.ToString("o")
-    os                = "windows"
-    arch              = $arch
-    install_dir       = $installDir
-    download_bytes    = $downloadBytes
-  }
-  ($obj | ConvertTo-Json -Depth 4) | Set-Content -LiteralPath $StatsFile -Encoding UTF8
-  Info "wrote stats: $StatsFile"
+main() {
+  local os arch tag asset base url_bin url_sha url_sig
+  os="$(detect_os)"
+  arch="$(detect_arch)"
+
+  if [[ "$VERSION" == "latest" ]]; then
+    tag="$(resolve_latest_tag)"
+  else
+    tag="$VERSION"
+  fi
+
+  asset="vix-$os-$arch.tar.gz"
+  base="https://github.com/$REPO/releases/download/$tag"
+  url_bin="$base/$asset"
+  url_sha="$url_bin.sha256"
+  url_sig="$url_bin.minisig"
+
+  info "repo=$REPO version=$tag os=$os arch=$arch"
+  info "install_dir=$INSTALL_DIR"
+  info "asset=$asset"
+  info "url=$url_bin"
+
+  mkdir -p "$INSTALL_DIR" || die "cannot create install dir: $INSTALL_DIR"
+  mkdir -p "$STATS_DIR" || die "cannot create stats dir: $STATS_DIR"
+
+  local tmp
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "$tmp" >/dev/null 2>&1 || true' EXIT
+
+  local archive="$tmp/$asset"
+  local sha_path="$tmp/$asset.sha256"
+  local sig_path="$tmp/$asset.minisig"
+  local extract_dir="$tmp/extract"
+
+  info "downloading..."
+  http_get "$url_bin" > "$archive" || die "download failed"
+
+  info "verifying sha256..."
+  http_get "$url_sha" > "$sha_path" || die "sha256 file not found ($url_sha). refusing to install."
+
+  local first expected actual
+  first="$(head -n 1 "$sha_path" || true)"
+  expected="$(parse_sha_expected "$first")"
+  [[ -n "$expected" ]] || die "invalid sha256 format"
+
+  actual="$(sha256_file "$archive")"
+  [[ "${expected,,}" == "${actual,,}" ]] || die "sha256 mismatch"
+  info "sha256 ok"
+
+  # minisign optional: verify only if minisign exists AND minisig exists
+  if need_cmd minisign; then
+    if http_get "$url_sig" > "$sig_path" 2>/dev/null; then
+      local pubkey="RWTB+/RzT24X6uPqrPGKrqODmbchU4N1G00fWzQSUc+qkz7pBUnEys58"
+      minisign -Vm "$archive" -P "$pubkey" >/dev/null 2>&1 || die "minisign verification failed"
+      info "minisign ok"
+    else
+      info "minisig not found (sha256 already verified)"
+    fi
+  else
+    info "minisign not installed (optional; sha256 already verified)"
+  fi
+
+  info "extracting..."
+  mkdir -p "$extract_dir"
+  tar -xzf "$archive" -C "$extract_dir" || die "failed to extract archive"
+
+  local bin="$extract_dir/$BIN_NAME"
+  if [[ ! -f "$bin" ]]; then
+    bin="$(find "$extract_dir" -type f -name "$BIN_NAME" 2>/dev/null | head -n 1 || true)"
+  fi
+  [[ -f "$bin" ]] || die "archive does not contain $BIN_NAME"
+
+  chmod +x "$bin" || true
+
+  local dest="$INSTALL_DIR/$BIN_NAME"
+  local staged="$INSTALL_DIR/$BIN_NAME.tmp.$$"
+  cp -f "$bin" "$staged" || die "failed to stage binary"
+  chmod +x "$staged" || true
+  mv -f "$staged" "$dest" || die "failed to install to $dest"
+
+  local installed_version
+  installed_version="$("$dest" --version 2>/dev/null | tr -d '\r' | sed -n 's/.*\(v[0-9]\+\.[0-9]\+\.[0-9]\+\([-.+][0-9A-Za-z\.-]\+\)\?\).*/\1/p' | tail -n 1)"
+  [[ -n "$installed_version" ]] || installed_version="$tag"
+
+  cat > "$STATS_FILE" <<EOF
+{
+  "repo": "$REPO",
+  "version": "$tag",
+  "installed_version": "$installed_version",
+  "installed_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "os": "$os",
+  "arch": "$arch",
+  "install_dir": "$INSTALL_DIR",
+  "download_bytes": null,
+  "asset_url": "$url_bin"
+}
+EOF
+
+  info "installed to $dest"
+  info "wrote stats: $STATS_FILE"
+
+  if ! echo ":$PATH:" | grep -q ":$INSTALL_DIR:"; then
+    echo "vix install: PATH missing install_dir"
+    echo "vix install: add to your shell config:"
+    echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
+  fi
+
+  info "done"
 }
 
-$InstallDirNorm = Normalize-Dir $InstallDir
-$Exe = Join-Path $InstallDirNorm $BinName
-
-$Arch = if ([Environment]::Is64BitOperatingSystem) {
-  if ($env:PROCESSOR_ARCHITECTURE -match '^ARM' -or $env:PROCESSOR_ARCHITEW6432 -match '^ARM') { "aarch64" } else { "x86_64" }
-} else { Die "unsupported OS: 32-bit Windows" }
-
-$Tag = if ($Version -eq "latest") { Resolve-LatestTag $Repo } else { $Version }
-
-$Asset   = "vix-windows-$Arch.zip"
-$BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
-$UrlBin  = "$BaseUrl/$Asset"
-$UrlSha  = "$UrlBin.sha256"
-
-Info "repo=$Repo version=$Tag arch=$Arch"
-Info "install_dir=$InstallDirNorm"
-
-# Skip if already installed and matches
-$installedTag = Get-InstalledVersion $Exe
-if ($installedTag -and $installedTag -eq $Tag) {
-  Info "already installed: $installedTag (no download needed)"
-  Write-InstallStats $Repo $Tag $Arch $InstallDirNorm $null $installedTag
-  Info "done"
-  exit 0
-}
-
-# Temp dir unique
-$TmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vix-" + [System.Guid]::NewGuid().ToString("N"))
-New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
-
-try {
-  $ZipPath = Join-Path $TmpDir $Asset
-  $ShaPath = Join-Path $TmpDir ($Asset + ".sha256")
-
-  $len = Get-RemoteContentLength $UrlBin
-  if ($len) { Info ("download size: {0} ({1} bytes)" -f (Format-Bytes $len), $len) }
-  else { Info "download size: unknown (no Content-Length)" }
-
-  Info "downloading: $UrlBin"
-  Invoke-WebRequest -Uri $UrlBin -OutFile $ZipPath -Headers @{ "User-Agent" = "vix-installer" }
-
-  Info "trying sha256 verification..."
-  $downloadBytes = $null
-  if ($len) { $downloadBytes = [int64]$len }
-
-  $haveSha = $false
-  try {
-    Invoke-WebRequest -Uri $UrlSha -OutFile $ShaPath -Headers @{ "User-Agent" = "vix-installer" }
-    $haveSha = $true
-
-    $first = (Get-Content -LiteralPath $ShaPath -TotalCount 1).Trim()
-    if (-not $first) { Die "invalid sha256 file" }
-
-    $expected = $null
-    if ($first -match "^[0-9a-fA-F]{64}") { $expected = ($first -split "\s+")[0] }
-    elseif ($first -match "=\s*([0-9a-fA-F]{64})\s*$") { $expected = $Matches[1] }
-    if (-not $expected) { Die "invalid sha256 format" }
-
-    $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ZipPath).Hash
-    if ($expected.ToLowerInvariant() -ne $actual.ToLowerInvariant()) { Die "sha256 mismatch" }
-
-    Info "sha256 ok"
-  } catch {
-    if ($haveSha) { throw }
-    Die "sha256 file not found ($UrlSha). refusing to install."
-  }
-
-  $ExtractDir = Join-Path $TmpDir "extract"
-  New-Item -ItemType Directory -Force -Path $ExtractDir | Out-Null
-  Expand-Archive -LiteralPath $ZipPath -DestinationPath $ExtractDir -Force
-
-  $ExeCandidate = Get-ChildItem -LiteralPath $ExtractDir -Recurse -File -Filter $BinName | Select-Object -First 1
-  if (-not $ExeCandidate) { Die "archive does not contain $BinName" }
-
-  New-Item -ItemType Directory -Force -Path $InstallDirNorm | Out-Null
-
-  $TmpExe = Join-Path $InstallDirNorm ("$BinName.tmp." + [System.Diagnostics.Process]::GetCurrentProcess().Id)
-  Copy-Item -LiteralPath $ExeCandidate.FullName -Destination $TmpExe -Force
-  Move-Item -LiteralPath $TmpExe -Destination $Exe -Force
-
-  Info "installed to $Exe"
-
-  # Add to user PATH (idempotent)
-  $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-  if (-not $userPath) { $userPath = "" }
-
-  $segments = $userPath -split ";" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
-  $already = $false
-  foreach ($s in $segments) {
-    if ([string]::Equals((Normalize-Dir $s), $InstallDirNorm, [System.StringComparison]::OrdinalIgnoreCase)) { $already = $true; break }
-  }
-
-  if (-not $already) {
-    $newPath = ($segments + $InstallDirNorm) -join ";"
-    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-    Info "added to PATH (restart your terminal)"
-  } else {
-    Info "PATH already contains install_dir"
-  }
-
-  $installedVersion = $null
-  try {
-    $raw = & $Exe --version 2>$null
-    $installedVersion = Extract-VersionToken ([string]$raw)
-    if ($raw) { Info "version: $raw" }
-  } catch { }
-
-  if (-not $installedVersion) { $installedVersion = $Tag }
-
-  Write-InstallStats $Repo $Tag $Arch $InstallDirNorm $downloadBytes $installedVersion
-
-  Info "done"
-}
-finally {
-  Remove-Item -LiteralPath $TmpDir -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-}
+main "$@"
