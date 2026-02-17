@@ -1,160 +1,181 @@
-# WS Chat
+# WebSocket Chat Example
 
-This example demonstrates a minimal WebSocket chat in Vix using:
+This example shows how to build a minimal real-time chat server using
+Vix.cpp.
 
--   `serve_http_and_ws`
--   Typed messages: `{ "type": "...", "payload": {...} }`
--   Broadcast to everyone or to a room
--   Optional long-polling bridge endpoints
+It is designed for:
 
-Everything is inside `main()`.
+-   C++ beginners learning WebSocket
+-   Backend developers building real-time systems
+-   Production-ready typed message handling
 
-------------------------------------------------------------------------
+## 1. Goal
 
-## Chat protocol
+We will build:
 
-Client sends:
+-   One HTTP route: `/health`
+-   One WebSocket endpoint
+-   A simple typed protocol: { "type": "chat.message", "payload": { ...
+    } }
+-   Broadcast messages to all connected clients
 
-``` json
-{
-  "type": "chat.message",
-  "payload": {
-    "room": "general",
-    "user": "Alice",
-    "text": "Hello"
-  }
-}
-```
+## 2. Minimal Chat Server (Single File)
 
-Server broadcasts the same payload back to the room (or global).
+Create:
 
-------------------------------------------------------------------------
-
-## Full example
+main.cpp
 
 ``` cpp
 #include <vix.hpp>
-
 #include <vix/websocket/AttachedRuntime.hpp>
-#include <vix/websocket/HttpApi.hpp>
-#include <vix/websocket/LongPollingBridge.hpp>
-
-#include <chrono>
-#include <memory>
-#include <string>
-#include <variant>
 
 using namespace vix;
 
-// Helpers for Simple JSON token/kvs extraction (string only)
-static std::string token_to_string(const vix::json::token& t)
-{
-  if (auto s = std::get_if<std::string>(&t.v))
-    return *s;
-  return {};
-}
-
-static std::string kvs_get_string(const vix::json::kvs& obj, const std::string& key)
-{
-  const auto& f = obj.flat;
-  for (std::size_t i = 0; i + 1 < f.size(); i += 2)
-  {
-    const std::string k = token_to_string(f[i]);
-    if (k == key)
-      return token_to_string(f[i + 1]);
-  }
-  return {};
-}
-
 int main()
 {
-  vix::serve_http_and_ws([](auto& app, auto& ws)
+  vix::serve_http_and_ws([](App& app, auto& ws)
   {
-    // Optional: long polling bridge (fallback transport)
-    static vix::websocket::WebSocketMetrics metrics;
-
-    auto bridge = std::make_shared<vix::websocket::LongPollingBridge>(
-      &metrics,
-      std::chrono::seconds{60},
-      256
-    );
-
-    ws.attach_long_polling_bridge(bridge);
-
-    // Basic HTTP route
-    app.get("/", [](auto&, auto& res)
+    // HTTP route
+    app.get("/health", [](Request&, Response& res)
     {
-      res.json({"message", "Hello from Vix.cpp"});
+      res.json({
+        "ok", true,
+        "service", "chat"
+      });
     });
 
-    // Long polling endpoints (optional)
-    app.get("/ws/poll", [&ws](auto& req, auto& res)
+    // WebSocket events
+
+    ws.on_open([&ws](auto&)
     {
-      vix::websocket::http::handle_ws_poll(req, res, ws);
+      ws.broadcast_json("chat.system", {
+        "text", "A user connected"
+      });
     });
 
-    app.post("/ws/send", [&ws](auto& req, auto& res)
+    ws.on_close([&ws](auto&)
     {
-      vix::websocket::http::handle_ws_send(req, res, ws);
+      ws.broadcast_json("chat.system", {
+        "text", "A user disconnected"
+      });
     });
 
-    app.get("/ws/status", [&ws](auto&, auto& res)
-    {
-      auto b = ws.long_polling_bridge();
-      res.json(vix::json::kv({
-        {"bridge_attached", static_cast<bool>(b)},
-        {"sessions", b ? static_cast<int>(b->session_count()) : 0}
-      }));
-    });
+    ws.on_typed_message(
+      [&ws](auto&, const std::string& type,
+            const vix::json::kvs& payload)
+      {
+        if (type == "chat.message")
+        {
+          ws.broadcast_json("chat.message", payload);
+          return;
+        }
 
-    // Typed message handler
-    ws.on_typed_message([&ws](auto&, const std::string& type, const vix::json::kvs& payload)
-    {
-      if (type != "chat.message")
-        return;
-
-      const std::string room = kvs_get_string(payload, "room");
-
-      if (!room.empty())
-        ws.broadcast_room_json(room, "chat.message", payload);
-      else
-        ws.broadcast_json("chat.message", payload);
-    });
+        ws.broadcast_json("chat.unknown", {
+          "type", type
+        });
+      });
   });
 
   return 0;
 }
 ```
 
-------------------------------------------------------------------------
+## 3. How To Run
 
-## Test quickly
-
-Start:
+From your project directory:
 
 ``` bash
-vix run examples/ws_chat.cpp
+vix run main.cpp
 ```
 
-Check HTTP:
+You should see the server listening on port 8080.
+
+## 4. Test HTTP Route
 
 ``` bash
-curl -i http://127.0.0.1:8080/
+curl http://127.0.0.1:8080/health
 ```
 
-Check status:
+Expected output:
+
+``` json
+{
+  "ok": true,
+  "service": "chat"
+}
+```
+
+## 5. Test WebSocket (Beginner Method)
+
+Install websocat if needed:
+
+Linux:
 
 ``` bash
-curl -i http://127.0.0.1:8080/ws/status
+sudo apt install websocat
 ```
 
-------------------------------------------------------------------------
+Then connect:
 
-## Notes
+``` bash
+websocat ws://127.0.0.1:8080/
+```
 
--   The transport can be native WebSocket or long-polling fallback.
--   Use typed messages to keep protocol explicit.
--   For real apps, validate payload fields and enforce limits.
+Now send:
 
-Next example: async-worker.
+``` json
+{"type":"chat.message","payload":{"user":"Alice","text":"Hello!"}}
+```
+
+Open two terminals running websocat to see broadcast working.
+
+## 6. Message Protocol
+
+Every WebSocket message follows this structure:
+
+``` json
+{
+  "type": "chat.message",
+  "payload": {
+    "user": "Alice",
+    "text": "Hello"
+  }
+}
+```
+
+Rules:
+
+-   type defines the event
+-   payload contains the data
+-   Server decides how to route based on type
+
+## 7. Recommended Structure For Real Projects
+
+Instead of a single file:
+
+src/ main.cpp chat/ ChatHandler.hpp ChatHandler.cpp
+
+Keep WebSocket logic separate from HTTP routes.
+
+## 8. Common Extensions
+
+You can extend this example with:
+
+-   Authentication before joining chat
+-   Rooms (ws.join(room))
+-   Private messaging
+-   Presence tracking
+-   Database persistence
+-   Rate limiting
+-   Message validation
+
+## 9. Key Concepts Learned
+
+-   How to start HTTP + WebSocket in Vix
+-   How to broadcast messages
+-   How typed protocols work
+-   How to test real-time systems quickly
+-   How to structure C++ WebSocket backends
+
+This example is intentionally minimal but production-ready in structure.
 

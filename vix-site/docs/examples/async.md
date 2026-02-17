@@ -1,73 +1,163 @@
-# async-worker
+# Async Worker (Beginner Guide)
 
-Minimal examples for **Vix async**.
-All code is kept inside `main()` on purpose.
+Welcome 👋
 
-## Run
+This page explains how to use Vix async in a simple and practical way.
+If you are new to coroutines or async C++, this guide is for you.
 
-```bash
-vix run examples/async-worker.cpp
+------------------------------------------------------------------------
+
+## What is an Async Worker?
+
+An async worker allows your program to:
+
+-   Run tasks without blocking the main thread
+-   Wait for timers without freezing
+-   Run heavy CPU work in background threads
+-   Stop cleanly when receiving Ctrl+C
+
+In simple words:
+
+Async = Do not block.\
+Worker = Do work safely in background.
+
+------------------------------------------------------------------------
+
+# 1️⃣ Minimal Example -- Hello Async
+
+This is the smallest possible example.
+
+``` cpp
+#include <iostream>
+#include <vix/async/core/io_context.hpp>
+#include <vix/async/core/task.hpp>
+
+using vix::async::core::io_context;
+using vix::async::core::task;
+
+task<void> app(io_context& ctx)
+{
+    std::cout << "Hello async world!\n";
+    ctx.stop();
+    co_return;
+}
+
+int main()
+{
+    io_context ctx;
+
+    auto t = app(ctx);
+    ctx.post(t.handle());
+    ctx.run();
+
+    return 0;
+}
 ```
 
-## Example: timer + cpu_pool + stop
+What happens here?
 
-```cpp
-#include <cassert>
-#include <chrono>
+-   io_context = async runtime
+-   task\<\> = coroutine function
+-   ctx.post() = schedule the task
+-   ctx.run() = start the event loop
+-   ctx.stop() = stop the runtime
+
+------------------------------------------------------------------------
+
+# 2️⃣ Waiting Without Blocking (Timer)
+
+This example waits 1 second without freezing the program.
+
+``` cpp
 #include <iostream>
+#include <chrono>
 
 #include <vix/async/core/io_context.hpp>
 #include <vix/async/core/task.hpp>
 #include <vix/async/core/timer.hpp>
+
+using vix::async::core::io_context;
+using vix::async::core::task;
+
+task<void> app(io_context& ctx)
+{
+    std::cout << "Waiting 1 second...\n";
+
+    co_await ctx.timers().sleep_for(std::chrono::seconds(1));
+
+    std::cout << "Done!\n";
+    ctx.stop();
+    co_return;
+}
+
+int main()
+{
+    io_context ctx;
+    auto t = app(ctx);
+    ctx.post(t.handle());
+    ctx.run();
+}
+```
+
+Important:
+
+sleep_for() does NOT block the event loop thread.
+
+------------------------------------------------------------------------
+
+# 3️⃣ Running Heavy Work in Background (CPU Pool)
+
+Never block your event loop with heavy computation.
+
+Instead:
+
+``` cpp
+#include <iostream>
+#include <vix/async/core/io_context.hpp>
+#include <vix/async/core/task.hpp>
 #include <vix/async/core/thread_pool.hpp>
 
 using vix::async::core::io_context;
 using vix::async::core::task;
 
-static task<void> app(io_context &ctx)
+task<void> app(io_context& ctx)
 {
-  std::cout << "[async] hello from task\n";
+    int result = co_await ctx.cpu_pool().submit([] {
+        int sum = 0;
+        for (int i = 0; i < 100000; ++i)
+            sum += i;
+        return sum;
+    });
 
-  // Timer: sleep for 50ms (does not block the event loop thread)
-  co_await ctx.timers().sleep_for(std::chrono::milliseconds(50));
-  std::cout << "[async] after timer\n";
+    std::cout << "Result: " << result << "\n";
 
-  // Thread pool: run CPU work off the event loop, then resume here
-  int v = co_await ctx.cpu_pool().submit([]() -> int
-  {
-    int sum = 0;
-    for (int i = 0; i < 100000; ++i)
-      sum += (i % 7);
-    return sum;
-  });
-
-  std::cout << "[async] cpu_pool result = " << v << "\n";
-  assert(v >= 0);
-
-  // Stop the runtime once done
-  ctx.stop();
-  co_return;
+    ctx.stop();
+    co_return;
 }
 
 int main()
 {
-  io_context ctx;
-
-  auto t = app(ctx);
-  ctx.post(t.handle());
-
-  ctx.run();
-
-  std::cout << "[async] done\n";
-  return 0;
+    io_context ctx;
+    auto t = app(ctx);
+    ctx.post(t.handle());
+    ctx.run();
 }
 ```
 
-## Example: signals (SIGINT/SIGTERM)
+Here:
 
-```cpp
-#include <csignal>
+-   The heavy loop runs on a worker thread
+-   The event loop stays responsive
+
+------------------------------------------------------------------------
+
+# 4️⃣ Clean Shutdown (Ctrl+C)
+
+Production programs must stop safely.
+
+``` cpp
 #include <iostream>
+#include <signal.h>
 
 #include <vix/async/core/io_context.hpp>
 #include <vix/async/core/signal.hpp>
@@ -76,148 +166,44 @@ int main()
 using vix::async::core::io_context;
 using vix::async::core::task;
 
-static task<void> app(io_context &ctx)
+task<void> app(io_context& ctx)
 {
-  auto &sig = ctx.signals();
+    auto& sig = ctx.signals();
 
-  sig.add(SIGINT);
-  sig.add(SIGTERM);
+    sig.add(SIGINT);
+    sig.add(SIGTERM);
 
-  std::cout << "[async] waiting for SIGINT/SIGTERM (Ctrl+C)\n";
+    std::cout << "Press Ctrl+C to stop\n";
 
-  sig.on_signal([&](int s)
-  {
-    std::cout << "[async] signal received: " << s << " -> stopping\n";
-    ctx.stop();
-  });
+    sig.on_signal([&](int){
+        std::cout << "Stopping...\n";
+        ctx.stop();
+    });
 
-  int s = co_await sig.async_wait();
-  std::cout << "[async] async_wait got signal: " << s << " -> stopping\n";
-  ctx.stop();
-
-  co_return;
+    co_await sig.async_wait();
+    co_return;
 }
 
 int main()
 {
-  io_context ctx;
-
-  auto t = app(ctx);
-  ctx.post(t.handle());
-
-  ctx.run();
-
-  std::cout << "[async] stopped\n";
-  return 0;
+    io_context ctx;
+    auto t = app(ctx);
+    ctx.post(t.handle());
+    ctx.run();
 }
 ```
 
-## Example: tcp echo server (async accept/read/write)
+------------------------------------------------------------------------
 
-```cpp
-#include <csignal>
-#include <cstddef>
-#include <iostream>
-#include <memory>
-#include <span>
-#include <system_error>
-#include <vector>
+# Final Notes for Beginners
 
-#include <vix/async/core/io_context.hpp>
-#include <vix/async/core/signal.hpp>
-#include <vix/async/core/spawn.hpp>
-#include <vix/async/core/task.hpp>
+✔ Always use cpu_pool() for heavy work\
+✔ Use timers instead of std::this_thread::sleep_for()\
+✔ Handle SIGINT for production apps\
+✔ Keep event loop clean and responsive
 
-#include <vix/async/net/tcp.hpp>
+------------------------------------------------------------------------
 
-using vix::async::core::io_context;
-using vix::async::core::task;
-
-static task<void> handle_client(std::unique_ptr<vix::async::net::tcp_stream> client)
-{
-  std::cout << "[async] client connected\n";
-
-  std::vector<std::byte> buf(4096);
-
-  while (client && client->is_open())
-  {
-    std::size_t n = 0;
-
-    try
-    {
-      n = co_await client->async_read(std::span<std::byte>(buf.data(), buf.size()));
-    }
-    catch (const std::system_error &e)
-    {
-      std::cout << "[async] read error: " << e.code().message() << "\n";
-      break;
-    }
-
-    if (n == 0)
-      break;
-
-    try
-    {
-      co_await client->async_write(std::span<const std::byte>(buf.data(), n));
-    }
-    catch (const std::system_error &e)
-    {
-      std::cout << "[async] write error: " << e.code().message() << "\n";
-      break;
-    }
-  }
-
-  client->close();
-  std::cout << "[async] client disconnected\n";
-  co_return;
-}
-
-static task<void> server(io_context &ctx)
-{
-  auto &sig = ctx.signals();
-  sig.add(SIGINT);
-  sig.add(SIGTERM);
-  sig.on_signal([&](int s)
-  {
-    std::cout << "[async] signal " << s << " received -> stopping\n";
-    ctx.stop();
-  });
-
-  auto listener = vix::async::net::make_tcp_listener(ctx);
-
-  co_await listener->async_listen({"0.0.0.0", 9090}, 128);
-  std::cout << "[async] echo server listening on 0.0.0.0:9090\n";
-
-  while (ctx.is_running())
-  {
-    try
-    {
-      auto client = co_await listener->async_accept();
-      vix::async::core::spawn_detached(ctx, handle_client(std::move(client)));
-    }
-    catch (const std::system_error &e)
-    {
-      std::cout << "[async] accept error: " << e.code().message() << "\n";
-      break;
-    }
-  }
-
-  listener->close();
-  ctx.stop();
-  co_return;
-}
-
-int main()
-{
-  io_context ctx;
-
-  auto t = server(ctx);
-  ctx.post(t.handle());
-
-  ctx.run();
-
-  std::cout << "[async] server stopped\n";
-  return 0;
-}
-```
+Generated on 2026-02-17\
+Vix Async Beginner Guide
 

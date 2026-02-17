@@ -79,16 +79,155 @@ export default defineConfig({
         ],
       },
 
-      // 3) People want to see working stuff early
+      // 3) People want to see working stuff early (structured by user
       {
         text: "Examples",
         collapsed: false,
         items: [
-          { text: "All Examples", link: "/examples/" },
-          { text: "Hello HTTP", link: "/examples/hello-http" },
-          { text: "Auth Middleware", link: "/examples/auth" },
-          { text: "WebSocket Chat", link: "/examples/ws-chat" },
-          { text: "Async Worker", link: "/examples/async" },
+          { text: "Overview", link: "/examples/" },
+
+          // Beginner
+          {
+            text: "Start",
+            collapsed: false,
+            items: [
+              { text: "Hello HTTP", link: "/examples/hello-http" },
+              { text: "JSON", link: "/examples/json-basics" },
+              { text: "REST Starter", link: "/examples/rest-api" },
+              { text: "Errors", link: "/examples/errors" },
+              { text: "OpenAPI", link: "/examples/openapi" },
+            ],
+          },
+
+          // HTTP Core
+          {
+            text: "HTTP",
+            collapsed: true,
+            items: [
+              { text: "Routing", link: "/examples/routing" },
+              { text: "Middleware", link: "/examples/middleware" },
+              { text: "Validation", link: "/examples/validation" },
+              { text: "Auth", link: "/examples/auth" },
+              { text: "Groups", link: "/examples/group-api" },
+              { text: "Prefix vs Group", link: "/examples/group-vs-prefix" },
+              {
+                text: "Group Advanced",
+                link: "/examples/group-advanced-patterns",
+              },
+              { text: "Headers", link: "/examples/headers" },
+              { text: "Static", link: "/examples/static-files" },
+              { text: "Forms", link: "/examples/form" },
+              { text: "Multipart", link: "/examples/multipart" },
+              { text: "JSON Parser", link: "/examples/json-parsers" },
+            ],
+          },
+
+          // Real-time
+          {
+            text: "Realtime",
+            collapsed: true,
+            items: [
+              { text: "Overview", link: "/examples/realtime" },
+              { text: "WS Chat", link: "/examples/ws-chat" },
+              { text: "Presence", link: "/examples/presence" },
+              { text: "Notifications", link: "/examples/notifications" },
+              { text: "Streaming", link: "/examples/streaming" },
+            ],
+          },
+
+          // Database
+          {
+            text: "Database",
+            collapsed: true,
+            items: [
+              { text: "Overview", link: "/examples/db" },
+              { text: "Quickstart", link: "/examples/db-quickstart" },
+              { text: "Transactions", link: "/examples/db-transactions" },
+              { text: "Production", link: "/examples/db-production-guide" },
+            ],
+          },
+
+          // ORM
+          {
+            text: "ORM",
+            collapsed: true,
+            items: [
+              {
+                text: "Beginner",
+                collapsed: true,
+                items: [
+                  { text: "Users CRUD", link: "/examples/users-crud" },
+                  { text: "Repo CRUD", link: "/examples/repository-crud-full" },
+                ],
+              },
+              {
+                text: "Intermediate",
+                collapsed: true,
+                items: [
+                  { text: "QB Update", link: "/examples/querybuilder-update" },
+                  { text: "Batch + Tx", link: "/examples/batch-insert-tx" },
+                  { text: "Errors", link: "/examples/error-handling" },
+                ],
+              },
+              {
+                text: "Advanced",
+                collapsed: true,
+                items: [
+                  { text: "Unit of Work", link: "/examples/tx-unit-of-work" },
+                ],
+              },
+            ],
+          },
+
+          // Security
+          {
+            text: "Security",
+            collapsed: true,
+            items: [
+              { text: "API Key", link: "/examples/api-key" },
+              { text: "JWT", link: "/examples/jwt" },
+              { text: "Session", link: "/examples/session" },
+              { text: "RBAC", link: "/examples/rbac" },
+              { text: "RBAC + Session", link: "/examples/rbac-session" },
+              { text: "Session vs JWT", link: "/examples/session-jwt" },
+              { text: "Cookies", link: "/examples/cookies" },
+              { text: "CSRF", link: "/examples/csrf" },
+              { text: "CORS", link: "/examples/cors" },
+              { text: "IP Filter", link: "/examples/ip-filter" },
+              { text: "Body Limit", link: "/examples/body-limit" },
+              { text: "Rate Limit", link: "/examples/rate-limit" },
+            ],
+          },
+
+          // Offline
+          {
+            text: "Offline",
+            collapsed: true,
+            items: [
+              { text: "Sync", link: "/examples/sync" },
+              { text: "WAL", link: "/examples/wal-recovery" },
+              { text: "Outbox", link: "/examples/outbox" },
+              { text: "Retry", link: "/examples/retry-policy" },
+              { text: "P2P Node", link: "/examples/p2p-node" },
+              { text: "P2P HTTP", link: "/examples/p2p-http" },
+              { text: "P2P Sync", link: "/examples/p2p-sync" },
+            ],
+          },
+
+          // Ops
+          {
+            text: "Ops",
+            collapsed: true,
+            items: [
+              { text: "Async", link: "/examples/async" },
+              { text: "Cache", link: "/examples/caching" },
+              { text: "Compression", link: "/examples/compression" },
+              { text: "ETag", link: "/examples/etag" },
+              { text: "Logging", link: "/examples/logging-json" },
+              { text: "Shutdown", link: "/examples/graceful-shutdown" },
+              { text: "API Groups", link: "/examples/production-api-groups" },
+            ],
+          },
         ],
       },
 
@@ -190,6 +329,12 @@ export default defineConfig({
           },
 
           {
+            text: "WebSocket",
+            collapsed: true,
+            items: [{ text: "Overview", link: "/modules/websocket/" }],
+          },
+
+          {
             text: "Async",
             collapsed: true,
             items: [
@@ -222,12 +367,6 @@ export default defineConfig({
             text: "Net",
             collapsed: true,
             items: [{ text: "Overview", link: "/modules/net/" }],
-          },
-
-          {
-            text: "WebSocket",
-            collapsed: true,
-            items: [{ text: "Overview", link: "/modules/websocket/" }],
           },
 
           {
@@ -294,6 +433,7 @@ export default defineConfig({
             items: [
               { text: "Overview", link: "/modules/orm/" },
               { text: "Examples", link: "/modules/orm/examples" },
+              { text: "Repository", link: "/modules/orm/repository" },
             ],
           },
 

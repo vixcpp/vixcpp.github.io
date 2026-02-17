@@ -50,8 +50,4 @@ The Vix API follows strict principles:
 
 Everything that happens should be visible in code.
 
-------------------------------------------------------------------------
-
-Continue with the next API component page.
-
 
