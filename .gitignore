@@ -25,4 +25,7 @@ dist-ssr
 cmd.md
 .env
 vix-site/.env
-
+# Environment
+.env
+.env.*
+vix-site/.env
