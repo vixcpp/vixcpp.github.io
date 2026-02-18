@@ -1,8 +1,9 @@
 {
   "repo": "vixcpp/vix",
-  "fetched_at": "2026-02-17T12:37:44.529Z",
-  "stars": 291,
+  "fetched_at": "2026-02-18T10:52:46.392Z",
+  "stars": 293,
   "forks": 26,
   "open_issues": 12,
-  "watchers": 3
+  "watchers": 3,
+  "rate_limit": "auth"
 }
