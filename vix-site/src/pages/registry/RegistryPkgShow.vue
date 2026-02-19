@@ -518,14 +518,57 @@ function buildTocFromTokens(tokens) {
   return toc.slice(0, 60);
 }
 
+function tryFixMojibakeUtf8(s) {
+  const src = (s || "").toString();
+  if (!src) return src;
+
+  // Heuristique: si on voit "â" ou "Ã", c'est souvent un UTF-8 mal décodé
+  const looksMojibake = src.includes("â") || src.includes("Ã");
+  if (!looksMojibake) return src;
+
+  try {
+    // Reconstituer les bytes 0..255, puis décoder en UTF-8
+    const bytes = Uint8Array.from(src, (ch) => ch.charCodeAt(0) & 0xff);
+    const fixed = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+
+    // Garde la version "fixed" seulement si elle réduit clairement le mojibake
+    const badCount = (src.match(/[âÃ]/g) || []).length;
+    const fixedBadCount = (fixed.match(/[âÃ]/g) || []).length;
+
+    return fixedBadCount < badCount ? fixed : src;
+  } catch {
+    return src;
+  }
+}
+
 async function renderMarkdown(md, { tocOut = null } = {}) {
-  const source = (md || "").toString();
+  let source = (md || "").toString();
   if (!source) return "";
+
+  // FIX: réparer le texte avant parsing
+  source = tryFixMojibakeUtf8(source);
 
   const hl = await ensureHighlighter();
   const renderer = new marked.Renderer();
 
-  renderer.heading = (text, level) => {
+  renderer.heading = (...args) => {
+    // marked peut appeler:
+    // - heading(text, level, raw, slugger)  (ancien)
+    // - heading(token)                     (nouveau)
+    let text = "";
+    let level = 1;
+
+    const a0 = args[0];
+
+    if (typeof a0 === "string") {
+      text = a0;
+      level = Number(args[1] || 1);
+    } else if (a0 && typeof a0 === "object") {
+      // token shape
+      text = typeof a0.text === "string" ? a0.text : "";
+      level = Number(a0.depth || a0.level || 1);
+    }
+
     const t = (text || "").toString();
     const id = t
       .toLowerCase()
@@ -533,6 +576,7 @@ async function renderMarkdown(md, { tocOut = null } = {}) {
       .trim()
       .replace(/\s+/g, "-")
       .slice(0, 80);
+
     return `<h${level} id="${id}">${t}</h${level}>`;
   };
 
@@ -1853,16 +1897,6 @@ watch(
               </div>
 
               <template v-else>
-                <div class="pinned" v-if="pinnedRootNodes.length">
-                  <div class="label">Pinned</div>
-                  <div class="pinned-grid">
-                    <button class="pin" v-for="n in pinnedRootNodes" :key="n.path" @click="openNode(n)">
-                      <span class="icon" :class="n.type === 'dir' ? 'dir' : 'file'"></span>
-                      <span class="pin-name">{{ n.name }}</span>
-                    </button>
-                  </div>
-                </div>
-
                 <div class="file-list">
                   <div class="file-row head">
                     <div class="c1">Name</div>
