@@ -1,4 +1,3 @@
-<!-- src/pages/registry/pkgshow/PkgFilesTab.vue -->
 <script setup>
 import { computed, ref, watch, nextTick, onBeforeUnmount } from "vue";
 import { createHighlighter } from "shiki";

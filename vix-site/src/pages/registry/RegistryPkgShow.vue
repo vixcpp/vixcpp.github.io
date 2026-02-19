@@ -30,6 +30,33 @@ const pkg = ref(null);
 const activeTab = ref((route.query.tab || "overview").toString() || "overview");
 const selectedVersion = ref("");
 
+const tabKey = ref({
+  overview: 0,
+  docs: 0,
+  files: 0,
+  versions: 0,
+});
+
+function reloadTab(t) {
+  const tab = (t || activeTab.value || "overview").toString();
+
+  // force re-mount du composant tab
+  tabKey.value = {
+    ...tabKey.value,
+    [tab]: (tabKey.value[tab] || 0) + 1,
+  };
+
+  // optionnel: UX comme JSR
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // optionnel: re-fetch immédiat (utile si le tab n’a pas de lifecycle)
+  if (tab === "overview") loadReadme();
+  if (tab === "files") loadDir(currentPath.value || "");
+  if (tab === "docs") loadDocs();
+  // versions: rien à fetch
+}
+
+
 const isDev = computed(() => !!import.meta.env.DEV);
 
 /* README */
@@ -1540,12 +1567,14 @@ watch(
           @update:selectedVersion="selectedVersion = $event"
           @update:metaOpen="metaOpen = $event"
           @setTab="setTab"
+          @reloadTab="reloadTab"
           :registryHintExportsJson="registryHintExportsJson"
         />
 
         <section class="panel">
           <PkgOverviewTab
             v-if="activeTab === 'overview'"
+            :key="tabKey.overview"
             :pkg="pkg"
             :installSnippet="installSnippet"
             :includeSnippet="includeSnippet"
@@ -1560,6 +1589,7 @@ watch(
 
           <PkgDocsTab
             v-else-if="activeTab === 'docs'"
+            :key="tabKey.docs"
             :id="id"
             :docsLoading="docsLoading"
             :docsError="docsError"
@@ -1577,6 +1607,7 @@ watch(
 
           <PkgFilesTab
             v-else-if="activeTab === 'files'"
+            :key="tabKey.files"
             :pkgRepoUrl="pkgRepoUrl"
             :filesLoading="filesLoading"
             :filesError="filesError"
@@ -1622,6 +1653,7 @@ watch(
 
           <PkgVersionsTab
             v-else-if="activeTab === 'versions'"
+            :key="tabKey.versions"
             :sortedVersions="sortedVersions"
             :pkgLatest="pkgLatest"
             :shortSha="shortSha"

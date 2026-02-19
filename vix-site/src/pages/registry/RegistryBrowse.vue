@@ -1,12 +1,14 @@
+<!-- src/pages/RegistryBrowse.vue -->
 <script setup>
-import { ref, onMounted, watch, onBeforeUnmount } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted, watch, onBeforeUnmount, computed, nextTick } from "vue";
+import { useRoute, useRouter, RouterLink } from "vue-router";
 import { loadRegistryIndex } from "@/lib/loadRegistryIndex";
-
 import RegistrySearchWorker from "@/workers/registrySearch.worker.js?worker";
 
 const route = useRoute();
 const router = useRouter();
+
+const worker = new RegistrySearchWorker();
 
 const q = ref((route.query.q || "").toString());
 const hits = ref([]);
@@ -17,32 +19,65 @@ const error = ref("");
 
 const searchEl = ref(null);
 
-const worker = new RegistrySearchWorker();
-
-function doSearch() {
-  const isEmpty = !q.value || !q.value.trim();
-
-  worker.postMessage({
-    type: "search",
-    query: isEmpty ? "" : q.value.trim(),
-    limit: isEmpty ? 50 : 30,
-    sort: isEmpty ? "latest" : "score"
-  });
-}
-function goSearch(next) {
-  const s = (next ?? q.value ?? "").toString().trim();
-
-  if (!s) {
-    router.push({ path: "/registry/browse", query: {} });
-    return;
-  }
-
-  router.push({ path: "/registry/browse", query: { q: s } });
-}
+const isEmptyQuery = computed(() => !q.value || !q.value.trim());
+const titleLabel = computed(() => (isEmptyQuery.value ? "Explore packages" : "Search results"));
+const subtitleLabel = computed(() => {
+  const parts = [];
+  if (version.value) parts.push(`Index: ${version.value}`);
+  if (!isEmptyQuery.value) parts.push(`Query: "${q.value.trim()}"`);
+  return parts.join(" · ");
+});
 
 function focusSearch() {
   if (searchEl.value) searchEl.value.focus();
 }
+
+function doSearch() {
+  const query = (q.value || "").trim();
+
+  worker.postMessage({
+    type: "search",
+    query: query,
+    limit: query ? 30 : 50,
+    sort: query ? "score" : "latest",
+  });
+}
+
+function goSearch(next) {
+  const s = (next ?? q.value ?? "").toString().trim();
+
+  if (!s) {
+    router.push({ path: "/registry/browse", query: {} }).catch(() => {});
+    return;
+  }
+  router.push({ path: "/registry/browse", query: { q: s } }).catch(() => {});
+}
+
+function clearSearch() {
+  q.value = "";
+  goSearch("");
+  nextTick(() => focusSearch());
+}
+
+function openPkg(h) {
+  if (!h) return;
+  router.push({ path: `/registry/pkg/${h.namespace}/${h.name}` }).catch(() => {});
+}
+
+const keyHandler = (e) => {
+  const isCtrlK = (e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K");
+  if (isCtrlK) {
+    e.preventDefault();
+    focusSearch();
+    return;
+  }
+
+  const isEsc = e.key === "Escape";
+  if (isEsc && document.activeElement === searchEl.value) {
+    e.preventDefault();
+    clearSearch();
+  }
+};
 
 onMounted(async () => {
   worker.onmessage = (ev) => {
@@ -68,14 +103,7 @@ onMounted(async () => {
     }
   };
 
-  const onKey = (e) => {
-    const isCtrlK = (e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K");
-    if (!isCtrlK) return;
-    e.preventDefault();
-    focusSearch();
-  };
-
-  window.addEventListener("keydown", onKey);
+  window.addEventListener("keydown", keyHandler);
 
   try {
     const { data } = await loadRegistryIndex();
@@ -84,13 +112,10 @@ onMounted(async () => {
     loading.value = false;
     error.value = "cannot_load_registry";
   }
-
-  onBeforeUnmount(() => {
-    window.removeEventListener("keydown", onKey);
-  });
 });
 
 onBeforeUnmount(() => {
+  window.removeEventListener("keydown", keyHandler);
   worker.terminate();
 });
 
@@ -104,139 +129,140 @@ watch(
 </script>
 
 <template>
-  <section class="reg-page">
-    <!-- Top header like JSR -->
-    <header class="reg-top">
-      <div class="reg-top-inner">
+  <section class="page">
+    <!-- Top bar (JSR-like) -->
+    <header class="topbar">
+      <div class="topbar-inner">
         <RouterLink class="brand" to="/registry">
-          <span class="logo" aria-hidden="true"></span>
-          <span class="brand-text">Vix Registry</span>
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-text">Registry</span>
         </RouterLink>
 
         <form class="search" @submit.prevent="goSearch()">
+          <span class="search-ico" aria-hidden="true">⌕</span>
           <input
             ref="searchEl"
-            v-model.trim="q"
+            v-model="q"
             class="search-in"
             type="search"
-            placeholder="Search for packages (Ctrl+K)"
+            placeholder="Search packages"
             autocomplete="off"
+            spellcheck="false"
             @keydown.enter.prevent="goSearch()"
           />
-          <button class="search-btn" type="submit" :disabled="loading" aria-label="Search">
-            <span aria-hidden="true">⌕</span>
-          </button>
+          <kbd class="kbd" title="Focus search">Ctrl K</kbd>
+          <button v-if="q" class="x" type="button" @click="clearSearch" aria-label="Clear">×</button>
         </form>
 
         <nav class="nav">
           <a class="nav-link" href="/docs/" target="_self" rel="noreferrer">Docs</a>
-          <a class="nav-link" href="https://github.com/vixcpp/registry" target="_blank" rel="noreferrer">
-            GitHub
-          </a>
-
-          <RouterLink class="nav-link" to="/registry/publish">Publish</RouterLink>
+          <a class="nav-link" href="https://github.com/vixcpp/registry" target="_blank" rel="noreferrer">GitHub</a>
+          <RouterLink class="nav-link pill" to="/registry/publish">Publish</RouterLink>
         </nav>
       </div>
     </header>
 
-    <!-- Body -->
+    <!-- Content -->
     <div class="wrap">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">
-              {{ q ? "Search results" : "Explore packages" }}
-            </div>
-            <div class="panel-sub">
-              <span v-if="version">Index: {{ version }}</span>
-              <span v-if="q" class="sep">|</span>
-              <span v-if="q">Query: "{{ q }}"</span>
-            </div>
-          </div>
-
-          <div class="panel-right">
-            <span v-if="!loading && !error" class="count">
-              {{ total }} result(s)
-            </span>
-
-            <button v-if="q" class="clear" type="button" @click="goSearch('')">
-              Clear
-            </button>
-          </div>
+      <div class="head">
+        <div class="hblock">
+          <div class="h1">{{ titleLabel }}</div>
+          <div class="sub" v-if="subtitleLabel">{{ subtitleLabel }}</div>
         </div>
 
-        <div v-if="loading" class="state muted">Loading registry…</div>
-        <div v-else-if="error" class="state muted">Error: {{ error }}</div>
+        <div class="meta">
+          <div class="count" v-if="!loading && !error">
+            {{ total }} result(s)
+          </div>
+        </div>
+      </div>
 
-        <div v-else>
-          <div v-if="q && total === 0" class="state muted">
-            No results for "{{ q }}".
+      <div class="card">
+        <div v-if="loading" class="state">
+          <span class="spinner" aria-hidden="true"></span>
+          Loading registry…
+        </div>
+
+        <div v-else-if="error" class="state error">
+          Error: {{ error }}
+        </div>
+
+        <template v-else>
+          <div v-if="!isEmptyQuery && total === 0" class="empty">
+            <div class="empty-title">No results</div>
+            <div class="empty-sub">Try a different query.</div>
           </div>
 
-          <ul v-else class="list">
-            <li v-for="h in hits" :key="h.id" class="item">
-              <div class="row">
+          <ul v-else class="list" role="list">
+            <li v-for="h in hits" :key="h.id" class="row">
+              <button class="row-btn" type="button" @click="openPkg(h)">
                 <div class="left">
-                <RouterLink
-                  class="id id-link"
-                  :to="`/registry/pkg/${h.namespace}/${h.name}`"
-                >
-                  {{ h.id }}
-                </RouterLink>
+                  <!-- show id only once -->
+                  <div class="pkg-id">
+                    <span class="ns">@{{ h.namespace }}</span><span class="slash">/</span><span class="nm">{{ h.name }}</span>
+                  </div>
                   <div v-if="h.description" class="desc">{{ h.description }}</div>
                 </div>
 
                 <div class="right">
-                  <div class="ver">{{ h.latest }}</div>
-                  <a
-                    v-if="h.repo"
-                    class="repo"
-                    :href="h.repo"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <span class="tag" v-if="h.latest">v{{ h.latest }}</span>
+                  <a v-if="h.repo" class="repo" :href="h.repo" target="_blank" rel="noreferrer" @click.stop>
                     repo
                   </a>
                 </div>
-              </div>
+              </button>
             </li>
           </ul>
 
-          <div v-if="!q" class="foot muted">
-            Tip: use Ctrl+K to focus search
+          <div class="foot" v-if="isEmptyQuery">
+            Tip: Ctrl K focuses search. Esc clears when focused.
           </div>
-        </div>
+        </template>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.reg-page{
+.page{
+  --max: 1160px;
+  --pad: 20px;
+
+  --bg: #05080b;
+  --panel: rgba(255,255,255,.03);
+  --border: rgba(255,255,255,.10);
+
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.66);
+  --muted2: rgba(255,255,255,.54);
+
+  --link: rgba(140,200,255,.95);
+  --link2: rgba(140,200,255,.80);
+
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 50% 12%, rgba(34, 211, 238, 0.08), transparent 55%),
-    radial-gradient(circle at 50% 60%, rgba(16, 185, 129, 0.06), transparent 60%),
-    linear-gradient(to bottom, #031b1a, #020617);
 }
 
-/* Top bar */
-.reg-top{
+/* =========================
+   Topbar
+========================= */
+.topbar{
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
+
   backdrop-filter: blur(10px);
-  background: rgba(2,6,23,.55);
-  border-bottom: 1px solid rgba(148,163,184,.12);
+  background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.30));
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-.reg-top-inner{
-  max-width: 1160px;
+.topbar-inner{
+  max-width: var(--max);
   margin: 0 auto;
-  padding: 12px 16px;
+  padding: 12px var(--pad);
+
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 14px;
+  grid-template-columns: 180px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: center;
 }
 
@@ -245,167 +271,204 @@ watch(
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  color: var(--text);
+  font-weight: 950;
+  letter-spacing: -0.01em;
 }
 
-.logo{
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background:
-    linear-gradient(135deg, rgba(94,234,212,.95), rgba(34,197,94,.95));
-  box-shadow: 0 10px 28px rgba(16,185,129,.18);
+.brand-dot{
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(140,200,255,.80);
+  box-shadow: 0 0 0 3px rgba(140,200,255,.14);
 }
 
 .brand-text{
-  font-weight: 950;
-  color: rgba(229,249,246,.95);
+  font-size: 14px;
+  opacity: .95;
 }
 
+/* =========================
+   Search
+========================= */
 .search{
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
   border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(148,163,184,.18);
-  background: rgba(15,23,42,.35);
+
+  padding: 8px 10px;
+  min-width: 0;
+}
+
+.search-ico{
+  color: rgba(255,255,255,.60);
+  font-size: 14px;
+  flex: 0 0 auto;
 }
 
 .search-in{
   width: 100%;
-  min-width: 180px;
-  padding: 10px 12px;
+  min-width: 0;
+
+  background: transparent;
   border: 0;
   outline: none;
-  color: rgba(226,232,240,.95);
-  background: transparent;
+
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .search-in::placeholder{
-  color: rgba(148,163,184,.85);
+  color: rgba(255,255,255,.42);
+  font-weight: 800;
 }
 
-.search-btn{
-  width: 46px;
-  border: 0;
-  cursor: pointer;
-  background: rgba(20,184,166,.22);
-  color: rgba(229,249,246,.95);
+.kbd{
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(255,255,255,.64);
+
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.25);
+  border-radius: 8px;
+  padding: 3px 7px;
+}
+
+.x{
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+
+  color: rgba(255,255,255,.74);
   font-weight: 950;
+  cursor: pointer;
+}
+.x:hover{
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
 }
 
-.search-btn:hover{
-  background: rgba(20,184,166,.30);
-}
-
-.search-btn:disabled{
-  opacity: .6;
-  cursor: not-allowed;
-}
-
+/* =========================
+   Nav
+========================= */
 .nav{
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .nav-link{
-  color: rgba(147,197,253,.95);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 800;
-  font-size: 0.95rem;
+  text-decoration: none;
+  color: rgba(255,255,255,.70);
+  font-size: 13px;
+  font-weight: 900;
+}
+.nav-link:hover{ color: rgba(255,255,255,.92); }
+
+.pill{
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
 }
 
-.nav-link:hover{
-  color: rgba(191,219,254,1);
-}
-
-.icon-btn{
-  border: 1px solid rgba(148,163,184,.18);
-  background: rgba(15,23,42,.35);
-  color: rgba(226,232,240,.92);
-  border-radius: 10px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
-.icon-btn:hover{
-  background: rgba(15,23,42,.55);
-}
-
-/* Body */
+/* =========================
+   Page head
+========================= */
 .wrap{
-  max-width: 1160px;
+  max-width: var(--max);
   margin: 0 auto;
-  padding: 18px 16px 40px;
+  padding: 18px var(--pad) 40px;
 }
 
-.panel{
-  border: 1px solid rgba(148,163,184,.14);
-  border-radius: 14px;
-  background: rgba(2,6,23,.35);
-  overflow: hidden;
-}
-
-.panel-head{
-  padding: 14px 14px;
+.head{
   display: flex;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 14px;
-  align-items: flex-start;
-  background: rgba(2,6,23,.25);
-  border-bottom: 1px solid rgba(148,163,184,.10);
+  gap: 16px;
+  margin: 12px 0 12px;
 }
 
-.panel-title{
+.h1{
+  font-size: 18px;
   font-weight: 950;
-  color: rgba(229,249,246,.95);
+  color: var(--text);
+  letter-spacing: -0.01em;
 }
 
-.panel-sub{
-  margin-top: 4px;
-  color: rgba(148,163,184,.95);
-  font-size: 0.92rem;
-}
-
-.sep{ margin: 0 8px; opacity: .6; }
-
-.panel-right{
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
+.sub{
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,.62);
+  font-weight: 800;
 }
 
 .count{
+  font-size: 12px;
   font-weight: 900;
-  color: rgba(226,232,240,.92);
-  border: 1px solid rgba(148,163,184,.14);
-  padding: 6px 10px;
+  color: rgba(255,255,255,.62);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
   border-radius: 999px;
-  background: rgba(15,23,42,.25);
+  padding: 6px 10px;
 }
 
-.clear{
-  border: 1px solid rgba(148,163,184,.14);
-  background: rgba(15,23,42,.25);
-  color: rgba(226,232,240,.92);
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 900;
-}
-
-.clear:hover{
-  background: rgba(15,23,42,.45);
+/* =========================
+   Card + list
+========================= */
+.card{
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  border-radius: 14px;
+  padding: 0 !important;
+  overflow: hidden;
 }
 
 .state{
-  padding: 14px;
+  padding: 16px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.70);
+  font-size: 13.5px;
+  font-weight: 800;
 }
+.state.error{ color: rgba(255,140,140,.92); }
 
-.muted{
-  color: rgba(148,163,184,.95);
+.spinner{
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.18);
+  border-top-color: rgba(255,255,255,.70);
+  animation: spin .9s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.empty{
+  padding: 18px 14px;
+}
+.empty-title{
+  font-size: 14px;
+  font-weight: 950;
+  color: rgba(255,255,255,.90);
+}
+.empty-sub{
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,.62);
 }
 
 .list{
@@ -414,90 +477,114 @@ watch(
   padding: 0;
 }
 
-.item{
-  padding: 14px;
-  border-top: 1px solid rgba(148,163,184,.10);
-}
-
-.item:first-child{
-  border-top: 0;
-}
-
 .row{
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.row:first-child{ border-top: 0; }
+
+.row-btn{
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  align-items: flex-start;
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border: 0;
+  background: transparent;
+}
+.row-btn:hover{
+  background: rgba(255,255,255,.04);
 }
 
-.id{
+.left{ min-width: 0; }
+
+.pkg-id{
+  font-size: 14px;
   font-weight: 950;
-  color: rgba(229,249,246,.95);
+  color: rgba(255,255,255,.92);
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
 }
+
+.ns{ color: rgba(255,255,255,.86); }
+.slash{ color: rgba(255,255,255,.52); padding: 0 2px; }
+.nm{ color: rgba(255,255,255,.92); }
 
 .desc{
   margin-top: 6px;
-  color: rgba(226,232,240,.88);
-  max-width: 780px;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,.62);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 760px;
 }
 
 .right{
-  display: grid;
-  justify-items: end;
-  gap: 8px;
-  min-width: 120px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.ver{
+.tag{
+  font-size: 12px;
   font-weight: 950;
-  color: rgba(94,234,212,.95);
+  color: rgba(255,255,255,.82);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  border-radius: 999px;
+  padding: 6px 10px;
 }
 
 .repo{
-  color: rgba(147,197,253,.95);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 900;
-}
-
-.foot{
-  padding: 12px 14px 14px;
-  border-top: 1px solid rgba(148,163,184,.10);
-}
-.id-link{
-  color: #1a73e8;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 950;
+  color: rgba(140,200,255,.95);
   text-decoration: none;
+  border: 1px solid rgba(140,200,255,.22);
+  background: rgba(140,200,255,.08);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.repo:hover{
+  background: rgba(140,200,255,.12);
 }
 
-.id-link:hover{
-  text-decoration: underline;
-  text-underline-offset: 2px;
+/* Footer tip */
+.foot{
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.60);
+  font-size: 12.5px;
+  font-weight: 800;
 }
 
-.id-link:visited{
-  color: #1a73e8;
-}
-
-
-/* Mobile */
-@media (max-width: 920px){
-  .reg-top-inner{
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 960px){
+  .topbar-inner{
     grid-template-columns: 1fr;
   }
   .nav{
     justify-content: flex-start;
-    flex-wrap: wrap;
   }
 }
 
-@media (max-width: 520px){
-  .row{
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .right{
-    justify-items: start;
-  }
+@media (max-width: 560px){
+  .wrap{ padding: 14px 14px 28px; }
+  .desc{ max-width: 100%; }
+  .kbd{ display: none; }
+  .head{ align-items: flex-start; flex-direction: column; }
+  .right{ gap: 8px; }
 }
 </style>

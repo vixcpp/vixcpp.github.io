@@ -435,14 +435,18 @@ onBeforeUnmount(() => {
 
 /* Sidebar code blocks */
 .codeblock{
-  margin: 0;
-  padding: 10px 12px;
+  position: relative;
+
+  padding: 8px 10px; /* réduit */
   border-radius: 10px;
-  background: rgba(255,255,255,.05);
+
+  background: rgba(0,0,0,.35);
   border: 1px solid rgba(255,255,255,.10);
+
   overflow: auto;
   white-space: nowrap;
 }
+
 .codeblock code{
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12.5px;
@@ -758,12 +762,13 @@ onBeforeUnmount(() => {
   content: "";
   position: absolute;
   left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
+  top: 4px;
+  bottom: 4px; /* réduit */
+  width: 2px;  /* plus fin */
   border-radius: 999px;
   background: rgba(140,200,255,.55);
 }
+
 /* =========================
    REAL RESPONSIVE FIX
    ========================= */
@@ -885,6 +890,63 @@ onBeforeUnmount(() => {
   .toc-text{
     white-space: normal;
   }
+}
+/* =========================
+   Scrollbars (code + toc)
+   ========================= */
+
+/* targets */
+.codeblock,
+.toc-list{
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255,255,255,.22) transparent; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+.codeblock::-webkit-scrollbar,
+.toc-list::-webkit-scrollbar{
+  height: 8px;   /* horizontal */
+  width: 8px;    /* vertical */
+}
+
+.codeblock::-webkit-scrollbar-track,
+.toc-list::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+.codeblock::-webkit-scrollbar-thumb,
+.toc-list::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
+  border: 2px solid transparent; /* makes it slimmer */
+  background-clip: content-box;
+}
+
+.codeblock::-webkit-scrollbar-thumb:hover,
+.toc-list::-webkit-scrollbar-thumb:hover{
+  background: rgba(255,255,255,.28);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* optional: avoid scrollbar corner block */
+.codeblock::-webkit-scrollbar-corner,
+.toc-list::-webkit-scrollbar-corner{
+  background: transparent;
+}
+.codeblock :deep(pre){
+  overflow: visible !important;
+}
+.codeblock :deep(pre){
+  margin: 0 !important;
+  padding: 0 !important;   /* 🔥 retire le padding double */
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.codeblock :deep(code){
+  padding: 0 !important;
 }
 
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   id: { type: String, default: "" },
@@ -20,6 +20,10 @@ const props = defineProps({
   activeTab: { type: String, default: "overview" },
 });
 
+const emit = defineEmits(["setTab", "reloadTab"]);
+
+// optional: small UI feedback on reload
+const tabReloadKey = ref(0);
 
 function relativeTime(iso) {
   if (!iso) return null;
@@ -63,19 +67,47 @@ const published = computed(() => {
   return null;
 });
 
-const emit = defineEmits(["setTab"]);
+function clickTab(t) {
+  if (props.activeTab === t) {
+    tabReloadKey.value++;
+    emit("reloadTab", t);
+    return;
+  }
+  emit("setTab", t);
+}
 </script>
 
 <template>
   <header class="header">
     <div class="header-top single">
       <div class="pkg-block">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+          <RouterLink to="/registry/browse" class="crumb-link">
+            Registry
+          </RouterLink>
+
+          <span class="crumb-sep">/</span>
+
+          <span class="crumb-current">
+            @{{ id }}
+          </span>
+        </div>
+
+        <!-- Package name row -->
         <div class="pkg-name-row">
-          <div class="pkg-name">@{{ id }}</div>
+          <div class="pkg-name">
+            {{ pkgDisplayName || id.split('/').pop() }}
+          </div>
 
           <div class="chips">
-            <span class="chip latest" v-if="latest">Latest {{ latest }}</span>
-            <span class="chip offline" v-if="offlineMode">Offline</span>
+            <span class="chip latest" v-if="latest">
+              Latest {{ latest }}
+            </span>
+            <span class="chip offline" v-if="offlineMode">
+              Offline
+            </span>
           </div>
         </div>
 
@@ -86,7 +118,9 @@ const emit = defineEmits(["setTab"]);
         <div class="meta-line" v-if="published">
           <span>
             Published {{ published.rel }}
-            <span class="mono" v-if="published.version">({{ published.version }})</span>
+            <span class="mono" v-if="published.version">
+              ({{ published.version }})
+            </span>
           </span>
 
           <span v-if="pkg?.license">• {{ pkg.license }}</span>
@@ -96,20 +130,20 @@ const emit = defineEmits(["setTab"]);
         <div class="notice" v-if="offlineMode">
           Offline mode is enabled. Browsing remote sources may be limited.
         </div>
+
         <div class="notice soft" v-else-if="ghNotice">
           {{ ghNotice }}
         </div>
       </div>
     </div>
 
+    <!-- Tabs -->
     <nav class="tabs" aria-label="Package tabs">
       <button
         type="button"
         class="tab"
         :class="{ active: activeTab === 'overview' }"
-        :aria-current="activeTab === 'overview' ? 'page' : null"
-        :disabled="activeTab === 'overview'"
-        @click.prevent="emit('setTab', 'overview')"
+        @click="clickTab('overview')"
       >
         Overview
       </button>
@@ -118,9 +152,7 @@ const emit = defineEmits(["setTab"]);
         type="button"
         class="tab"
         :class="{ active: activeTab === 'docs' }"
-        :aria-current="activeTab === 'docs' ? 'page' : null"
-        :disabled="activeTab === 'docs'"
-        @click.prevent="emit('setTab', 'docs')"
+        @click="clickTab('docs')"
       >
         Docs
       </button>
@@ -129,9 +161,7 @@ const emit = defineEmits(["setTab"]);
         type="button"
         class="tab"
         :class="{ active: activeTab === 'files' }"
-        :aria-current="activeTab === 'files' ? 'page' : null"
-        :disabled="activeTab === 'files'"
-        @click.prevent="emit('setTab', 'files')"
+        @click="clickTab('files')"
       >
         Files
       </button>
@@ -140,16 +170,13 @@ const emit = defineEmits(["setTab"]);
         type="button"
         class="tab"
         :class="{ active: activeTab === 'versions' }"
-        :aria-current="activeTab === 'versions' ? 'page' : null"
-        :disabled="activeTab === 'versions'"
-        @click.prevent="emit('setTab', 'versions')"
+        @click="clickTab('versions')"
       >
         Versions
       </button>
     </nav>
   </header>
 </template>
-
 
 <style scoped>
 /* PkgShowHeader.vue (scoped)
@@ -530,6 +557,52 @@ const emit = defineEmits(["setTab"]);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12.5px;
   color: rgba(255,255,255,.75);
+}
+/* Breadcrumb */
+.breadcrumb{
+  margin-bottom: 10px;
+}
+
+.back-link{
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,.60);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+
+.back-link:hover{
+  color: rgba(255,255,255,.95);
+}
+/* ---------------------------
+   Breadcrumb (JSR style)
+---------------------------- */
+
+.breadcrumb{
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crumb-link{
+  color: rgba(255,255,255,.60);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+
+.crumb-link:hover{
+  color: rgba(255,255,255,.95);
+}
+
+.crumb-sep{
+  color: rgba(255,255,255,.35);
+}
+
+.crumb-current{
+  color: rgba(255,255,255,.90);
 }
 
 </style>
