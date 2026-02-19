@@ -70,12 +70,8 @@ const emit = defineEmits(["setTab"]);
   <header class="header">
     <div class="header-top single">
       <div class="pkg-block">
-        <div class="pkg-topline">
-          <div class="pkg-id">{{ id }}</div>
-        </div>
-
         <div class="pkg-name-row">
-          <div class="pkg-name">{{ pkgDisplayName }}</div>
+          <div class="pkg-name">@{{ id }}</div>
 
           <div class="chips">
             <span class="chip latest" v-if="latest">Latest {{ latest }}</span>
