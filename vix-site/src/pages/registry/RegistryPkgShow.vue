@@ -4,6 +4,12 @@ import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { loadRegistryIndex } from "@/lib/loadRegistryIndex";
 import RegistrySearchWorker from "@/workers/registrySearch.worker.js?worker";
+import PkgShowHeader from "./pkgshow/PkgShowHeader.vue";
+import PkgOverviewTab from "./pkgshow/PkgOverviewTab.vue";
+import PkgDocsTab from "./pkgshow/PkgDocsTab.vue";
+import PkgFilesTab from "./pkgshow/PkgFilesTab.vue";
+import PkgVersionsTab from "./pkgshow/PkgVersionsTab.vue";
+
 
 import { marked } from "marked";
 import DOMPurify from "dompurify";
@@ -1498,7 +1504,6 @@ watch(
   },
 );
 </script>
-
 <template>
   <section class="page">
     <div class="container">
@@ -1513,499 +1518,116 @@ watch(
       </div>
 
       <template v-else-if="pkg">
-        <header class="header">
-          <div class="header-top">
-            <div class="pkg-block">
-              <div class="pkg-id">{{ id }}</div>
-              <div class="pkg-name">{{ pkgDisplayName }}</div>
-
-              <div class="pkg-desc" v-if="pkg.description">
-                {{ pkg.description }}
-              </div>
-
-              <div class="meta-row">
-                <a
-                  v-if="pkgRepoUrl"
-                  class="link"
-                  :href="pkgRepoUrl"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Repo
-                </a>
-
-                <span class="muted" v-if="indexVersion">Index: {{ indexVersion }}</span>
-                <span class="muted" v-if="selectedCommit">Commit: {{ shortSha(selectedCommit) }}</span>
-                <span class="muted" v-if="selectedTag">Tag: {{ selectedTag }}</span>
-              </div>
-
-              <div class="notice" v-if="offlineMode">
-                Offline mode is enabled. GitHub browsing is limited.
-              </div>
-
-              <div class="notice soft" v-else-if="ghNotice">
-                {{ ghNotice }}
-              </div>
-            </div>
-
-            <div class="side">
-              <div class="badge-grid">
-                <div class="badge" v-for="b in overviewBadges" :key="b.k">
-                  <div class="k">{{ b.k }}</div>
-                  <div class="v">{{ b.v }}</div>
-                </div>
-              </div>
-
-              <div class="side-row">
-               <div class="token-pill" :class="{ ok: isDev && hasDevToken, warn: isDev && !hasDevToken }">
-                {{ tokenPolicyLabel }}
-               </div>
-
-                <div class="version-pick" v-if="sortedVersions.length">
-                  <span class="muted">Version</span>
-                  <select v-model="selectedVersion" aria-label="Select version">
-                    <option v-for="v in sortedVersions" :key="v.version" :value="v.version">
-                      {{ v.version }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <button class="meta-btn" @click="metaOpen = !metaOpen" :aria-expanded="metaOpen ? 'true' : 'false'">
-                Registry metadata
-              </button>
-            </div>
-          </div>
-
-          <div v-if="metaOpen" class="meta-panel">
-            <div class="meta-grid">
-              <div class="meta-card">
-                <div class="meta-title">Manifest</div>
-                <div class="meta-kv"><span class="k">License</span><span class="v">{{ (pkg.license || "-") }}</span></div>
-                <div class="meta-kv"><span class="k">Type</span><span class="v">{{ (pkg.type || "-") }}</span></div>
-                <div class="meta-kv"><span class="k">Keywords</span><span class="v">{{ (pkg.keywords || []).join(", ") || "-" }}</span></div>
-              </div>
-
-              <div class="meta-card">
-                <div class="meta-title">Exports</div>
-                <div class="meta-kv">
-                  <span class="k">exports.headers</span>
-                  <span class="v">{{ hasRegistryExports ? "present" : "missing" }}</span>
-                </div>
-
-                <div class="meta-warn" v-if="!hasRegistryExports">
-                  Missing exports.headers will reduce docs quality.
-                </div>
-
-                <div class="meta-snippet" v-if="!hasRegistryExports">
-                  <div class="label">Add this to your registry entry</div>
-                  <pre><code>{{ registryHintExportsJson() }}</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <nav class="tabs" aria-label="Package tabs">
-            <button class="tab" :class="{ active: activeTab === 'overview' }" @click="setTab('overview')">
-              Overview
-            </button>
-            <button class="tab" :class="{ active: activeTab === 'docs' }" @click="setTab('docs')">
-              Docs
-            </button>
-            <button class="tab" :class="{ active: activeTab === 'files' }" @click="setTab('files')">
-              Files
-            </button>
-            <button class="tab" :class="{ active: activeTab === 'versions' }" @click="setTab('versions')">
-              Versions
-            </button>
-          </nav>
-        </header>
+        <PkgShowHeader
+          :id="id"
+          :pkgDisplayName="pkgDisplayName"
+          :pkg="pkg"
+          :pkgRepoUrl="pkgRepoUrl"
+          :indexVersion="indexVersion"
+          :selectedCommit="selectedCommit"
+          :selectedTag="selectedTag"
+          :shortSha="shortSha"
+          :offlineMode="offlineMode"
+          :ghNotice="ghNotice"
+          :overviewBadges="overviewBadges"
+          :isDev="isDev"
+          :hasDevToken="hasDevToken"
+          :tokenPolicyLabel="tokenPolicyLabel"
+          :sortedVersions="sortedVersions"
+          :selectedVersion="selectedVersion"
+          :metaOpen="metaOpen"
+          :activeTab="activeTab"
+          @update:selectedVersion="selectedVersion = $event"
+          @update:metaOpen="metaOpen = $event"
+          @setTab="setTab"
+          :registryHintExportsJson="registryHintExportsJson"
+        />
 
         <section class="panel">
-          <!-- OVERVIEW -->
-          <div v-if="activeTab === 'overview'" class="grid">
-            <div class="card">
-              <div class="card-title">Use</div>
+          <PkgOverviewTab
+            v-if="activeTab === 'overview'"
+            :pkg="pkg"
+            :installSnippet="installSnippet"
+            :includeSnippet="includeSnippet"
+            :safeClipboardCopy="safeClipboardCopy"
+            :readmeLoading="readmeLoading"
+            :readmeError="readmeError"
+            :readmeHtml="readmeHtml"
+            :readmeToc="readmeToc"
+            :readmeMeta="readmeMeta"
+            :readmeWarn="readmeWarn"
+          />
 
-              <div class="snippet">
-                <div class="label">Add</div>
-                <div class="row">
-                  <pre class="flex"><code>{{ installSnippet }}</code></pre>
-                  <button class="mini-btn" @click="safeClipboardCopy(installSnippet)" aria-label="Copy install command">
-                    Copy
-                  </button>
-                </div>
-              </div>
+          <PkgDocsTab
+            v-else-if="activeTab === 'docs'"
+            :id="id"
+            :docsLoading="docsLoading"
+            :docsError="docsError"
+            :hasRegistryExports="hasRegistryExports"
+            :docsHeaderPicked="docsHeaderPicked"
+            :docsHeadersTried="docsHeadersTried"
+            :docsCounts="docsCounts"
+            :docsActiveList="docsActiveList"
+            :docsJump="docsJump"
+            :docsGroupsTab="docsGroupsTab"
+            :nodeWebUrl="nodeWebUrl"
+            @update:docsJump="docsJump = $event"
+            @update:docsGroupsTab="docsGroupsTab = $event"
+          />
 
-              <div class="snippet">
-                <div class="label">Include</div>
-                <div class="row">
-                  <pre class="flex"><code>{{ includeSnippet }}</code></pre>
-                  <button class="mini-btn" @click="safeClipboardCopy(includeSnippet)" aria-label="Copy include line">
-                    Copy
-                  </button>
-                </div>
-              </div>
+          <PkgFilesTab
+            v-else-if="activeTab === 'files'"
+            :pkgRepoUrl="pkgRepoUrl"
+            :filesLoading="filesLoading"
+            :filesError="filesError"
+            :currentPath="currentPath"
+            :pathStack="pathStack"
+            :goRoot="goRoot"
+            :goCrumb="goCrumb"
+            :goUp="goUp"
+            :globalSearchOpen="globalSearchOpen"
+            :globalSearchQuery="globalSearchQuery"
+            :globalSearchLoading="globalSearchLoading"
+            :globalSearchError="globalSearchError"
+            :globalSearchResults="globalSearchResults"
+            :runGlobalSearch="runGlobalSearch"
+            :filesFilter="filesFilter"
+            :filesShowHidden="filesShowHidden"
+            :filesSortKey="filesSortKey"
+            :filesSortDir="filesSortDir"
+            :toggleSort="toggleSort"
+            :visibleListing="visibleListing"
+            :canLoadMore="canLoadMore"
+            :loadMore="loadMore"
+            :filteredSortedListingLen="filteredSortedListing.length"
+            :openNode="openNode"
+            :niceSize="niceSize"
+            :nodeWebUrl="nodeWebUrl"
+            :previewOpen="previewOpen"
+            :previewLoading="previewLoading"
+            :previewError="previewError"
+            :previewNode="previewNode"
+            :previewText="previewText"
+            :previewHtml="previewHtml"
+            :previewLang="previewLang"
+            :copyPreviewPath="copyPreviewPath"
+            :copyPreviewRawUrl="copyPreviewRawUrl"
+            :downloadPreviewFile="downloadPreviewFile"
+            :closePreview="closePreview"
+            @update:globalSearchOpen="globalSearchOpen = $event"
+            @update:globalSearchQuery="globalSearchQuery = $event"
+            @update:filesFilter="filesFilter = $event"
+            @update:filesShowHidden="filesShowHidden = $event"
+          />
 
-              <div class="tags-wrap" v-if="pkg.keywords && pkg.keywords.length">
-                <div class="label">Keywords</div>
-                <div class="tags">
-                  <span class="tag" v-for="k in pkg.keywords" :key="k">{{ k }}</span>
-                </div>
-              </div>
-
-              <div class="hint">
-                <span class="dot"></span>
-                Tip: publish tag + commit in each version for stable browsing.
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">README</div>
-
-              <div class="state" v-if="readmeLoading">
-                <span class="spinner"></span>
-                Loading README...
-              </div>
-
-              <div class="state error" v-else-if="readmeError">
-                Error: {{ readmeError }}
-              </div>
-
-              <template v-else>
-                <div class="readme-top">
-                  <div class="readme-actions">
-                    <a v-if="readmeMeta.sourceUrl" class="mini-link" :href="readmeMeta.sourceUrl" target="_blank" rel="noreferrer">
-                      View source
-                    </a>
-                    <a v-if="readmeMeta.editUrl" class="mini-link" :href="readmeMeta.editUrl" target="_blank" rel="noreferrer">
-                      Edit
-                    </a>
-                  </div>
-
-                  <div class="warn" v-if="readmeWarn">{{ readmeWarn }}</div>
-
-                  <details class="toc" v-if="readmeToc.length">
-                    <summary>Table of contents</summary>
-                    <div class="toc-list">
-                      <a
-                        v-for="h in readmeToc"
-                        :key="h.id"
-                        class="toc-item"
-                        :style="{ paddingLeft: Math.min(24, (h.level - 1) * 10) + 'px' }"
-                        :href="'#' + h.id"
-                      >
-                        {{ h.text }}
-                      </a>
-                    </div>
-                  </details>
-                </div>
-
-                <div class="readme" v-html="readmeHtml"></div>
-              </template>
-            </div>
-          </div>
-
-          <!-- DOCS -->
-          <div v-else-if="activeTab === 'docs'" class="docs">
-            <div class="card">
-              <div class="card-title">Header scan</div>
-
-              <div class="state" v-if="docsLoading">
-                <span class="spinner"></span>
-                Scanning headers...
-              </div>
-
-              <div class="state error" v-else-if="docsError">
-                <div class="err-title">No docs available</div>
-
-                <div class="err-sub" v-if="docsError === 'no_exported_header_found'">
-                  Exports exist, but no header could be fetched for this ref.
-                </div>
-
-                <div class="err-sub" v-else-if="docsError === 'no_header_detected'">
-                  No header detected. Add exports.headers in the registry entry.
-                </div>
-
-                <div class="err-sub" v-else-if="docsError === 'offline_mode'">
-                  Offline mode: docs scanning is disabled.
-                </div>
-
-                <div class="err-sub" v-else>
-                  Error: {{ docsError }}
-                </div>
-
-                <div class="hint soft" v-if="!hasRegistryExports">
-                  Note: exports.headers is missing. We tried a minimal include scan fallback.
-                </div>
-              </div>
-
-              <template v-else>
-                <div class="docs-top">
-                  <div class="docs-meta">
-                    <div class="muted">{{ id }}</div>
-                    <div class="muted" v-if="docsHeaderPicked">
-                      Source:
-                      <a
-                        class="link"
-                        :href="nodeWebUrl({ type: 'file', name: docsHeaderPicked.split('/').pop(), path: docsHeaderPicked })"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {{ docsHeaderPicked }}
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="docs-stats">
-                    <span class="pill2">Namespaces {{ docsCounts.namespaces }}</span>
-                    <span class="pill2">Types {{ docsCounts.types }}</span>
-                    <span class="pill2">Functions {{ docsCounts.functions }}</span>
-                    <span class="pill2">Enums {{ docsCounts.enums }}</span>
-                    <span class="pill2">Macros {{ docsCounts.macros }}</span>
-                  </div>
-
-                  <div class="docs-controls">
-                    <input
-                      class="input"
-                      v-model="docsJump"
-                      placeholder="Filter symbols..."
-                      aria-label="Filter symbols"
-                    />
-
-                    <div class="seg">
-                      <button class="seg-btn" :class="{ active: docsGroupsTab === 'functions' }" @click="docsGroupsTab = 'functions'">Functions</button>
-                      <button class="seg-btn" :class="{ active: docsGroupsTab === 'types' }" @click="docsGroupsTab = 'types'">Types</button>
-                      <button class="seg-btn" :class="{ active: docsGroupsTab === 'namespaces' }" @click="docsGroupsTab = 'namespaces'">Namespaces</button>
-                      <button class="seg-btn" :class="{ active: docsGroupsTab === 'enums' }" @click="docsGroupsTab = 'enums'">Enums</button>
-                      <button class="seg-btn" :class="{ active: docsGroupsTab === 'macros' }" @click="docsGroupsTab = 'macros'">Macros</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="docs-list">
-                  <div class="muted" v-if="!docsActiveList.length">No results</div>
-                  <div v-else class="sym-row" v-for="s in docsActiveList" :key="s">
-                    <code>{{ s }}</code>
-                  </div>
-                </div>
-
-                <details class="tried" v-if="docsHeadersTried.length">
-                  <summary>Headers tried</summary>
-                  <div class="tried-list">
-                    <div class="muted" v-for="h in docsHeadersTried" :key="h">{{ h }}</div>
-                  </div>
-                </details>
-
-                <div class="hint soft">
-                  Best-effort parsing for quick browsing.
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <!-- FILES -->
-          <div v-else-if="activeTab === 'files'" class="files">
-            <div class="card">
-              <div class="card-title">Files</div>
-
-              <div class="files-top">
-                <div class="crumbs">
-                  <button class="crumb" @click="goRoot" :class="{ active: !currentPath }">root</button>
-                  <template v-for="p in pathStack" :key="p">
-                    <span class="sep">/</span>
-                    <button class="crumb" @click="goCrumb(p)" :class="{ active: currentPath === p }">
-                      {{ p.split('/').pop() }}
-                    </button>
-                  </template>
-                </div>
-
-                <div class="files-actions">
-                  <button class="mini-btn" @click="goUp" :disabled="!currentPath" aria-label="Go up">
-                    Up
-                  </button>
-                  <button class="mini-btn" @click="globalSearchOpen = !globalSearchOpen" aria-label="Toggle global search">
-                    Search
-                  </button>
-                </div>
-              </div>
-
-              <div v-if="globalSearchOpen" class="search-box">
-                <div class="row">
-                  <input class="input flex" v-model="globalSearchQuery" placeholder="Code search (repo-wide)..." />
-                  <button class="mini-btn" @click="runGlobalSearch" :disabled="globalSearchLoading">Go</button>
-                </div>
-
-                <div class="state" v-if="globalSearchLoading">
-                  <span class="spinner"></span>
-                  Searching...
-                </div>
-                <div class="state error" v-else-if="globalSearchError">
-                  Error: {{ globalSearchError }}
-                </div>
-                <div v-else-if="globalSearchResults.length" class="search-results">
-                  <a
-                    class="search-hit"
-                    v-for="r in globalSearchResults"
-                    :key="r.html_url"
-                    :href="r.html_url"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div class="hit-name">{{ r.name }}</div>
-                    <div class="hit-path">{{ r.path }}</div>
-                  </a>
-                </div>
-              </div>
-
-              <div class="controls">
-                <input class="input flex" v-model="filesFilter" placeholder="Filter in this folder..." aria-label="Filter files" />
-
-                <label class="toggle">
-                  <input type="checkbox" v-model="filesShowHidden" />
-                  <span>Show hidden</span>
-                </label>
-
-                <div class="sort">
-                  <button class="mini-btn" @click="toggleSort('type')">Type</button>
-                  <button class="mini-btn" @click="toggleSort('name')">Name</button>
-                  <button class="mini-btn" @click="toggleSort('size')">Size</button>
-                  <span class="muted small">{{ filesSortKey }} {{ filesSortDir }}</span>
-                </div>
-              </div>
-
-              <div class="state" v-if="filesLoading">
-                <span class="spinner"></span>
-                Loading folder...
-              </div>
-
-              <div class="state error" v-else-if="filesError">
-                Error: {{ filesError }}
-              </div>
-
-              <template v-else>
-                <div class="file-list">
-                  <div class="file-row head">
-                    <div class="c1">Name</div>
-                    <div class="c2">Size</div>
-                    <div class="c3"></div>
-                  </div>
-
-                  <button v-if="currentPath" class="file-row back" @click="goUp">
-                    <div class="c1">
-                      <span class="icon dir"></span>
-                      <span class="path">..</span>
-                    </div>
-                    <div class="c2"></div>
-                    <div class="c3"><span class="arrow">›</span></div>
-                  </button>
-
-                  <button
-                    v-for="n in visibleListing"
-                    :key="n.path"
-                    class="file-row btn"
-                    @click="openNode(n)"
-                  >
-                    <div class="c1">
-                      <span class="icon" :class="n.type === 'dir' ? 'dir' : 'file'"></span>
-                      <span class="path">{{ n.name }}</span>
-                    </div>
-                    <div class="c2">
-                      <span class="muted">{{ n.type === "dir" ? "" : niceSize(n.size) }}</span>
-                    </div>
-                    <div class="c3"><span class="arrow">›</span></div>
-                  </button>
-
-                  <div class="loadmore" v-if="canLoadMore">
-                    <button class="mini-btn" @click="loadMore">Load more</button>
-                    <span class="muted small">{{ visibleListing.length }} / {{ filteredSortedListing.length }}</span>
-                  </div>
-
-                  <div class="hint soft" v-if="pkgRepoUrl">
-                    Open on GitHub:
-                    <a class="link" :href="nodeWebUrl({ type: 'dir', name: currentPath || '', path: currentPath || '' }) || pkgRepoUrl" target="_blank" rel="noreferrer">
-                      {{ currentPath ? currentPath : "repo root" }}
-                    </a>
-                  </div>
-                </div>
-              </template>
-            </div>
-
-            <!-- Preview modal -->
-            <div class="modal" v-if="previewOpen" role="dialog" aria-modal="true">
-              <div class="modal-card">
-                <div class="modal-top">
-                  <div class="modal-title">
-                    <span class="mono">{{ previewNode?.path || "" }}</span>
-                  </div>
-                  <div class="modal-actions">
-                    <button class="mini-btn" @click="copyPreviewPath">Copy path</button>
-                    <button class="mini-btn" @click="copyPreviewRawUrl">Copy raw</button>
-                    <button class="mini-btn" @click="downloadPreviewFile">Download</button>
-                    <a
-                      class="mini-link"
-                      v-if="previewNode"
-                      :href="nodeWebUrl(previewNode)"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open
-                    </a>
-                    <button class="mini-btn danger" @click="closePreview" aria-label="Close preview">Close</button>
-                  </div>
-                </div>
-
-                <div class="state" v-if="previewLoading">
-                  <span class="spinner"></span>
-                  Loading preview...
-                </div>
-
-                <div class="state error" v-else-if="previewError">
-                  Error: {{ previewError }}
-                </div>
-
-                <div v-else class="modal-body">
-                  <div v-if="previewLang === 'md'" class="readme" v-html="previewHtml"></div>
-                  <pre v-else class="codebox"><code>{{ previewText }}</code></pre>
-                </div>
-              </div>
-              <div class="modal-backdrop" @click="closePreview" aria-hidden="true"></div>
-            </div>
-          </div>
-
-          <!-- VERSIONS -->
-          <div v-else-if="activeTab === 'versions'" class="versions">
-            <div class="card">
-              <div class="card-title">Versions</div>
-
-              <div class="v-table">
-                <div class="v-row head">
-                  <div class="c1">Version</div>
-                  <div class="c2">Tag</div>
-                  <div class="c3">Commit</div>
-                  <div class="c4">Notes</div>
-                  <div class="c5">Published</div>
-                </div>
-
-                <div class="v-row" v-for="v in sortedVersions" :key="v.version">
-                  <div class="c1">
-                    <button class="pick" @click="selectedVersion = v.version">
-                      {{ v.version }}
-                    </button>
-                    <span class="pill" v-if="v.version === pkgLatest">latest</span>
-                  </div>
-                  <div class="c2"><code>{{ v.tag || "-" }}</code></div>
-                  <div class="c3"><code>{{ shortSha(v.commit || "") || "-" }}</code></div>
-                  <div class="c4">{{ v.notes || "" }}</div>
-                  <div class="c5">{{ v.publishedAt || "-" }}</div>
-                </div>
-              </div>
-
-              <div class="hint soft">
-                Install command updates when you switch version.
-              </div>
-            </div>
-          </div>
+          <PkgVersionsTab
+            v-else-if="activeTab === 'versions'"
+            :sortedVersions="sortedVersions"
+            :pkgLatest="pkgLatest"
+            :shortSha="shortSha"
+            :selectedVersion="selectedVersion"
+            @update:selectedVersion="selectedVersion = $event"
+          />
         </section>
       </template>
 
@@ -2013,6 +1635,7 @@ watch(
     </div>
   </section>
 </template>
+
 
 <style scoped>
 /* =========================
