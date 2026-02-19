@@ -389,7 +389,7 @@ onBeforeUnmount(() => {
 }
 
 /* -------------------------
-   Sidebar (JSR-like)
+   Sidebar
 -------------------------- */
 .side{
   position: sticky;
@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
   margin-bottom: 6px;
 }
 
-/* Sidebar code blocks (more JSR-like) */
+/* Sidebar code blocks */
 .codeblock{
   margin: 0;
   padding: 10px 12px;
@@ -588,7 +588,7 @@ onBeforeUnmount(() => {
 
 
 /* -------------------------
-   README styling (JSR-like)
+   README styling
    IMPORTANT: v-html needs :deep()
 -------------------------- */
 
@@ -743,7 +743,7 @@ onBeforeUnmount(() => {
 .codeblock code{
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12.5px;
-  color: rgba(210,235,255,.95); /* subtle blue-ish like JSR */
+  color: rgba(210,235,255,.95);
 }
 
 /* optional: emphasize tokens inside codeblocks (works for plain text too) */
