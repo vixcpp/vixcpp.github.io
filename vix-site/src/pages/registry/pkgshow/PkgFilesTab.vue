@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, nextTick, onBeforeUnmount } from "vue";
 import { createHighlighter } from "shiki";
+import { marked } from "marked";
 import PkgPreviewModal from "./PkgPreviewModal.vue";
 
 const props = defineProps({
@@ -100,7 +101,6 @@ function navCrumb(p) {
   props.goCrumb(p);
 }
 
-
 const inPreview = computed(() => !!props.previewOpen);
 const showListingBody = computed(() => !inPreview.value);
 const showSearchPanel = computed(() => !inPreview.value && props.globalSearchOpen);
@@ -111,9 +111,7 @@ function previewPathLabel() {
 }
 
 /* -------------------------
-   Shiki (single render, avoid double code)
-   - Always prefer local highlighted html.
-   - Never render raw previewText alongside highlighted html.
+   Single renderer
 -------------------------- */
 let shiki = null;
 let seq = 0;
@@ -137,26 +135,16 @@ function normalizeLang(lang) {
   return l || "txt";
 }
 
+function isMarkdown(pathOrName) {
+  const s = String(pathOrName || "").toLowerCase();
+  return s.endsWith(".md") || s.endsWith(".markdown");
+}
+
 async function ensureShiki() {
   if (shiki) return shiki;
   shiki = await createHighlighter({
     themes: ["github-dark"],
-    langs: [
-      "cpp",
-      "c",
-      "bash",
-      "js",
-      "ts",
-      "json",
-      "md",
-      "yaml",
-      "txt",
-      "html",
-      "css",
-      "toml",
-      "ini",
-      "sql",
-    ],
+    langs: ["cpp", "c", "bash", "js", "ts", "json", "md", "yaml", "txt", "html", "css", "toml", "ini", "sql"],
   });
   return shiki;
 }
@@ -164,24 +152,30 @@ async function ensureShiki() {
 async function highlightPreview() {
   const my = ++seq;
 
-  // Reset first to avoid showing stale output
+  // reset (avoid stale output)
   highlightedHtml.value = "";
 
-  // If we are not in preview, nothing to do
   if (!props.previewOpen) return;
 
-  // If parent gave HTML already, use it directly (still single render)
+  const txt = String(props.previewText || "");
+  if (!txt) return;
+
+  const node = props.previewNode;
+  const pathOrName = node?.path || node?.name || "";
+
+  // 1) Markdown: render via marked (single render)
+  if (isMarkdown(pathOrName)) {
+    highlightedHtml.value = `<article class="md github-dark">${marked.parse(txt)}</article>`;
+    return;
+  }
+
+  // 2) If parent gave HTML, use it
   if (props.previewHtml) {
     highlightedHtml.value = props.previewHtml;
     return;
   }
 
-  const txt = String(props.previewText || "");
-  if (!txt) {
-    highlightedHtml.value = "";
-    return;
-  }
-
+  // 3) Shiki code highlighting
   try {
     const h = await ensureShiki();
     if (my !== seq) return;
@@ -195,7 +189,14 @@ async function highlightPreview() {
 }
 
 watch(
-  () => [props.previewOpen, props.previewText, props.previewLang, props.previewHtml],
+  () => [
+    props.previewOpen,
+    props.previewText,
+    props.previewLang,
+    props.previewHtml,
+    props.previewNode?.path,
+    props.previewNode?.name,
+  ],
   async () => {
     await nextTick();
     await highlightPreview();
@@ -207,7 +208,6 @@ onBeforeUnmount(() => {
   shiki = null;
 });
 </script>
-
 <template>
   <div class="files">
     <!-- Always keep a top header like JSR (history + actions) -->
@@ -378,10 +378,12 @@ onBeforeUnmount(() => {
                   <path d="M3 10h18l-2 8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2l-2-8z" fill="#ffd866"/>
                 </svg>
 
-                <svg v-else viewBox="0 0 24 24" class="svg file">
-                  <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="#e5e7eb"/>
-                  <path d="M15 2v5h5" fill="#cbd5e1"/>
-                </svg>
+             <svg v-else viewBox="0 0 16 16" class="svg file" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M2 1.75A.75.75 0 0 1 2.75 1h6.19c.2 0 .39.08.53.22l3.31 3.31c.14.14.22.33.22.53v8.19a.75.75 0 0 1-.75.75H2.75A.75.75 0 0 1 2 13.25V1.75Z"
+                />
+              </svg>
               </span>
               <span class="fname">{{ n.name }}</span>
             </div>
@@ -902,6 +904,7 @@ onBeforeUnmount(() => {
   gap: 12px;
   padding: 10px 12px;
   background: rgba(255,255,255,.03);
+  background: #161616 !important;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
@@ -971,6 +974,21 @@ onBeforeUnmount(() => {
   font-size: 13px;
 }
 
+/* File icon — GitHub style */
+.svg.file{
+  width: 16px;
+  height: 16px;
+  color: #8b949e; /* GitHub dark file color */
+  opacity: .95;
+  transition: color .15s ease;
+}
+.svg.dir{
+  color: #d29922; /* GitHub folder color */
+}
+/* Hover like GitHub */
+.row.btn:hover .svg.file{
+  color: #c9d1d9;
+}
 @media (max-width: 980px){
   .controls{ flex-direction: column; align-items: stretch; }
   .sort{ margin-left: 0; justify-content:flex-start; }
@@ -982,5 +1000,213 @@ onBeforeUnmount(() => {
   .top-right{ justify-content:flex-end; }
   .row{ grid-template-columns: 1fr 0 28px; }
   .cell.size{ display:none; }
+}
+
+/* ==========================================
+   REGISTRY FILE PREVIEW
+   Adapted to pure dark palette
+========================================== */
+
+.codewrap{
+  margin-top: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #111111;
+  overflow: hidden;
+}
+
+/* HEADER */
+.code-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 8px 12px;
+
+  background: #161616;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+/* path */
+.code-path{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.code-path .dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+}
+
+.code-path .p{
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,.92);
+}
+
+.mini{
+  border: 1px solid rgba(255,255,255,.15);
+  background: #111111;
+  color: rgba(255,255,255,.85);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mini:hover{
+  background: #161616;
+}
+
+.mini.close{
+  border-color: rgba(255,100,100,.35);
+}
+
+/* CODE BODY */
+.code-body{
+  background: #111111;
+}
+
+/* kill Shiki theme background */
+.code-html :deep(.shiki){
+  background: #111111 !important;
+}
+
+.code-html :deep(pre){
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  background: #111111 !important;
+}
+
+/* Code text tone */
+.code-html :deep(code){
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* FOOTER */
+.code-foot{
+  padding: 8px 12px;
+  background: #161616 !important;
+  border-top: 1px solid rgba(255,255,255,.12);
+  font-size: 12px;
+  display:flex;
+  gap: 6px;
+}
+
+.code-foot .muted{
+  color: rgba(255,255,255,.65);
+}
+
+.code-foot .link{
+  color: #58a6ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.code-foot .link:hover{
+  text-decoration: underline;
+}
+/* README rendered inside preview */
+.code-html :deep(.md){
+  padding: 18px 18px 22px;
+}
+
+/* petit espace en haut comme GitHub */
+.code-html :deep(.md > :first-child){
+  margin-top: 0;
+}
+/* Markdown surface (matches pure dark override) */
+.code-html :deep(.github-dark){
+  background: #0a0a0a;
+  color: rgba(255,255,255,.92);
+}
+
+/* headings */
+.code-html :deep(.github-dark h1),
+.code-html :deep(.github-dark h2),
+.code-html :deep(.github-dark h3){
+  color: rgba(255,255,255,.96);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  padding-bottom: 6px;
+  margin: 22px 0 12px;
+}
+
+/* paragraphs + lists */
+.code-html :deep(.github-dark p){
+  margin: 10px 0;
+  line-height: 1.75;
+}
+.code-html :deep(.github-dark ul),
+.code-html :deep(.github-dark ol){
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+/* inline code */
+.code-html :deep(.github-dark code){
+  background: #161616;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* code blocks inside README */
+.code-html :deep(.github-dark pre){
+  background: #111111;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  padding: 12px 12px;
+  overflow: auto;
+}
+
+/* links */
+.code-html :deep(.github-dark a){
+  color: rgba(140,200,255,.95);
+  text-decoration: none;
+}
+.code-html :deep(.github-dark a:hover){
+  text-decoration: underline;
+}
+/* Inline code uniquement (pas dans les blocs <pre>) */
+.code-html :deep(.github-dark :not(pre) > code){
+  background: #161616;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Code block: le <pre> gère le fond, le <code> reste neutre */
+.code-html :deep(.github-dark pre){
+  background: #111111;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  padding: 12px 12px;
+  overflow: auto;
+}
+
+.code-html :deep(.github-dark pre code){
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+.code-html :deep(.shiki code){
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+/* Force dark background during loading */
+.codewrap.loading{
+  background: #161616 !important;
+}
+
+/* Ensure body area keeps same tone */
+.codewrap.loading .code-body{
+  background: #161616 !important;
 }
 </style>

@@ -113,6 +113,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import RegistryNetBg from "@/components/RegistryNetBg.vue";
+import { useBodyClass } from "@/lib/useBodyClass";
+
+useBodyClass("is-registry");
 
 const router = useRouter();
 const q = ref("");

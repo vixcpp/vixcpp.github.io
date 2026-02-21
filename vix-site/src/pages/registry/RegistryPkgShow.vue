@@ -15,6 +15,9 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { createHighlighter } from "shiki";
 
+onMounted(() => document.body.classList.add("is-registry"));
+onBeforeUnmount(() => document.body.classList.remove("is-registry"));
+
 /* =========================
    Core state
 ========================= */

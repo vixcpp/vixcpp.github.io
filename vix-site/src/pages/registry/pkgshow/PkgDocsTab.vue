@@ -715,7 +715,91 @@ onBeforeUnmount(() => {
   font-size: 13px;
   line-height: 1.6;
 }
+/* ===============================
+   Signature Shiki: NEVER overflow
+   =============================== */
 
+/* 1) flex child must be allowed to shrink */
+.sig{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sig-code{
+  flex: 1 1 520px;      /* grow + shrink */
+  min-width: 0;         /* CRITICAL in flex to allow overflow scroll */
+  max-width: 100%;
+}
+
+/* 2) harden Shiki output */
+.sig-code :deep(pre),
+.sig-code :deep(pre.shiki){
+  margin: 0 !important;
+  max-width: 100% !important;
+
+  padding: 10px 12px !important;
+  border-radius: 12px !important;
+
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(0,0,0,.35) !important;
+
+  overflow-x: auto !important;     /* horizontal scroll */
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 3) ensure code does not wrap (so it scrolls instead of breaking layout) */
+.sig-code :deep(code){
+  display: block;
+  white-space: pre !important;     /* no wrapping */
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(255,255,255,.90);
+}
+
+/* 4) if Shiki injects inline background via style="", this keeps our background */
+.sig-code :deep(.shiki){
+  background: transparent !important;
+}
+
+/* 5) nice scrollbar */
+.sig-code :deep(pre::-webkit-scrollbar){
+  height: 8px;
+}
+.sig-code :deep(pre::-webkit-scrollbar-thumb){
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
+}
+.sig-code :deep(pre::-webkit-scrollbar-track){
+  background: rgba(0,0,0,.18);
+  border-radius: 999px;
+}
+
+/* 6) keep "Source" link aligned without forcing overflow */
+.src2{
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+@media (max-width: 980px){
+  .src2{ margin-left: 0; }
+}
+/* Add breathing room at the end of long signatures */
+.sig-code :deep(pre),
+.sig-code :deep(pre.shiki){
+  padding-right: 50px !important;   /* espace visuel à droite */
+}
+
+/* sécurité supplémentaire */
+.sig-code :deep(code){
+  padding-right: 8px;
+}
 /* responsive */
 @media (max-width: 980px){
   .toolbar{ flex-direction: column; align-items: stretch; }

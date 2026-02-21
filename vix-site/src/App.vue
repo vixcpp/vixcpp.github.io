@@ -46,6 +46,7 @@ watch(
   isRegistry,
   (v) => {
     document.documentElement.classList.toggle("is-registry", v);
+    document.body.classList.toggle("is-registry", v);
   },
   { immediate: true }
 );
@@ -135,13 +136,6 @@ onMounted(() => {
   window.addEventListener("appinstalled", onAppInstalled);
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
-  window.removeEventListener("appinstalled", onAppInstalled);
-
-  // nettoyage au cas où on quitte l'app
-  document.documentElement.classList.remove("is-registry");
-});
 </script>
 
 <style scoped>

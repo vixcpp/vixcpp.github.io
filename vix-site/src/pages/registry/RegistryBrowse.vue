@@ -1,4 +1,3 @@
-<!-- src/pages/RegistryBrowse.vue -->
 <script setup>
 import { ref, onMounted, watch, onBeforeUnmount, computed, nextTick } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
@@ -119,6 +118,9 @@ onBeforeUnmount(() => {
   worker.terminate();
 });
 
+onMounted(() => document.body.classList.add("is-registry"));
+onBeforeUnmount(() => document.body.classList.remove("is-registry"));
+
 watch(
   () => route.query.q,
   (v) => {
@@ -133,13 +135,20 @@ watch(
     <!-- Top bar (JSR-like) -->
     <header class="topbar">
       <div class="topbar-inner">
-        <RouterLink class="brand" to="/registry">
-          <span class="brand-dot" aria-hidden="true"></span>
-          <span class="brand-text">Registry</span>
+        <RouterLink class="brand" to="/registry" aria-label="Registry home">
+          <span class="brand-text">Vix registry</span>
         </RouterLink>
 
         <form class="search" @submit.prevent="goSearch()">
-          <span class="search-ico" aria-hidden="true">⌕</span>
+          <span class="search-ico" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="16" height="16">
+              <path
+                fill="currentColor"
+                d="M11.742 10.344 14.5 13.1l-.9.9-2.758-2.758a6 6 0 1 1 .9-.898zM6.5 11.5a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"
+              />
+            </svg>
+          </span>
+
           <input
             ref="searchEl"
             v-model="q"
@@ -150,14 +159,21 @@ watch(
             spellcheck="false"
             @keydown.enter.prevent="goSearch()"
           />
+
           <kbd class="kbd" title="Focus search">Ctrl K</kbd>
-          <button v-if="q" class="x" type="button" @click="clearSearch" aria-label="Clear">×</button>
+
+          <button v-if="q" class="clear" type="button" @click="clearSearch" aria-label="Clear">
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 1 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06z"
+              />
+            </svg>
+          </button>
         </form>
 
-        <nav class="nav">
-          <a class="nav-link" href="/docs/" target="_self" rel="noreferrer">Docs</a>
-          <a class="nav-link" href="https://github.com/vixcpp/registry" target="_blank" rel="noreferrer">GitHub</a>
-          <RouterLink class="nav-link pill" to="/registry/publish">Publish</RouterLink>
+        <nav class="actions" aria-label="Registry actions">
+          <RouterLink class="action-btn" to="/registry/publish">Publish</RouterLink>
         </nav>
       </div>
     </header>
@@ -224,6 +240,7 @@ watch(
 </template>
 
 <style scoped>
+
 .page{
   --max: 1160px;
   --pad: 20px;
@@ -243,146 +260,227 @@ watch(
 }
 
 /* =========================
-   Topbar
+   Header
 ========================= */
+/* Header: JSR-like (no box, no border, no shadow) */
 .topbar{
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 40;
 
+  /* IMPORTANT: no border/shadow */
+  border: 0;
+  box-shadow: none;
+
+  /* subtle glass */
+  background: rgba(5,8,11,.72);
   backdrop-filter: blur(10px);
-  background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.30));
-  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
 .topbar-inner{
   max-width: var(--max);
   margin: 0 auto;
-  padding: 12px var(--pad);
+  padding: 10px var(--pad);
 
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
 }
 
 .brand{
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
-  color: var(--text);
-  font-weight: 950;
-  letter-spacing: -0.01em;
-}
-
-.brand-dot{
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: rgba(140,200,255,.80);
-  box-shadow: 0 0 0 3px rgba(140,200,255,.14);
+  letter-spacing: -0.02em;
 }
 
 .brand-text{
-  font-size: 14px;
-  opacity: .95;
-}
+  font-size: 15px;
+  font-weight: 650;
 
-/* =========================
-   Search
-========================= */
+  background: linear-gradient(
+    135deg,
+    #1ee6a3 0%,
+    #1ee6a3 40%,
+    #ffffff 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.brand-text{
+  font-size: 15px;
+  font-weight: 600;
+  color: #1ee6a3;
+}
 .search{
   display: flex;
   align-items: center;
   gap: 8px;
-
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 12px;
-
-  padding: 8px 10px;
   min-width: 0;
+
+  height: 36px;
+  padding: 0 10px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+}
+
+.search:focus-within{
+  border-color: rgba(140,200,255,.35);
+  box-shadow: 0 0 0 3px rgba(140,200,255,.10);
 }
 
 .search-ico{
-  color: rgba(255,255,255,.60);
-  font-size: 14px;
-  flex: 0 0 auto;
+  display: inline-flex;
+  color: rgba(255,255,255,.55);
 }
 
 .search-in{
   width: 100%;
   min-width: 0;
-
-  background: transparent;
   border: 0;
   outline: none;
+  background: transparent;
 
-  color: var(--text);
+  color: rgba(255,255,255,.92);
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .search-in::placeholder{
-  color: rgba(255,255,255,.42);
-  font-weight: 800;
+  color: rgba(255,255,255,.45);
+  font-weight: 500;
 }
 
 .kbd{
   flex: 0 0 auto;
   font-size: 11px;
-  font-weight: 900;
-  color: rgba(255,255,255,.64);
+  font-weight: 600;
+  color: rgba(255,255,255,.65);
 
   border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.25);
-  border-radius: 8px;
-  padding: 3px 7px;
+  background: rgba(0,0,0,.22);
+  border-radius: 999px;
+  padding: 3px 8px;
 }
 
-.x{
+.clear{
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
-
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-
-  color: rgba(255,255,255,.74);
-  font-weight: 950;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255,255,255,.62);
   cursor: pointer;
+  display: grid;
+  place-items: center;
 }
-.x:hover{
+.clear:hover{
   background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.92);
+  color: rgba(255,255,255,.90);
 }
 
-/* =========================
-   Nav
-========================= */
-.nav{
+.actions{
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-.nav-link{
+.action-link{
   text-decoration: none;
-  color: rgba(255,255,255,.70);
+  color: rgba(255,255,255,.72);
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 600;
 }
-.nav-link:hover{ color: rgba(255,255,255,.92); }
+.action-link:hover{ color: rgba(255,255,255,.92); }
 
-.pill{
+.action-btn{
+  text-decoration: none;
+  color: rgba(255,255,255,.92);
+  font-size: 13px;
+  font-weight: 700;
+
   padding: 7px 10px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
+  background: rgba(255,255,255,.05);
+}
+.action-btn:hover{ background: rgba(255,255,255,.08); }
+
+/* Mobile like JSR: stack nicely */
+@media (max-width: 860px){
+  .topbar-inner{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .actions{
+    justify-content: flex-start;
+  }
 }
 
+@media (max-width: 560px){
+  .kbd{ display: none; }
+  .actions{ gap: 10px; }
+}
+/* =========================
+   Header layout (JSR-like)
+========================= */
+
+.topbar-inner{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 10px var(--pad);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Desktop normal */
+.search{
+  grid-column: 2;
+}
+
+.actions{
+  grid-column: 3;
+}
+
+/* =========================
+   Mobile layout
+========================= */
+
+@media (max-width: 760px){
+
+  .topbar-inner{
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 10px;
+  }
+
+  /* Row 1 */
+  .brand{
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .actions{
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  /* Row 2 */
+  .search{
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    width: 100%;
+  }
+}
 /* =========================
    Page head
 ========================= */
@@ -575,9 +673,6 @@ watch(
   .topbar-inner{
     grid-template-columns: 1fr;
   }
-  .nav{
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 560px){
@@ -586,5 +681,65 @@ watch(
   .kbd{ display: none; }
   .head{ align-items: flex-start; flex-direction: column; }
   .right{ gap: 8px; }
+}
+/* Make package id look like a link (JSR-like) */
+.pkg-id{
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+
+  color: var(--link);
+  text-decoration: none;
+}
+
+/* parts inherit link color */
+.ns,
+.nm{
+  color: inherit;
+}
+
+/* keep slash muted */
+.slash{
+  color: rgba(255,255,255,.45);
+  padding: 0 2px;
+}
+
+/* hover/focus: underline + slightly brighter */
+.row-btn:hover .pkg-id{
+  color: rgba(170,220,255,.98);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.row-btn:focus-visible .pkg-id{
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* accessibility: show focus ring on row */
+.row-btn:focus-visible{
+  outline: 2px solid rgba(140,200,255,.35);
+  outline-offset: -2px;
+  border-radius: 10px;
+}
+.pkg-id{
+  font-weight: 600;
+}
+.desc{
+  font-weight: 400;
+}
+.sub,
+.count,
+.foot{
+  font-weight: 500;
+}
+.search-in{
+  font-weight: 500;
+}
+.tag{
+  font-weight: 600;
 }
 </style>

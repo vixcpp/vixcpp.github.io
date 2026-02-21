@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink } from "vue-router";
+import { useBodyClass } from "@/lib/useBodyClass";
+
+useBodyClass("is-registry");
 </script>
 
 <template>

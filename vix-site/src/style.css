@@ -1595,3 +1595,159 @@ html.is-registry .container{
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+/* ======================================================
+   VIX REGISTRY GLOBAL OVERRIDE — PURE DARK MODE (FIXED)
+====================================================== */
+
+body.is-registry{
+  --bg: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-soft: #161616;
+
+  --accent: #1ee6a3;
+  --accent-dark: #0ca377;
+
+  --text: rgba(255,255,255,.96);
+  --muted: rgba(255,255,255,.70);
+  --border: rgba(255,255,255,.12);
+
+  padding-top: 0 !important; /* safety */
+}
+
+/* Flat solid background */
+html.is-registry,
+body.is-registry{
+  background: var(--bg) !important;
+}
+
+/* App layer must not repaint a different bg */
+html.is-registry #app,
+body.is-registry #app{
+  background: transparent !important;
+}
+
+/* Remove inherited section backgrounds */
+body.is-registry main,
+body.is-registry section{
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Main padding must be 0 in registry */
+body.is-registry .main{
+  padding-top: 0 !important;
+  min-height: 100vh;
+}
+
+/* Cards */
+body.is-registry .card{
+  background: var(--bg-elevated) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Header (JSR-like): NOT fixed, same bg, no border/shadow */
+body.is-registry .topbar{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40;
+
+  background: var(--bg) !important; /* match registry bg */
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Search */
+body.is-registry .search{
+  background: var(--bg-soft) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: none !important;
+}
+
+body.is-registry .search:focus-within{
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(30,230,163,.25) !important;
+}
+
+/* README render */
+body.is-registry .readme,
+body.is-registry .markdown-body{
+  background: var(--bg-elevated) !important;
+  color: rgba(255,255,255,.92);
+}
+
+body.is-registry .markdown-body pre,
+body.is-registry .markdown-body .shiki{
+  background: var(--bg-elevated) !important;
+}
+
+body.is-registry .markdown-body code{
+  background: var(--bg-soft) !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+body.is-registry .markdown-body,
+body.is-registry .readme{
+  padding: 24px 8px;
+}
+
+/* Sticky needs no scroll-container clipping */
+html.is-registry,
+body.is-registry,
+body.is-registry #app,
+body.is-registry .app,
+body.is-registry .main,
+body.is-registry .content,
+body.is-registry .layout,
+body.is-registry .app-shell{
+  overflow: visible !important;
+}
+/* ======================================================
+   REGISTRY FINAL OVERRIDE (fix bg mismatch)
+====================================================== */
+
+body.is-registry .page{
+  --bg: #0a0a0a !important;
+  --panel: rgba(255,255,255,.03) !important;
+  --border: rgba(255,255,255,.10) !important;
+
+  --text: rgba(255,255,255,.96) !important;
+  --muted: rgba(255,255,255,.70) !important;
+}
+
+body.is-registry .topbar{
+  background: #0a0a0a !important;  /* direct color, no variable */
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+/* ===============================
+   REGISTRY: header must NOT be fixed
+   Put this at the VERY END (global)
+================================ */
+
+/* 1) Remove any global top padding that was made for the main SiteHeader */
+html.is-registry body{
+  padding-top: 0 !important;
+}
+
+/* 2) Ensure no container blocks normal flow or sticky behavior */
+html.is-registry,
+html.is-registry body,
+html.is-registry #app,
+html.is-registry .app,
+html.is-registry .main{
+  overflow: visible !important;
+}
+
+/* 3) Force the registry header to be normal flow (NOT fixed) */
+html.is-registry .topbar{
+  position: static !important;   /* <- this kills fixed and sticky */
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
