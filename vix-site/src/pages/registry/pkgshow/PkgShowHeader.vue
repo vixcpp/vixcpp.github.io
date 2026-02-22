@@ -588,7 +588,7 @@ function clickTab(t) {
 }
 
 .crumb-link{
-  color: rgba(255,255,255,.60);
+  color: rgba(140,200,255,.95);
   text-decoration: none;
   transition: color .15s ease;
 }
