@@ -21,4 +21,6 @@ export const NAV = [
       { label: "The Documentary", to: "/about/documentary" },
     ],
   },
+
+  { label: "Support", to: "/support", match: "/support" },
 ];

@@ -20,6 +20,7 @@ import RegistryBrowse from "../pages/registry/RegistryBrowse.vue";
 import RegistryDocs from "../pages/registry/RegistryDocs.vue";
 import RegistryPublish from "../pages/registry/RegistryPublish.vue";
 import RegistryPkgShow from "../pages/registry/RegistryPkgShow.vue";
+import Support from "../pages/Support.vue";
 
 import { setSEO } from "../utils/seo";
 
@@ -145,6 +146,33 @@ const routes = [
         description:
           "Contribute to Vix.cpp. Issues, PR guidelines, and good first contributions.",
         path: "/community",
+      },
+    },
+  },
+
+  {
+    path: "/support",
+    name: "support",
+    component: Support,
+    meta: {
+      seo: {
+        title: "Support Vix",
+        description:
+          "Support the independent development of Vix.cpp. Voluntary sponsorship sustaining infrastructure and long-term runtime development.",
+        path: "/support",
+        type: "website",
+        jsonLd: {
+          "@context": "https://schema.org",
+          "@type": "DonateAction",
+          name: "Support Vix",
+          description:
+            "Voluntary sponsorship supporting the independent development of Vix.cpp.",
+          recipient: {
+            "@type": "SoftwareApplication",
+            name: "Vix.cpp",
+            url: "https://vixcpp.com",
+          },
+        },
       },
     },
   },

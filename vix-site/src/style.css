@@ -1751,3 +1751,8 @@ html.is-registry .topbar{
   left: auto !important;
   right: auto !important;
 }
+
+.nav-support {
+  color: var(--accent);
+  opacity: 0.9;
+}

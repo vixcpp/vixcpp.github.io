@@ -46,6 +46,24 @@ onMounted(async () => {
       :support="HOME.hero.support"
     />
 
+    <div class="section-sep hero-sep"></div>
+
+    <section class="support-cta">
+      <div class="container support-cta-inner">
+        <div class="support-cta-left">
+          <h2 class="support-cta-title">Support</h2>
+          <p class="support-cta-subtitle">
+            Help keep Vix.cpp moving fast. Crypto and local options available.
+          </p>
+        </div>
+
+        <div class="support-cta-right">
+          <a class="btn primary" href="/support">Go to Support</a>
+          <a class="btn secondary" href="/docs" v-if="false">Docs</a>
+        </div>
+      </div>
+    </section>
+
     <div class="section-sep"></div>
 
     <section v-if="HOME?.registry" class="registry">
@@ -334,5 +352,7 @@ onMounted(async () => {
     font-size: 1.85rem;
   }
 }
+
+
 
 </style>
