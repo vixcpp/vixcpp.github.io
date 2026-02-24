@@ -5,19 +5,35 @@
       <p class="p">{{ d.subtitle }}</p>
 
       <div class="links">
+        <a v-if="d.external.docsHref" class="btn" :href="d.external.docsHref" target="_blank" rel="noreferrer">
+          {{ d.external.docsLabel }}
+        </a>
         <a class="btn" :href="d.external.releasesHref" target="_blank" rel="noreferrer">
           {{ d.external.releasesLabel }}
         </a>
         <a class="btn" :href="d.external.sourceHref" target="_blank" rel="noreferrer">
           {{ d.external.sourceLabel }}
         </a>
+        <a v-if="d.external.issuesHref" class="btn" :href="d.external.issuesHref" target="_blank" rel="noreferrer">
+          {{ d.external.issuesLabel }}
+        </a>
       </div>
     </header>
 
     <section v-for="s in d.sections" :key="s.id" class="sec">
       <h2 class="h2">{{ s.title }}</h2>
-      <p class="muted">{{ s.desc }}</p>
-      <CodeBlock :code="s.code" />
+      <p class="muted" v-if="s.desc">{{ s.desc }}</p>
+
+      <!-- Bullets block (for trust, etc.) -->
+      <ul v-if="s.bullets && s.bullets.length" class="bullets">
+        <li v-for="(b, i) in s.bullets" :key="i" class="bullet">
+          {{ b }}
+        </li>
+      </ul>
+
+      <!-- Code block -->
+      <CodeBlock v-if="s.code" :code="s.code" />
+
       <p v-if="s.note" class="note">{{ s.note }}</p>
     </section>
   </div>
@@ -107,5 +123,17 @@ import CodeBlock from "../components/CodeBlock.vue";
 
 @media (max-width: 900px){
   .wrap{ padding: 1.8rem 1.2rem 2.4rem; }
+}
+.bullets{
+  margin: .75rem 0 1rem 0;
+  padding-left: 1.1rem;
+  max-width: 95ch;
+  color: #d7efe9;
+}
+
+.bullet{
+  margin: .35rem 0;
+  line-height: 1.55;
+  color: var(--muted);
 }
 </style>
