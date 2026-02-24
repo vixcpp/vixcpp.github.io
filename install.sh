@@ -2,7 +2,7 @@
 set -eu
 
 # minisign public key (ONLY the base64 key, without the comment line)
-MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
+MINISIGN_PUBKEY="RWTB+/RzT24X6uPqrPGKrqODmbchU4N1G00fWzQSUc+qkz7pBUnEys58"
 
 REPO="${VIX_REPO:-vixcpp/vix}"
 VERSION="${VIX_VERSION:-latest}"   # "latest" or "v1.20.1"
@@ -117,17 +117,8 @@ info "trying minisign verification..."
 if fetch "$URL_MINISIG" "$sig_file"; then
   have_sig=1
   have minisign || die "minisig is published but minisign is not installed"
-
-  pub_file="${TMP_DIR}/vix_minisign.pub"
-  cat > "$pub_file" <<'EOF'
-untrusted comment: minisign public key 3BD72CED2937E88
-RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ
-EOF
-
-  if ! minisign -V -m "$bin_tgz" -x "$sig_file" -p "$pub_file"; then
-    die "minisign verification failed (bad signature or wrong public key)"
-  fi
-
+  minisign -Vm "$bin_tgz" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1 \
+    || die "minisign verification failed"
   info "minisign ok"
 else
   info "minisig not found"

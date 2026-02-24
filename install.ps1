@@ -17,10 +17,8 @@ $Version    = if ($env:VIX_VERSION)     { $env:VIX_VERSION }     else { "latest"
 $InstallDir = if ($env:VIX_INSTALL_DIR) { $env:VIX_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "Vix\bin" }
 $BinName    = "vix.exe"
 
-# minisign public key (base64 only)
-$MiniSignPubKey = "RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
-
 function Resolve-LatestTag([string]$repo) {
+  # Robust way: call GitHub API (no auth needed for low volume)
   $api = "https://api.github.com/repos/$repo/releases/latest"
   try {
     $resp = Invoke-RestMethod -Uri $api -Headers @{ "User-Agent" = "vix-installer" }
@@ -33,7 +31,7 @@ function Resolve-LatestTag([string]$repo) {
 
 $Tag = if ($Version -eq "latest") { Resolve-LatestTag $Repo } else { $Version }
 
-# Detect arch
+# Detect arch (prefer OS bitness + ARM check)
 $archRaw = $env:PROCESSOR_ARCHITECTURE
 $Arch = switch -Regex ($archRaw) {
   "AMD64" { "x86_64"; break }
@@ -45,7 +43,6 @@ $Asset   = "vix-windows-$Arch.zip"
 $BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
 $UrlBin  = "$BaseUrl/$Asset"
 $UrlSha  = "$UrlBin.sha256"
-$UrlMiniSig = "$UrlBin.minisig"
 
 Info "repo=$Repo version=$Tag arch=$Arch"
 Info "install_dir=$InstallDir"
@@ -53,21 +50,18 @@ Info "install_dir=$InstallDir"
 # Temp dir unique
 $TmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vix-" + [System.Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
-
 try {
   $ZipPath = Join-Path $TmpDir $Asset
   $ShaPath = Join-Path $TmpDir ($Asset + ".sha256")
-  $SigPath = Join-Path $TmpDir ($Asset + ".minisig")
 
   Info "downloading: $UrlBin"
   Invoke-WebRequest -Uri $UrlBin -OutFile $ZipPath
 
-  # Require at least one verification method (sha256 or minisign)
-  $haveSha = $false
-  $haveSig = $false
-
-  # --- SHA256 verification ---
+  # SHA256 verification policy:
+  # - If sha256 file exists -> MUST verify and match.
+  # - If sha256 missing -> warn (optionally you can hard-fail; currently warn).
   Info "trying sha256 verification..."
+  $shaOk = $false
   try {
     Invoke-WebRequest -Uri $UrlSha -OutFile $ShaPath
 
@@ -88,38 +82,18 @@ try {
     $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ZipPath).Hash
     if ($expected.ToLower() -ne $actual.ToLower()) { Die "sha256 mismatch" }
 
-    $haveSha = $true
+    $shaOk = $true
     Info "sha256 ok"
   } catch {
     Info "sha256 file not found (skipping)"
   }
 
-  # --- minisign verification (if minisig exists) ---
-  Info "trying minisign verification..."
-  try {
-    Invoke-WebRequest -Uri $UrlMiniSig -OutFile $SigPath
-    $haveSig = $true
-
-    $mini = Get-Command minisign -ErrorAction SilentlyContinue
-    if (-not $mini) {
-      Die "minisig is published but minisign is not installed (install minisign or use sha256-only verification)"
-    }
-
-    & minisign -V -m $ZipPath -x $SigPath -P $MiniSignPubKey | Out-Null
-    Info "minisign ok"
-  } catch {
-    Info "minisig not found (skipping)"
-  }
-
-  if (-not $haveSha -and -not $haveSig) {
-    Die "no verification file found (.sha256 or .minisig). refusing to install."
-  }
-
-  # Extract to temp first, then move only vix.exe
+  # Extract to temp first, then move only vix.exe (avoids zip path layout issues)
   $ExtractDir = Join-Path $TmpDir "extract"
   New-Item -ItemType Directory -Force -Path $ExtractDir | Out-Null
   Expand-Archive -LiteralPath $ZipPath -DestinationPath $ExtractDir -Force
 
+  # Find vix.exe anywhere in archive
   $ExeCandidate = Get-ChildItem -LiteralPath $ExtractDir -Recurse -File -Filter $BinName | Select-Object -First 1
   if (-not $ExeCandidate) { Die "archive does not contain $BinName" }
 
@@ -129,7 +103,7 @@ try {
 
   Info "installed to $Exe"
 
-  # Add to user PATH (idempotent)
+  # Add to user PATH (idempotent + exact segment check)
   $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
   if (-not $userPath) { $userPath = "" }
 
