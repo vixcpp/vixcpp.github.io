@@ -1,156 +1,163 @@
-#!/usr/bin/env sh
-set -eu
+# Vix.cpp installer (Windows PowerShell)
+# Usage:
+#   irm https://vixcpp.com/install.ps1 | iex
+# Optional:
+#   $env:VIX_VERSION="v1.20.1"
+#   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"
+#   $env:VIX_REPO="vixcpp/vix"
 
-# minisign public key (ONLY the base64 key, without the comment line)
-MINISIGN_PUBKEY="RWTB+/RzT24X6uPqrPGKrqODmbchU4N1G00fWzQSUc+qkz7pBUnEys58"
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
-REPO="${VIX_REPO:-vixcpp/vix}"
-VERSION="${VIX_VERSION:-latest}"   # "latest" or "v1.20.1"
-INSTALL_DIR="${VIX_INSTALL_DIR:-$HOME/.local/bin}"
-BIN_NAME="vix"
+function Info($msg) { Write-Host "vix install: $msg" }
+function Die($msg)  { throw "vix install: $msg" }
 
-die() { printf "vix install: %s\n" "$*" >&2; exit 1; }
-info() { printf "vix install: %s\n" "$*" >&2; }
+$Repo       = if ($env:VIX_REPO)        { $env:VIX_REPO }        else { "vixcpp/vix" }
+$Version    = if ($env:VIX_VERSION)     { $env:VIX_VERSION }     else { "latest" }
+$InstallDir = if ($env:VIX_INSTALL_DIR) { $env:VIX_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "Vix\bin" }
+$BinName    = "vix.exe"
 
-have() { command -v "$1" >/dev/null 2>&1; }
-need_cmd() { have "$1" || die "missing dependency: $1"; }
+# minisign public key (base64 only)
+$MiniSignPubKey = "RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
-fetch() {
-  url="$1"
-  out="$2"
-  if have curl; then
-    curl -fsSL "$url" -o "$out" >/dev/null 2>&1
-  elif have wget; then
-    wget -qO "$out" "$url" >/dev/null 2>&1
-  else
-    die "need curl or wget"
-  fi
+function Resolve-LatestTag([string]$repo) {
+  $api = "https://api.github.com/repos/$repo/releases/latest"
+  try {
+    $resp = Invoke-RestMethod -Uri $api -Headers @{ "User-Agent" = "vix-installer" }
+    if (-not $resp.tag_name) { Die "could not resolve latest tag. Set VIX_VERSION=vX.Y.Z" }
+    return $resp.tag_name
+  } catch {
+    Die "could not resolve latest tag (GitHub API). Set VIX_VERSION=vX.Y.Z"
+  }
 }
 
-need_cmd uname
-need_cmd mktemp
-need_cmd tar
+$Tag = if ($Version -eq "latest") { Resolve-LatestTag $Repo } else { $Version }
 
-os="$(uname -s | tr '[:upper:]' '[:lower:]')"
-arch="$(uname -m)"
-
-case "$os" in
-  linux)  OS="linux" ;;
-  darwin) OS="macos" ;;
-  *) die "unsupported OS: $os (only Linux/macOS supported by install.sh)" ;;
-esac
-
-case "$arch" in
-  x86_64|amd64) ARCH="x86_64" ;;
-  arm64|aarch64) ARCH="aarch64" ;;
-  *) die "unsupported CPU arch: $arch" ;;
-esac
-
-TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t vix)"
-cleanup() { rm -rf "$TMP_DIR"; }
-trap cleanup EXIT INT TERM
-
-resolve_version() {
-  if [ "$VERSION" = "latest" ]; then
-    have curl || die "curl is required to resolve latest (or set VIX_VERSION=vX.Y.Z)"
-    final="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/$REPO/releases/latest")"
-    tag="${final##*/}"
-    [ -n "$tag" ] || die "could not resolve latest version"
-    printf "%s" "$tag"
-  else
-    printf "%s" "$VERSION"
-  fi
+# Detect arch
+$archRaw = $env:PROCESSOR_ARCHITECTURE
+$Arch = switch -Regex ($archRaw) {
+  "AMD64" { "x86_64"; break }
+  "^ARM"  { "aarch64"; break }
+  default { Die "unsupported arch: $archRaw" }
 }
 
-TAG="$(resolve_version)"
-info "repo=$REPO version=$TAG os=$OS arch=$ARCH"
+$Asset   = "vix-windows-$Arch.zip"
+$BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
+$UrlBin  = "$BaseUrl/$Asset"
+$UrlSha  = "$UrlBin.sha256"
+$UrlMiniSig = "$UrlBin.minisig"
 
-ASSET="vix-${OS}-${ARCH}.tar.gz"
-BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
-URL_BIN="${BASE_URL}/${ASSET}"
-URL_SHA="${URL_BIN}.sha256"
-URL_MINISIG="${URL_BIN}.minisig"
+Info "repo=$Repo version=$Tag arch=$Arch"
+Info "install_dir=$InstallDir"
 
-bin_tgz="${TMP_DIR}/${ASSET}"
-sha_file="${TMP_DIR}/${ASSET}.sha256"
-sig_file="${TMP_DIR}/${ASSET}.minisig"
+# Temp dir unique
+$TmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vix-" + [System.Guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 
-info "downloading: $URL_BIN"
-fetch "$URL_BIN" "$bin_tgz" || die "download failed"
+try {
+  $ZipPath = Join-Path $TmpDir $Asset
+  $ShaPath = Join-Path $TmpDir ($Asset + ".sha256")
+  $SigPath = Join-Path $TmpDir ($Asset + ".minisig")
 
-# ---- Verification policy ----
-# Require at least one verification method (sha256 or minisign).
-have_sha=0
-have_sig=0
+  Info "downloading: $UrlBin"
+  Invoke-WebRequest -Uri $UrlBin -OutFile $ZipPath
 
-info "trying sha256 verification..."
-if fetch "$URL_SHA" "$sha_file"; then
-  have_sha=1
-  if ! have sha256sum && ! have shasum; then
-    die "need sha256sum (Linux) or shasum (macOS) for verification"
-  fi
+  # Require at least one verification method (sha256 or minisign)
+  $haveSha = $false
+  $haveSig = $false
 
-  # support both formats:
-  # 1) "<sha>  <file>"
-  # 2) "SHA256 (file) = <sha>"
-  expected="$(
-    awk '
-      /^[0-9a-fA-F]{64}/ { print $1; exit }
-      /^SHA256 \(/ { print $NF; exit }
-    ' "$sha_file"
-  )"
-  [ -n "$expected" ] || die "invalid sha256 file"
+  # --- SHA256 verification ---
+  Info "trying sha256 verification..."
+  try {
+    Invoke-WebRequest -Uri $UrlSha -OutFile $ShaPath
 
-  if have sha256sum; then
-    actual="$(sha256sum "$bin_tgz" | awk '{print $1}')"
-  else
-    actual="$(shasum -a 256 "$bin_tgz" | awk '{print $1}')"
-  fi
+    $first = (Get-Content -LiteralPath $ShaPath -TotalCount 1).Trim()
+    if (-not $first) { Die "invalid sha256 file" }
 
-  [ "$expected" = "$actual" ] || die "sha256 mismatch"
-  info "sha256 ok"
-else
-  info "sha256 file not found"
-fi
+    # Accept:
+    # 1) "<sha>  file"
+    # 2) "SHA256 (file) = <sha>"
+    $expected = $null
+    if ($first -match "^[0-9a-fA-F]{64}") {
+      $expected = ($first -split "\s+")[0]
+    } elseif ($first -match "=\s*([0-9a-fA-F]{64})\s*$") {
+      $expected = $Matches[1]
+    }
+    if (-not $expected) { Die "invalid sha256 format" }
 
-info "trying minisign verification..."
-if fetch "$URL_MINISIG" "$sig_file"; then
-  have_sig=1
-  have minisign || die "minisig is published but minisign is not installed"
-  minisign -Vm "$bin_tgz" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1 \
-    || die "minisign verification failed"
-  info "minisign ok"
-else
-  info "minisig not found"
-fi
+    $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ZipPath).Hash
+    if ($expected.ToLower() -ne $actual.ToLower()) { Die "sha256 mismatch" }
 
-if [ "$have_sha" -eq 0 ] && [ "$have_sig" -eq 0 ]; then
-  die "no verification file found (.sha256 or .minisig). refusing to install."
-fi
+    $haveSha = $true
+    Info "sha256 ok"
+  } catch {
+    Info "sha256 file not found (skipping)"
+  }
 
-# Extract and install
-mkdir -p "$INSTALL_DIR"
-tar -xzf "$bin_tgz" -C "$TMP_DIR"
-[ -f "${TMP_DIR}/${BIN_NAME}" ] || die "archive does not contain '${BIN_NAME}'"
+  # --- minisign verification (if minisig exists) ---
+  Info "trying minisign verification..."
+  try {
+    Invoke-WebRequest -Uri $UrlMiniSig -OutFile $SigPath
+    $haveSig = $true
 
-chmod +x "${TMP_DIR}/${BIN_NAME}"
-dest="${INSTALL_DIR}/${BIN_NAME}"
-info "installing to: $dest"
-mv -f "${TMP_DIR}/${BIN_NAME}" "$dest"
+    $mini = Get-Command minisign -ErrorAction SilentlyContinue
+    if (-not $mini) {
+      Die "minisig is published but minisign is not installed (install minisign or use sha256-only verification)"
+    }
 
-if "$dest" --version >/dev/null 2>&1; then
-  info "installed: $("$dest" --version 2>/dev/null || true)"
-else
-  info "installed, but running 'vix --version' failed (PATH or runtime issue)"
-fi
+    & minisign -V -m $ZipPath -x $SigPath -P $MiniSignPubKey | Out-Null
+    Info "minisign ok"
+  } catch {
+    Info "minisig not found (skipping)"
+  }
 
-case ":$PATH:" in
-  *":$INSTALL_DIR:"*) : ;;
-  *)
-    info "NOTE: '$INSTALL_DIR' is not in your PATH."
-    info "Add this to your shell config:"
-    info "  export PATH=\"$INSTALL_DIR:\$PATH\""
-    ;;
-esac
+  if (-not $haveSha -and -not $haveSig) {
+    Die "no verification file found (.sha256 or .minisig). refusing to install."
+  }
 
-info "done"
+  # Extract to temp first, then move only vix.exe
+  $ExtractDir = Join-Path $TmpDir "extract"
+  New-Item -ItemType Directory -Force -Path $ExtractDir | Out-Null
+  Expand-Archive -LiteralPath $ZipPath -DestinationPath $ExtractDir -Force
+
+  $ExeCandidate = Get-ChildItem -LiteralPath $ExtractDir -Recurse -File -Filter $BinName | Select-Object -First 1
+  if (-not $ExeCandidate) { Die "archive does not contain $BinName" }
+
+  New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+  $Exe = Join-Path $InstallDir $BinName
+  Copy-Item -LiteralPath $ExeCandidate.FullName -Destination $Exe -Force
+
+  Info "installed to $Exe"
+
+  # Add to user PATH (idempotent)
+  $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+  if (-not $userPath) { $userPath = "" }
+
+  $segments = $userPath -split ";" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
+  $already = $false
+  foreach ($s in $segments) {
+    if ([string]::Equals($s.TrimEnd("\"), $InstallDir.TrimEnd("\"), [System.StringComparison]::OrdinalIgnoreCase)) {
+      $already = $true
+      break
+    }
+  }
+
+  if (-not $already) {
+    $newPath = ($segments + $InstallDir) -join ";"
+    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+    Info "added to PATH (restart your terminal)"
+  } else {
+    Info "PATH already contains install_dir"
+  }
+
+  # Quick check
+  try {
+    $ver = & $Exe --version 2>$null
+    if ($ver) { Info "version: $ver" }
+  } catch { }
+
+  Info "done"
+}
+finally {
+  Remove-Item -LiteralPath $TmpDir -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+}

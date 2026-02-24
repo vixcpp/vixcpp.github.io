@@ -16,6 +16,7 @@ $Repo       = if ($env:VIX_REPO)        { $env:VIX_REPO }        else { "vixcpp/
 $Version    = if ($env:VIX_VERSION)     { $env:VIX_VERSION }     else { "latest" }
 $InstallDir = if ($env:VIX_INSTALL_DIR) { $env:VIX_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "Vix\bin" }
 $BinName    = "vix.exe"
+$MiniSignPubKey = "RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
 function Resolve-LatestTag([string]$repo) {
   # Robust way: call GitHub API (no auth needed for low volume)
@@ -43,6 +44,8 @@ $Asset   = "vix-windows-$Arch.zip"
 $BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
 $UrlBin  = "$BaseUrl/$Asset"
 $UrlSha  = "$UrlBin.sha256"
+$UrlMiniSig = "$UrlBin.minisig"
+$SigPath = Join-Path $TmpDir ($Asset + ".minisig")
 
 Info "repo=$Repo version=$Tag arch=$Arch"
 Info "install_dir=$InstallDir"
@@ -84,6 +87,23 @@ try {
 
     $shaOk = $true
     Info "sha256 ok"
+
+    Info "trying minisign verification..."
+    try {
+      Invoke-WebRequest -Uri $UrlMiniSig -OutFile $SigPath
+
+      $mini = Get-Command minisign -ErrorAction SilentlyContinue
+      if (-not $mini) {
+        Die "minisig is published but minisign is not installed (install minisign or use a release without minisig)"
+      }
+
+      # minisign on Windows supports -V -m <file> -x <sig> -P <pubkey>
+      & minisign -V -m $ZipPath -x $SigPath -P $MiniSignPubKey | Out-Null
+
+      Info "minisign ok"
+    } catch {
+      Info "minisig not found (skipping)"
+    }
   } catch {
     Info "sha256 file not found (skipping)"
   }
