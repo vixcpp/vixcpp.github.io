@@ -4,7 +4,7 @@ export const HOME = {
     subtitle:
       "A modern C++ runtime and serious alternative to Node.js, Deno, and Bun, designed for unreliable networks and native performance.",
     ctas: [
-      { label: "Get Vix.cpp", to: "/install", kind: "primary" },
+      { label: "Install", to: "/install", kind: "primary" },
       {
         label: "Get started",
         href: "/docs/",
