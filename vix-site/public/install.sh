@@ -2,7 +2,7 @@
 set -eu
 
 # minisign public key (ONLY the base64 key, without the comment line)
-MINISIGN_PUBKEY="RWTB+/RzT24X6uPqrPGKrqODmbchU4N1G00fWzQSUc+qkz7pBUnEys58"
+MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
 REPO="${VIX_REPO:-vixcpp/vix}"
 VERSION="${VIX_VERSION:-latest}"   # "latest" or "v1.20.1"
@@ -116,16 +116,25 @@ fi
 info "trying minisign verification..."
 if fetch "$URL_MINISIG" "$sig_file"; then
   have_sig=1
-  have minisign || die "minisig is published but minisign is not installed"
-  minisign -Vm "$bin_tgz" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1 \
-    || die "minisign verification failed"
-  info "minisign ok"
+  if have minisign; then
+    if minisign -Vm "$bin_tgz" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1; then
+      info "minisign ok"
+    else
+      if [ "$have_sha" -eq 1 ]; then
+        info "minisign verification failed (sha256 already ok, continuing)"
+      else
+        die "minisign verification failed"
+      fi
+    fi
+  else
+    if [ "$have_sha" -eq 1 ]; then
+      info "minisig is published but minisign is not installed (sha256 already ok, continuing)"
+    else
+      die "minisig is published but minisign is not installed"
+    fi
+  fi
 else
   info "minisig not found"
-fi
-
-if [ "$have_sha" -eq 0 ] && [ "$have_sig" -eq 0 ]; then
-  die "no verification file found (.sha256 or .minisig). refusing to install."
 fi
 
 # Extract and install

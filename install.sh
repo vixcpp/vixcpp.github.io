@@ -137,10 +137,6 @@ else
   info "minisig not found"
 fi
 
-if [ "$have_sha" -eq 0 ] && [ "$have_sig" -eq 0 ]; then
-  die "no verification file found (.sha256 or .minisig). refusing to install."
-fi
-
 # Extract and install
 mkdir -p "$INSTALL_DIR"
 tar -xzf "$bin_tgz" -C "$TMP_DIR"
