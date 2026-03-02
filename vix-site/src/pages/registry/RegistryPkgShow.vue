@@ -1,4 +1,3 @@
-<!-- src/pages/RegistryPkgShow.vue -->
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -9,7 +8,6 @@ import PkgOverviewTab from "./pkgshow/PkgOverviewTab.vue";
 import PkgDocsTab from "./pkgshow/PkgDocsTab.vue";
 import PkgFilesTab from "./pkgshow/PkgFilesTab.vue";
 import PkgVersionsTab from "./pkgshow/PkgVersionsTab.vue";
-
 
 import { marked } from "marked";
 import DOMPurify from "dompurify";
