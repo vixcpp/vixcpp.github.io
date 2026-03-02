@@ -10,6 +10,8 @@ const router = useRouter();
 const worker = new RegistrySearchWorker();
 
 const q = ref((route.query.q || "").toString());
+const page = ref(Math.max(1, Number(route.query.page || 1)));
+
 const hits = ref([]);
 const total = ref(0);
 const loading = ref(true);
@@ -18,12 +20,50 @@ const error = ref("");
 
 const searchEl = ref(null);
 
-const isEmptyQuery = computed(() => !q.value || !q.value.trim());
+const queryTrimmed = computed(() => (q.value || "").toString().trim());
+const isEmptyQuery = computed(() => !queryTrimmed.value);
+
+const pageSize = computed(() => (isEmptyQuery.value ? 50 : 30));
+const offset = computed(() => (page.value - 1) * pageSize.value);
+
+const totalPages = computed(() => {
+  const t = Number(total.value || 0);
+  const s = Number(pageSize.value || 1);
+  return Math.max(1, Math.ceil(t / s));
+});
+
+const showingFrom = computed(() => (total.value ? offset.value + 1 : 0));
+const showingTo = computed(() => Math.min(offset.value + pageSize.value, total.value || 0));
+
+function safeParseDate(v) {
+  if (!v) return null;
+  const d = new Date(v);
+  if (Number.isNaN(d.getTime())) return null;
+  return d;
+}
+
+const indexLabel = computed(() => {
+  const d = safeParseDate(version.value);
+  if (!d) return version.value ? `Index: ${version.value}` : "";
+  const txt = d.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `Index: ${txt}`;
+});
+
 const titleLabel = computed(() => (isEmptyQuery.value ? "Explore packages" : "Search results"));
+
 const subtitleLabel = computed(() => {
   const parts = [];
-  if (version.value) parts.push(`Index: ${version.value}`);
-  if (!isEmptyQuery.value) parts.push(`Query: "${q.value.trim()}"`);
+  if (indexLabel.value) parts.push(indexLabel.value);
+  if (!isEmptyQuery.value) parts.push(`Query: "${queryTrimmed.value}"`);
+  if (!loading.value && !error.value && total.value) {
+    parts.push(`Showing ${showingFrom.value} to ${showingTo.value} of ${total.value}`);
+  }
   return parts.join(" · ");
 });
 
@@ -32,35 +72,66 @@ function focusSearch() {
 }
 
 function doSearch() {
-  const query = (q.value || "").trim();
+  const query = queryTrimmed.value;
 
   worker.postMessage({
     type: "search",
-    query: query,
-    limit: query ? 30 : 50,
+    query,
+    limit: pageSize.value,
+    offset: offset.value,
     sort: query ? "score" : "latest",
   });
 }
 
-function goSearch(next) {
-  const s = (next ?? q.value ?? "").toString().trim();
+function pushRoute(nextQ, nextPage) {
+  const nq = (nextQ ?? "").toString().trim();
+  const np = Math.max(1, Number(nextPage || 1));
 
-  if (!s) {
+  if (!nq) {
     router.push({ path: "/registry/browse", query: {} }).catch(() => {});
     return;
   }
-  router.push({ path: "/registry/browse", query: { q: s } }).catch(() => {});
+
+  router
+    .push({
+      path: "/registry/browse",
+      query: { q: nq, page: np },
+    })
+    .catch(() => {});
+}
+
+function goSearch(next) {
+  const s = (next ?? q.value ?? "").toString().trim();
+  pushRoute(s, 1);
 }
 
 function clearSearch() {
   q.value = "";
-  goSearch("");
+  router.push({ path: "/registry/browse", query: {} }).catch(() => {});
   nextTick(() => focusSearch());
 }
 
 function openPkg(h) {
   if (!h) return;
   router.push({ path: `/registry/pkg/${h.namespace}/${h.name}` }).catch(() => {});
+}
+
+function setPage(p) {
+  const np = Math.max(1, Math.min(Number(p || 1), totalPages.value));
+  // keep q as-is
+  if (isEmptyQuery.value) {
+    // browsing mode can still paginate with page only
+    router.push({ path: "/registry/browse", query: { page: np } }).catch(() => {});
+    return;
+  }
+  router.push({ path: "/registry/browse", query: { q: queryTrimmed.value, page: np } }).catch(() => {});
+}
+
+function nextPage() {
+  if (page.value < totalPages.value) setPage(page.value + 1);
+}
+function prevPage() {
+  if (page.value > 1) setPage(page.value - 1);
 }
 
 const keyHandler = (e) => {
@@ -75,8 +146,49 @@ const keyHandler = (e) => {
   if (isEsc && document.activeElement === searchEl.value) {
     e.preventDefault();
     clearSearch();
+    return;
+  }
+
+  // optional: Alt Left/Right for paging
+  const isNext = (e.altKey || e.metaKey) && e.key === "ArrowRight";
+  const isPrev = (e.altKey || e.metaKey) && e.key === "ArrowLeft";
+
+  if (!loading.value && !error.value) {
+    if (isNext) {
+      e.preventDefault();
+      nextPage();
+    } else if (isPrev) {
+      e.preventDefault();
+      prevPage();
+    }
   }
 };
+
+const pageButtons = computed(() => {
+  // simple compact pagination: [1 .. n], with window around current
+  const cur = page.value;
+  const max = totalPages.value;
+
+  const out = [];
+  const push = (x) => out.push(x);
+
+  const windowSize = 2;
+  const start = Math.max(1, cur - windowSize);
+  const end = Math.min(max, cur + windowSize);
+
+  push(1);
+  if (start > 2) push("…");
+
+  for (let i = start; i <= end; i++) {
+    if (i !== 1 && i !== max) push(i);
+  }
+
+  if (end < max - 1) push("…");
+  if (max > 1) push(max);
+
+  // remove duplicates
+  return out.filter((v, i) => i === 0 || v !== out[i - 1]);
+});
 
 onMounted(async () => {
   worker.onmessage = (ev) => {
@@ -91,8 +203,11 @@ onMounted(async () => {
 
     if (msg.type === "searchResult") {
       hits.value = msg.hits || [];
-      total.value = msg.total || 0;
+      total.value = Number(msg.total || 0);
       version.value = msg.version || version.value;
+
+      // guard: if URL points to page too high, snap back
+      if (page.value > totalPages.value) setPage(totalPages.value);
       return;
     }
 
@@ -125,6 +240,15 @@ watch(
   () => route.query.q,
   (v) => {
     q.value = (v || "").toString();
+    page.value = Math.max(1, Number(route.query.page || 1));
+    if (!loading.value && !error.value) doSearch();
+  }
+);
+
+watch(
+  () => route.query.page,
+  (v) => {
+    page.value = Math.max(1, Number(v || 1));
     if (!loading.value && !error.value) doSearch();
   }
 );
@@ -132,7 +256,6 @@ watch(
 
 <template>
   <section class="page">
-    <!-- Top bar (JSR-like) -->
     <header class="topbar">
       <div class="topbar-inner">
         <RouterLink class="brand" to="/registry" aria-label="Registry home">
@@ -144,7 +267,7 @@ watch(
             <svg viewBox="0 0 16 16" width="16" height="16">
               <path
                 fill="currentColor"
-                d="M11.742 10.344 14.5 13.1l-.9.9-2.758-2.758a6 6 0 1 1 .9-.898zM6.5 11.5a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"
+                d="M11.742 10.344 14.5 13.1l-.9.9-2.758-2.758a6 6 0 1 1 .9-.898zM6.5 11.5a5 5 0 0 0 0 10z"
               />
             </svg>
           </span>
@@ -166,7 +289,7 @@ watch(
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
               <path
                 fill="currentColor"
-                d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 1 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06z"
+                d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1 0-1.06z"
               />
             </svg>
           </button>
@@ -178,7 +301,6 @@ watch(
       </div>
     </header>
 
-    <!-- Content -->
     <div class="wrap">
       <div class="head">
         <div class="hblock">
@@ -199,9 +321,7 @@ watch(
           Loading registry…
         </div>
 
-        <div v-else-if="error" class="state error">
-          Error: {{ error }}
-        </div>
+        <div v-else-if="error" class="state error">Error: {{ error }}</div>
 
         <template v-else>
           <div v-if="!isEmptyQuery && total === 0" class="empty">
@@ -213,7 +333,6 @@ watch(
             <li v-for="h in hits" :key="h.id" class="row">
               <button class="row-btn" type="button" @click="openPkg(h)">
                 <div class="left">
-                  <!-- show id only once -->
                   <div class="pkg-id">
                     <span class="ns">@{{ h.namespace }}</span><span class="slash">/</span><span class="nm">{{ h.name }}</span>
                   </div>
@@ -222,23 +341,40 @@ watch(
 
                 <div class="right">
                   <span class="tag" v-if="h.latest">v{{ h.latest }}</span>
-                  <a v-if="h.repo" class="repo" :href="h.repo" target="_blank" rel="noreferrer" @click.stop>
-                    repo
-                  </a>
+                  <a v-if="h.repo" class="repo" :href="h.repo" target="_blank" rel="noreferrer" @click.stop>repo</a>
                 </div>
               </button>
             </li>
           </ul>
 
+          <div class="pager" v-if="total > pageSize">
+            <button class="pager-btn" type="button" :disabled="page <= 1" @click="prevPage">Prev</button>
+
+            <div class="pager-mid">
+              <button
+                v-for="b in pageButtons"
+                :key="String(b)"
+                class="pager-pill"
+                type="button"
+                :disabled="b === '…'"
+                :data-active="b === page"
+                @click="typeof b === 'number' && setPage(b)"
+              >
+                {{ b }}
+              </button>
+            </div>
+
+            <button class="pager-btn" type="button" :disabled="page >= totalPages" @click="nextPage">Next</button>
+          </div>
+
           <div class="foot" v-if="isEmptyQuery">
-            Tip: Ctrl K focuses search. Esc clears when focused.
+            Tip: Ctrl K focuses search. Esc clears when focused. Alt Left/Right changes pages.
           </div>
         </template>
       </div>
     </div>
   </section>
 </template>
-
 <style scoped>
 
 .page{
@@ -741,5 +877,63 @@ watch(
 }
 .tag{
   font-weight: 600;
+}
+.pager{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.16);
+}
+
+.pager-btn{
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.92);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pager-btn:hover:not(:disabled){
+  background: rgba(255,255,255,.09);
+}
+.pager-btn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.pager-mid{
+  display:flex;
+  align-items:center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content:center;
+}
+
+.pager-pill{
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.80);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor:pointer;
+}
+
+.pager-pill[data-active="true"]{
+  border-color: rgba(140,200,255,.25);
+  background: rgba(140,200,255,.10);
+  color: rgba(140,200,255,.95);
+}
+
+.pager-pill:disabled{
+  cursor: default;
+  opacity: .6;
 }
 </style>
