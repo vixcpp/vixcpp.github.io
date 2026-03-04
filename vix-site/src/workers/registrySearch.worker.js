@@ -16,6 +16,12 @@ function joinKeywords(entry) {
   return kw.filter((x) => typeof x === "string").join(", ");
 }
 
+function parseTime(v) {
+  if (!v) return 0;
+  const t = new Date(v).getTime();
+  return Number.isFinite(t) ? t : 0;
+}
+
 function latestVersion(entry) {
   if (typeof entry?.latest === "string" && entry.latest) return entry.latest;
 
@@ -57,6 +63,15 @@ function buildHit(e, score) {
 
   const repoUrl = e?.repo && typeof e.repo === "object" ? e.repo.url || "" : "";
 
+  const updatedAt =
+    e?.api?.updatedAt ||
+    e?.api?.generatedAt ||
+    e?.updatedAt ||
+    e?.lastUpdatedAt ||
+    "";
+
+  const createdAt = e?.createdAt || e?.api?.createdAt || "";
+
   return {
     id,
     namespace: ns,
@@ -66,6 +81,9 @@ function buildHit(e, score) {
     repo: repoUrl,
     latest: latestVersion(e),
     score: Number(score) || 0,
+
+    createdAt,
+    updatedAt,
   };
 }
 
@@ -91,15 +109,26 @@ function compareSemverDesc(a, b) {
 function sortHits(hits, sortMode) {
   if (sortMode === "latest") {
     hits.sort((a, b) => {
+      const ta = parseTime(a.updatedAt);
+      const tb = parseTime(b.updatedAt);
+
+      if (ta !== tb) return tb - ta;
+
       const v = compareSemverDesc(a.latest, b.latest);
       if (v !== 0) return v;
+
       return a.id.localeCompare(b.id);
     });
     return;
   }
 
+  // search mode => score
   hits.sort((a, b) => {
     if (a.score !== b.score) return b.score - a.score;
+    // petit bonus: si même score, plus récent d'abord
+    const ta = parseTime(a.updatedAt);
+    const tb = parseTime(b.updatedAt);
+    if (ta !== tb) return tb - ta;
     return a.id.localeCompare(b.id);
   });
 }
