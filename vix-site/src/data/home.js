@@ -120,7 +120,8 @@ i Hint:  Ctrl+C to stop`,
     preview: {
       title: "registry",
       code: `$ vix registry sync
-$ vix search websocket
+$ vix search oauth2
+$ vix add @gk/oauth2
 $ vix deps
 $ cat vix.lock`,
     },
@@ -197,8 +198,8 @@ $ cat vix.lock`,
           title: "registry",
           lines: [
             "$ vix registry sync",
-            "$ vix search io",
-            "$ vix add @vix/io",
+            "$ vix search web_app",
+            "$ vix add @vix/web_app",
             "$ vix deps",
           ],
         },
