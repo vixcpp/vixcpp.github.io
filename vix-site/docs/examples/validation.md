@@ -80,9 +80,9 @@ int main()
 ```
 
 Test:
-
+```bash
     curl -X POST http://localhost:8080/register   -H "Content-Type: application/json"   -d '{"email":"bad","password":"123"}'
-
+```
 ------------------------------------------------------------------------
 
 ## 2) Validate query parameters (GET /search)
