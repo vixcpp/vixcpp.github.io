@@ -156,7 +156,131 @@ onMounted(async () => {
         </div>
       </section>
 
-      <Section
+      <section v-if="HOME.showcase" class="vix-showcase">
+        <div class="container vix-showcase-header">
+          <h2 class="vix-showcase-heading">{{ HOME.showcase.heading }}</h2>
+          <p class="vix-showcase-subheading">{{ HOME.showcase.subheading }}</p>
+        </div>
+
+        <div class="container vix-showcase-inner">
+          <div class="vix-showcase-visual">
+            <div class="code-card vix-code-editor-card">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">{{ HOME.showcase.visual.fileName }}</span>
+                </div>
+              </div>
+
+              <div class="code-body">
+                <pre class="code-pre"><code v-html="HOME.showcase.visual.code"></code></pre>
+              </div>
+            </div>
+
+            <div class="vix-terminal-card">
+              <div class="vix-terminal-head">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+
+              <div class="vix-terminal-body">
+                <pre><code v-html="HOME.showcase.visual.terminal"></code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="vix-showcase-content">
+            <h3 class="vix-showcase-title">
+              {{ HOME.showcase.content.title }}
+              <span class="vix-badge vix-badge-cpp">{{ HOME.showcase.content.badge }}</span>
+            </h3>
+
+            <p class="vix-showcase-text">{{ HOME.showcase.content.text }}</p>
+
+            <a :href="HOME.showcase.content.cta.to" class="vix-showcase-btn">
+              {{ HOME.showcase.content.cta.label }}
+              <span class="vix-showcase-btn-arrow">›</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-sep"></div>
+
+      <section v-if="HOME.registryShowcase" class="registry-showcase">
+        <div class="container registry-showcase-inner">
+
+          <!-- LEFT -->
+          <div class="registry-showcase-content">
+            <h2 class="registry-showcase-title">
+              {{ HOME.registryShowcase.title }}
+              <span class="registry-badge">{{ HOME.registryShowcase.badge }}</span>
+            </h2>
+
+            <p class="registry-showcase-text">
+              {{ HOME.registryShowcase.text }}
+            </p>
+
+            <a
+              :href="HOME.registryShowcase.cta.to"
+              class="registry-showcase-btn"
+            >
+              {{ HOME.registryShowcase.cta.label }}
+              <span class="registry-showcase-btn-arrow">›</span>
+            </a>
+          </div>
+
+          <!-- RIGHT -->
+          <div class="registry-showcase-visual">
+
+            <!-- TOP CARD -->
+            <div class="code-card registry-code-card registry-code-card-top">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">
+                    {{ HOME.registryShowcase.cards.top.fileName }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="code-body">
+                <pre class="code-pre">
+                  <code v-html="HOME.registryShowcase.cards.top.code"></code>
+                </pre>
+              </div>
+            </div>
+
+            <!-- BOTTOM CARD -->
+            <div class="code-card registry-code-card registry-code-card-bottom">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">
+                    {{ HOME.registryShowcase.cards.bottom.fileName }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="code-body">
+                <pre class="code-pre">
+                  <code v-html="HOME.registryShowcase.cards.bottom.code"></code>
+                </pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- <Section
         v-if="HOME.mission"
         :title="HOME.mission.title"
         :subtitle="HOME.mission.subtitle"
@@ -183,25 +307,8 @@ onMounted(async () => {
         :subtitle="HOME.principles.subtitle"
       >
         <CardGrid :items="HOME.principles.items || []" />
-      </Section>
+      </Section> -->
 
-      <div v-if="HOME.principles" class="section-sep"></div>
-
-      <section class="support-cta">
-        <div class="container support-cta-inner">
-          <div class="support-cta-left">
-            <h2 class="support-cta-title">Support</h2>
-            <p class="support-cta-subtitle">
-              Help keep Vix.cpp moving fast. Support the runtime, the tooling,
-              and the growing ecosystem.
-            </p>
-          </div>
-
-          <div class="support-cta-right">
-            <a class="btn primary" href="/support">Go to Support</a>
-          </div>
-        </div>
-      </section>
 
       <div class="section-sep"></div>
 
@@ -272,6 +379,25 @@ onMounted(async () => {
       />
 
       <div v-if="HOME.batteries" class="section-sep"></div>
+
+
+      <section class="support-cta">
+        <div class="container support-cta-inner">
+          <div class="support-cta-left">
+            <h2 class="support-cta-title">Support</h2>
+            <p class="support-cta-subtitle">
+              Help keep Vix.cpp moving fast. Support the runtime, the tooling,
+              and the growing ecosystem.
+            </p>
+          </div>
+
+          <div class="support-cta-right">
+            <a class="btn primary" href="/support">Go to Support</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-sep"></div>
 
       <Section
         v-if="HOME.getStarted"
@@ -494,7 +620,7 @@ onMounted(async () => {
 }
 
 .install {
-  padding: 72px 0 80px;
+  padding: 32px 0 40px;
   background:
     radial-gradient(circle at top, rgba(34, 197, 94, 0.10), transparent 42%),
     linear-gradient(180deg, #031f1a 0%, #042a23 100%);
@@ -513,11 +639,13 @@ onMounted(async () => {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  gap: 10px;
+
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+
   font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #fff;
+  letter-spacing: -0.02em;
+  color: #ecfdf5;
 }
 
 .install-version {
@@ -855,5 +983,586 @@ onMounted(async () => {
   height: 2px;
   background: #22c55e;
   border-radius: 2px;
+}
+
+
+
+.vix-showcase {
+  padding: 96px 0;
+  background: #f5f5f5;
+}
+
+.vix-showcase-inner {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.15fr) minmax(280px, 0.85fr);
+  gap: 72px;
+  align-items: center;
+}
+
+.vix-showcase-visual {
+  position: relative;
+  min-height: 430px;
+  width: 100%;
+}
+
+.vix-code-editor-card {
+  position: relative;
+  width: min(100%, 560px);
+  z-index: 1;
+}
+
+.vix-code-editor-card .code-body {
+  padding-bottom: 120px;
+}
+
+/* terminal desktop */
+.vix-terminal-card {
+  position: absolute;
+  left: 48px;
+  bottom: 26px;
+  width: min(100%, 420px);
+  background: #0b0f17;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0,0,0,.22);
+  z-index: 3;
+}
+
+.vix-terminal-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #0f141b;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.vix-terminal-body {
+  padding: 16px 18px 18px;
+}
+
+.vix-terminal-body pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.vix-terminal-body code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  color: #e6edf3;
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+
+.vix-terminal-green {
+  color: #66e3a4;
+}
+
+/* tablette */
+@media (max-width: 980px) {
+  .vix-showcase {
+    padding: 0;
+  }
+
+  .vix-showcase-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .vix-showcase-visual {
+    min-height: 400px;
+  }
+
+  .vix-showcase-content {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .vix-showcase-text {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* mobile */
+@media (max-width: 720px) {
+  .vix-showcase {
+    padding: 64px 0;
+  }
+
+  .vix-showcase-inner {
+    gap: 36px;
+  }
+
+  .vix-showcase-visual {
+    min-height: auto;
+  }
+
+  .vix-code-editor-card {
+    width: 100%;
+  }
+
+  .vix-code-editor-card .code-body {
+    padding-bottom: 0;
+  }
+
+  .code-head {
+    padding: 10px 10px;
+  }
+
+  .head-title {
+    max-width: 42vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .code-pre {
+    font-size: 0.8rem;
+    min-width: 0;           /* important */
+    width: max-content;
+  }
+
+  .code-body {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .vix-terminal-card {
+    position: relative;     /* important */
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .vix-showcase-content {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .vix-showcase-title {
+    font-size: 2rem;
+  }
+
+  .vix-badge {
+    min-width: 54px;
+    height: 48px;
+    padding: 0 12px;
+    border-radius: 9px;
+  }
+
+  .vix-showcase-text {
+    font-size: 1rem;
+  }
+
+  .vix-showcase-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.vix-showcase-title {
+  margin: 0;
+  color: #ecfdf5;
+
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.vix-badge-cpp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 96px;
+  height: 58px;
+  padding: 0 18px;
+  margin-left: 8px;
+  border-radius: 12px;
+
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  color: #e2e8f0;
+
+  font-size: 0.56em;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.vix-showcase-btn {
+  margin-top: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 16px 24px;
+  border-radius: 999px;
+
+  background: linear-gradient(180deg, #4ade80 0%, #22c55e 100%);
+  color: #022c22;
+
+  font-size: 0.98rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+
+  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.vix-showcase-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.32);
+  filter: brightness(1.05);
+}
+
+.vix-showcase-btn-arrow {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .vix-badge-cpp {
+    min-width: 72px;
+    height: 46px;
+    padding: 0 12px;
+    border-radius: 10px;
+  }
+
+  .vix-showcase-btn {
+    width: 100%;
+    padding: 15px 18px;
+    font-size: 0.95rem;
+  }
+}
+
+.vix-showcase-header {
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto 72px;
+
+  /* léger effet glass */
+  backdrop-filter: blur(2px);
+}
+
+.vix-showcase-heading {
+  margin: 0;
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: #ecfdf5;
+}
+
+.vix-showcase-subheading {
+  margin: 20px 0 0;
+  font-size: 1.15rem;
+  line-height: 1.7;
+
+  /* gris verdâtre, pas gris pur */
+  color: rgba(236, 253, 245, 0.7);
+}
+
+@media (max-width: 720px) {
+  .vix-showcase-header {
+    margin-bottom: 48px;
+    padding: 0 10px;
+  }
+
+  .vix-showcase-heading {
+    font-size: 2rem;
+  }
+
+  .vix-showcase-subheading {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .vix-showcase-title {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+}
+
+.registry-showcase {
+  padding: 0;
+  padding-bottom: 40px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.registry-showcase-inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 72px;
+  align-items: center;
+}
+
+.registry-showcase-content {
+  max-width: 420px;
+}
+
+.registry-showcase-title {
+  margin: 0;
+  color: #ecfdf5;
+  font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.registry-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 0 14px;
+  min-width: 102px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  color: #ecfdf5;
+  font-size: 0.5em;
+  font-weight: 800;
+  vertical-align: middle;
+  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.20);
+}
+
+.registry-showcase-text {
+  margin: 18px 0 0;
+  color: rgba(236, 253, 245, 0.78);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.registry-showcase-btn {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 22px;
+  border-radius: 999px;
+  background: #67f0a8;
+  color: #052e16;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.registry-showcase-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(16, 185, 129, 0.24);
+}
+
+.registry-showcase-btn-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.registry-showcase-visual {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+}
+
+.registry-showcase-visual .registry-code-card {
+  position: absolute;
+  width: min(442px, 100%);
+  max-width: 100%;
+}
+
+.registry-showcase-visual .registry-code-card-top {
+  top: 0;
+  left: 8%;
+  z-index: 1;
+}
+
+.registry-showcase-visual .registry-code-card-bottom {
+  top: 230px;
+  left: 16%;
+  z-index: 2;
+}
+
+.registry-showcase-visual .registry-code-card .code-body {
+  padding: 10px 14px 12px !important;
+  overflow-x: hidden;
+}
+
+.registry-showcase-visual .registry-code-card .code-pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.registry-showcase-visual .registry-code-card .code-pre code {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+}
+
+@media (max-width: 1180px) {
+  .registry-showcase-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .registry-showcase-content {
+    max-width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .registry-showcase-visual {
+    max-width: 620px;
+    min-height: 500px;
+    margin: 0 auto;
+  }
+
+  .registry-showcase-visual .registry-code-card-top {
+    left: 4%;
+    width: min(442px, 92%);
+  }
+
+  .registry-showcase-visual .registry-code-card-bottom {
+    top: 220px;
+    left: 12%;
+    width: min(442px, 88%);
+  }
+}
+
+@media (max-width: 820px) {
+  .registry-showcase {
+    padding: 80px 0;
+  }
+
+  .registry-showcase-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .registry-showcase-content {
+    max-width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .registry-showcase-visual {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+    max-width: 100%;
+  }
+
+  .registry-showcase-visual .registry-code-card {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .registry-showcase-visual .registry-code-card-top,
+  .registry-showcase-visual .registry-code-card-bottom {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .registry-showcase {
+    padding: 72px 0;
+  }
+
+  .registry-showcase-inner {
+    gap: 28px;
+  }
+
+  .registry-showcase-title {
+    font-size: 1.7rem;
+  }
+
+  .registry-badge {
+    min-width: 84px;
+    height: 38px;
+    padding: 0 10px;
+  }
+
+  .registry-showcase-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .registry-showcase-text {
+    font-size: 0.98rem;
+  }
+
+  .registry-showcase-visual {
+    width: 100%;
+  }
+
+  .registry-showcase-visual .registry-code-card .code-body {
+    padding: 10px 12px !important;
+  }
+
+  .registry-showcase-visual .registry-code-card .code-pre {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .registry-showcase-visual .registry-code-card .head-title {
+    max-width: 46vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .registry-showcase {
+    padding: 64px 0;
+  }
+
+  .registry-showcase-title {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  .registry-badge {
+    display: inline-flex;
+    margin-top: 10px;
+    margin-left: 0;
+  }
+
+  .registry-showcase-visual .registry-code-card .code-body {
+    padding: 9px 10px !important;
+  }
+
+  .registry-showcase-visual .registry-code-card .code-pre {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
 }
 </style>

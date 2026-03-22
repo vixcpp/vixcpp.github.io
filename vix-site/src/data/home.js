@@ -118,6 +118,69 @@ i Hint: Ctrl+C to stop`,
     },
   },
 
+  showcase: {
+    heading: "All your favorite C++ tools, built-in and ready to go",
+    subheading:
+      "Vix runs modern C++ instantly with zero configuration. No CMake. No setup. No friction.",
+    visual: {
+      fileName: "main.cpp",
+      code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;iostream&gt;</span>
+
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
+  std::cout &lt;&lt; <span class="cpp-string">"Hello from Vix\\n"</span>;
+  <span class="cpp-keyword">return</span> 0;
+}`,
+      terminal: `<span class="vix-terminal-green">$ vix run main.cpp</span>
+Hello from Vix`,
+    },
+    content: {
+      title: "Just run",
+      badge: "C++",
+      text: "Run C++ instantly with zero setup. No build system. No config. No friction. Just write and run.",
+      cta: {
+        label: "More about running with Vix",
+        to: "/docs/modules/cli/run",
+      },
+    },
+  },
+
+  registryShowcase: {
+    title: "Seamless",
+    badge: "Registry",
+    text: "Install packages from Vix Registry and use them in your C++ projects with a simple workflow.",
+    cta: {
+      label: "Explore Vix Registry",
+      to: "/registry",
+    },
+    cards: {
+      top: {
+        fileName: "main.cpp",
+        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;pdf/pdf&gt;</span>
+
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
+
+  pdf::Document doc;
+  <span class="cpp-keyword">auto</span>&amp; page = doc.add_page();
+  page.text(50, 759, <span class="cpp-string">"Hello, world!"</span>, pdf::Font::Helvetica,
+            24);
+  doc.save(<span class="cpp-string">"hello.pdf"</span>);
+}`,
+      },
+
+      bottom: {
+        fileName: "terminal",
+        code: `<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix add</span> <span class="shell-flag">@gk/pdf</span>
+<span class="shell-success">✔ added:</span> gk/pdf@0.1.0
+
+<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix install</span>
+<span class="shell-success">✔ Dependencies ready</span>
+
+<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix run</span> main.cpp --auto-deps
+<span class="shell-success">✔ hello.pdf generated</span>`,
+      },
+    },
+  },
+
   mission: {
     title: "Most runtimes assume perfect networks.",
     subtitle:
