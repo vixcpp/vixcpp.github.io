@@ -127,11 +127,11 @@ i Hint: Ctrl+C to stop`,
       code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;iostream&gt;</span>
 
 <span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
-  std::cout &lt;&lt; <span class="cpp-string">"Hello from Vix\\n"</span>;
+  std::cout &lt;&lt; <span class="cpp-string">"Hello, Vix!"</span> &lt;&lt; "\\n";
   <span class="cpp-keyword">return</span> 0;
 }`,
       terminal: `<span class="vix-terminal-green">$ vix run main.cpp</span>
-Hello from Vix`,
+Hello, Vix!`,
     },
     content: {
       title: "Just run",
@@ -155,13 +155,12 @@ Hello from Vix`,
     cards: {
       top: {
         fileName: "main.cpp",
-        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;pdf/pdf&gt;</span>
+        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;pdf/pdf.hpp&gt;</span>
 
 <span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
-
   pdf::Document doc;
   <span class="cpp-keyword">auto</span>&amp; page = doc.add_page();
-  page.text(50, 759, <span class="cpp-string">"Hello, world!"</span>, pdf::Font::Helvetica,
+  page.text(50,759,<span class="cpp-string">"Hello, world!"</span>,pdf::Font::Helvetica,
             24);
   doc.save(<span class="cpp-string">"hello.pdf"</span>);
 }`,
@@ -169,13 +168,13 @@ Hello from Vix`,
 
       bottom: {
         fileName: "terminal",
-        code: `<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix add</span> <span class="shell-flag">@gk/pdf</span>
+        code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix add</span> <span class="shell-flag">@gk/pdf</span>
 <span class="shell-success">✔ added:</span> gk/pdf@0.1.0
 
-<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix install</span>
+<span class="shell-path">~$</span> <span class="shell-cmd">vix install</span>
 <span class="shell-success">✔ Dependencies ready</span>
 
-<span class="shell-path">~/demo/tmp$</span> <span class="shell-cmd">vix run</span> main.cpp --auto-deps
+<span class="shell-path">~$</span> <span class="shell-cmd">vix run</span> main.cpp --auto-deps
 <span class="shell-success">✔ hello.pdf generated</span>`,
       },
     },
