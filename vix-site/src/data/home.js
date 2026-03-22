@@ -2,7 +2,7 @@ export const HOME = {
   hero: {
     title: "Offline-first C++ runtime.",
     subtitle:
-      "A modern C++ runtime and serious alternative to Node.js, Deno, and Bun, designed for unreliable networks and native performance.",
+      "Build backend, realtime, and peer-to-peer systems that keep working even when the network doesn’t.",
     ctas: [
       { label: "Install", to: "/install", kind: "primary" },
       {
@@ -14,63 +14,14 @@ export const HOME = {
     ],
     badges: [],
     support: {
-      title: "Production ready",
-      meta: ["Native C++ binaries", "MIT licensed"],
+      title: "Built for serious systems",
+      meta: [
+        "Native C++ binaries",
+        "Offline-first architecture",
+        "MIT licensed",
+      ],
     },
     examples: [
-      {
-        key: "http",
-        label: "HTTP",
-        lang: "cpp",
-        file: "server.cpp",
-        code: `#include <vix.hpp>
-using namespace vix;
-
-int main()
-{
-  App app;
-
-  app.get("/", [](Request&, Response& res){
-    res.send("Hello");
-  });
-
-  app.run(8080);
-}`,
-      },
-      {
-        key: "ws",
-        label: "WebSocket",
-        lang: "cpp",
-        file: "ws.cpp",
-        code: `#include <vix/websocket.hpp>
-
-int main()
-{
-  vix::websocket::Server ws;
-
-  ws.on_text([](auto&, std::string_view msg){
-    // echo
-  });
-
-  ws.listen_blocking(9090);
-}`,
-      },
-      {
-        key: "p2p",
-        label: "P2P",
-        lang: "cpp",
-        file: "p2p.cpp",
-        code: `#include <vix/p2p/P2P.hpp>
-
-int main()
-{
-  vix::p2p::P2PRuntime p2p;
-  p2p.listen(9001);
-
-  p2p.start();
-  p2p.wait();
-}`,
-      },
       {
         key: "async",
         label: "Async",
@@ -91,24 +42,163 @@ int main()
 }`,
       },
       {
+        key: "p2p",
+        label: "P2P",
+        lang: "cpp",
+        file: "p2p.cpp",
+        code: `#include <vix/p2p/P2P.hpp>
+
+int main()
+{
+  vix::p2p::P2PRuntime p2p;
+  p2p.listen(9001);
+
+  p2p.start();
+  p2p.wait();
+}`,
+      },
+      {
+        key: "ws",
+        label: "WebSocket",
+        lang: "cpp",
+        file: "ws.cpp",
+        code: `#include <vix/websocket.hpp>
+
+int main()
+{
+  vix::websocket::Server ws;
+
+  ws.on_text([](auto&, std::string_view msg) {
+    // realtime messaging
+  });
+
+  ws.listen_blocking(9090);
+}`,
+      },
+      {
+        key: "http",
+        label: "HTTP",
+        lang: "cpp",
+        file: "server.cpp",
+        code: `#include <vix.hpp>
+using namespace vix;
+
+int main()
+{
+  App app;
+
+  app.get("/", [](Request&, Response& res) {
+    res.send("Hello");
+  });
+
+  app.run(8080);
+}`,
+      },
+      {
         key: "run",
         label: "vix run",
         lang: "shell",
         file: "",
         code: `~$ vix run server.cpp
-● Vix.cpp  READY  v1.21.1
+● Vix.cpp READY
 
 › HTTP:  http://localhost:8080/
-i Hint:  Ctrl+C to stop`,
+i Hint: Ctrl+C to stop`,
+      },
+    ],
+  },
+
+  install: {
+    title: "Install Vix.cpp",
+    version: "1.47.0",
+    note: "Latest release",
+    commands: {
+      unix: "curl -fsSL https://vixcpp.com/install.sh | bash",
+      windows: "irm https://vixcpp.com/install.ps1 | iex",
+    },
+  },
+
+  mission: {
+    title: "Most runtimes assume perfect networks.",
+    subtitle:
+      "In reality, connections drop, latency spikes, and systems break. Yet most tools are built as if everything is always online and stable.",
+    items: [
+      {
+        title: "The problem",
+        text: "A simple network glitch can break requests, lose data, or stop systems entirely.",
+      },
+      {
+        title: "What’s wrong today",
+        text: "Most runtimes depend on constant connectivity and push complexity to developers.",
+      },
+      {
+        title: "What Vix changes",
+        text: "Vix is designed for unreliable networks. Your system keeps running, even when the network doesn’t.",
+      },
+    ],
+  },
+
+  useCases: {
+    title: "What you can build with Vix",
+    subtitle:
+      "Vix is not limited to web servers. It is designed for systems that need performance, resilience, and control.",
+    items: [
+      {
+        title: "Backend APIs",
+        text: "Build fast native APIs and services with a modern C++ runtime.",
+      },
+      {
+        title: "Realtime systems",
+        text: "Run websocket, messaging, and event-driven services with low overhead.",
+      },
+      {
+        title: "Peer-to-peer apps",
+        text: "Build direct node-to-node systems for local-first and distributed architectures.",
+      },
+      {
+        title: "Edge workloads",
+        text: "Run services closer to users where connectivity and latency are unpredictable.",
+      },
+      {
+        title: "Offline-first tools",
+        text: "Create systems that continue to work even when the network is unstable.",
+      },
+      {
+        title: "Developer tooling",
+        text: "Ship native command line tools, scripts, and runtime-powered workflows.",
+      },
+    ],
+  },
+
+  principles: {
+    title: "Built with different assumptions",
+    subtitle:
+      "Vix is designed around how systems behave in the real world, not in perfect lab conditions.",
+    items: [
+      {
+        title: "Offline-first",
+        text: "The network should not be a hard dependency for useful work.",
+      },
+      {
+        title: "Native performance",
+        text: "C++ gives direct control over performance, memory, and execution.",
+      },
+      {
+        title: "Incremental adoption",
+        text: "Use one tool or adopt more of the stack as your needs grow.",
+      },
+      {
+        title: "Beyond web",
+        text: "HTTP is supported, but Vix is designed for more than just web servers.",
       },
     ],
   },
 
   registry: {
-    title: "Registry built for unreliable networks",
+    title: "A registry designed for unstable connectivity",
     subtitle:
-      "Sync once, search locally, and pin dependencies with vix.lock. The registry is designed for offline-first workflows.",
-    note: "Local search works even when your connection is unstable.",
+      "Sync once, search locally, pin dependencies with vix.lock, and keep working even when your connection is unreliable.",
+    note: "The registry supports offline-first development workflows, not just package installation.",
     ctas: [
       { label: "Registry docs", to: "/registry", kind: "primary" },
       {
@@ -120,9 +210,9 @@ i Hint:  Ctrl+C to stop`,
     preview: {
       title: "registry",
       code: `$ vix registry sync
-$ vix search oauth2
-$ vix add @gk/oauth2
-$ vix deps
+$ vix search jwt
+$ vix add @gk/jwt
+$ vix install
 $ cat vix.lock`,
     },
   },
@@ -130,8 +220,7 @@ $ cat vix.lock`,
   signals: {
     title: "Open-source project signals",
     subtitle:
-      "Vix.cpp is an open-source project developed in the open.\n" +
-      "These signals reflect real community activity and ongoing maintenance.",
+      "Vix.cpp is developed in the open. These signals reflect real usage, active maintenance, and a growing ecosystem.",
     items: [
       {
         title: "Stars",
@@ -149,22 +238,22 @@ $ cat vix.lock`,
         title: "Open issues",
         kind: "github",
         field: "open_issues",
-        meta: ["Active issues"],
+        meta: ["Active engineering feedback"],
       },
     ],
   },
 
   batteries: {
-    title: "Batteries included",
+    title: "Runtime, tooling, and workflow included",
     subtitle:
-      "Vix ships a complete CLI workflow to create, build, develop, package, and verify C++ backend projects.",
+      "Vix ships the core pieces needed to build, run, iterate, package, and verify serious C++ applications.",
     items: [
       {
-        title: "Project workflow",
-        text: "Create projects and iterate fast with dev mode and one-command runs.",
+        title: "Fast project workflow",
+        text: "Create projects, run them instantly, and iterate with dev mode.",
         href: "/docs/modules/cli/new",
         preview: {
-          title: "project",
+          title: "workflow",
           lines: [
             "$ vix new api",
             "$ cd api && vix dev",
@@ -173,17 +262,8 @@ $ cat vix.lock`,
         },
       },
       {
-        title: "Packaging & verification",
-        text: "Package builds and verify artifacts with a security-focused workflow.",
-        href: "/docs/modules/cli/pack",
-        preview: {
-          title: "pack + verify",
-          lines: ["$ vix pack --version 1.0.0", "$ vix verify"],
-        },
-      },
-      {
-        title: "Modules system",
-        text: "Opt-in modules to keep projects minimal and explicit.",
+        title: "Realtime and network modules",
+        text: "Use modules for websocket, transport, and peer-to-peer capabilities when your application grows beyond plain HTTP.",
         href: "/docs/modules/cli/modules",
         preview: {
           title: "modules",
@@ -191,17 +271,26 @@ $ cat vix.lock`,
         },
       },
       {
-        title: "Offline registry",
-        text: "Sync once, search locally, and pin dependencies via vix.lock.",
+        title: "Offline dependency workflows",
+        text: "Sync dependencies once, lock them, and keep building even in unstable environments.",
         href: "/docs/modules/cli/registry",
         preview: {
           title: "registry",
           lines: [
             "$ vix registry sync",
-            "$ vix search web_app",
-            "$ vix add @vix/web_app",
-            "$ vix deps",
+            "$ vix search pdf",
+            "$ vix add @gk/pdf",
+            "$ vix install",
           ],
+        },
+      },
+      {
+        title: "Packaging and verification",
+        text: "Package artifacts and verify what you ship with a security-focused workflow.",
+        href: "/docs/modules/cli/pack",
+        preview: {
+          title: "pack + verify",
+          lines: ["$ vix pack --version 1.0.0", "$ vix verify"],
         },
       },
     ],
@@ -209,11 +298,12 @@ $ cat vix.lock`,
 
   getStarted: {
     title: "Get started in under a minute",
-    subtitle: "Create a project, start dev mode, and iterate with hot-reload.",
+    subtitle:
+      "Create a project, start dev mode, and begin building native backend or realtime services with Vix.",
     code: `vix new api
 cd api
 vix dev`,
-    note: "Start with dev hot-reload, then switch to run or package when ready.",
+    note: "Start with dev mode, then move to run, package, and deploy as your project grows.",
     ctas: [
       { label: "Install Vix.cpp", to: "/install", kind: "primary" },
       {
