@@ -208,6 +208,50 @@ onMounted(async () => {
         </div>
       </section>
 
+     <div class="section-sep"></div>
+
+      <section v-if="HOME.registry" class="registry">
+        <div class="container registry-layout">
+          <div class="registry-left">
+            <h2 class="registry-title">{{ HOME.registry.title }}</h2>
+            <p class="registry-subtitle">{{ HOME.registry.subtitle }}</p>
+
+            <div class="registry-cta" v-if="HOME.registry.ctas?.length">
+              <a
+                v-for="cta in HOME.registry.ctas"
+                :key="cta.label"
+                :href="cta.href || cta.to"
+                :class="['btn', cta.kind]"
+                :target="cta.external ? '_blank' : null"
+                :rel="cta.external ? 'noreferrer' : null"
+              >
+                {{ cta.label }}
+              </a>
+            </div>
+          </div>
+
+          <div class="registry-right">
+            <div class="registry-card">
+              <div class="registry-head">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+                <span class="registry-head-title">
+                  {{ HOME.registry.preview?.title || "registry" }}
+                </span>
+              </div>
+
+              <div class="registry-body">
+                <pre class="registry-pre"><code class="registry-code">{{ HOME.registry.preview?.code || "" }}</code></pre>
+                <p v-if="HOME.registry.note" class="registry-note">
+                  {{ HOME.registry.note }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div class="section-sep"></div>
 
       <section v-if="HOME.registryShowcase" class="registry-showcase">
@@ -308,51 +352,6 @@ onMounted(async () => {
       >
         <CardGrid :items="HOME.principles.items || []" />
       </Section> -->
-
-
-      <div class="section-sep"></div>
-
-      <section v-if="HOME.registry" class="registry">
-        <div class="container registry-layout">
-          <div class="registry-left">
-            <h2 class="registry-title">{{ HOME.registry.title }}</h2>
-            <p class="registry-subtitle">{{ HOME.registry.subtitle }}</p>
-
-            <div class="registry-cta" v-if="HOME.registry.ctas?.length">
-              <a
-                v-for="cta in HOME.registry.ctas"
-                :key="cta.label"
-                :href="cta.href || cta.to"
-                :class="['btn', cta.kind]"
-                :target="cta.external ? '_blank' : null"
-                :rel="cta.external ? 'noreferrer' : null"
-              >
-                {{ cta.label }}
-              </a>
-            </div>
-          </div>
-
-          <div class="registry-right">
-            <div class="registry-card">
-              <div class="registry-head">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
-                <span class="registry-head-title">
-                  {{ HOME.registry.preview?.title || "registry" }}
-                </span>
-              </div>
-
-              <div class="registry-body">
-                <pre class="registry-pre"><code class="registry-code">{{ HOME.registry.preview?.code || "" }}</code></pre>
-                <p v-if="HOME.registry.note" class="registry-note">
-                  {{ HOME.registry.note }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <div v-if="HOME.registry" class="section-sep"></div>
 
@@ -919,7 +918,7 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 50px;
 }
 
 .install-tabs .tab{
@@ -950,15 +949,13 @@ onMounted(async () => {
 .install-tabs .tab:hover{
   color: #ffffff;
   background: rgba(148,163,184,.08);
-  border-color: rgba(34,197,94,.35);
   transform: translateY(-1px);
 }
 
 /* actif */
 .install-tabs .tab.active{
   color: #d1fae5;
-  background: rgba(34,197,94,.15);
-  border-color: rgba(34,197,94,.55);
+  border-color: rgba(34,197,94,.35);
 }
 
 /* mobile */
@@ -981,11 +978,8 @@ onMounted(async () => {
   right: 0;
   bottom: -4px;
   height: 2px;
-  background: #22c55e;
   border-radius: 2px;
 }
-
-
 
 .vix-showcase {
   padding: 96px 0;
