@@ -264,7 +264,10 @@ export default defineConfig({
               { text: "vix publish", link: "/modules/cli/publish" },
               { text: "vix registry", link: "/modules/cli/registry" },
               { text: "vix deps", link: "/modules/cli/deps" },
-              { text: "CMake Principles", link: "/registry/cmake-principles" },
+              {
+                text: "CMake Principles",
+                link: "/modules/cli/cmake-principles",
+              },
             ],
           },
 
