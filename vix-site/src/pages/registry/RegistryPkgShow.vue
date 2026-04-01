@@ -1570,6 +1570,7 @@ watch(
           @setTab="setTab"
           @reloadTab="reloadTab"
           :registryHintExportsJson="registryHintExportsJson"
+          :namespace="pkg?.namespace"
         />
 
         <section class="panel">

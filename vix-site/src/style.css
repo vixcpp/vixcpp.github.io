@@ -1596,163 +1596,220 @@ html.is-registry .container{
   padding-right: 0 !important;
 }
 
-/* ======================================================
-   VIX REGISTRY GLOBAL OVERRIDE — PURE DARK MODE (FIXED)
-====================================================== */
+
+/* =========================================
+   VIX REGISTRY THEME
+   Best choice: docs-like dark + Vix green
+========================================= */
 
 body.is-registry{
-  --bg: #0a0a0a;
-  --bg-elevated: #111111;
-  --bg-soft: #161616;
+  --bg: #14181b;
+  --bg-soft: #1b2024;
+  --bg-alt: #232a2f;
+
+  --panel: #14181b;
+  --panel-2: rgba(37,38,43,.78);
+
+  --border: rgba(255,255,255,.08);
+  --divider: rgba(255,255,255,.06);
+
+  --text: rgba(255,255,255,.92);
+  --text-2: rgba(255,255,255,.70);
 
   --accent: #1ee6a3;
-  --accent-dark: #0ca377;
+  --accent-strong: #17c98f;
+  --accent-soft: rgba(30,230,163,.14);
 
-  --text: rgba(255,255,255,.96);
-  --muted: rgba(255,255,255,.70);
-  --border: rgba(255,255,255,.12);
+  --shadow: 0 22px 60px rgba(0,0,0,.40);
 
-  padding-top: 0 !important; /* safety */
+  background: var(--bg) !important;
+  color: var(--text);
 }
 
-/* Flat solid background */
+/* Global */
 html.is-registry,
-body.is-registry{
+body.is-registry,
+body.is-registry #app{
   background: var(--bg) !important;
 }
 
-/* App layer must not repaint a different bg */
-html.is-registry #app,
-body.is-registry #app{
-  background: transparent !important;
-}
-
-/* Remove inherited section backgrounds */
 body.is-registry main,
-body.is-registry section{
+body.is-registry section,
+body.is-registry .main,
+body.is-registry .page{
   background: transparent !important;
-  background-image: none !important;
 }
 
-/* Main padding must be 0 in registry */
-body.is-registry .main{
-  padding-top: 0 !important;
-  min-height: 100vh;
-}
-
-/* Cards */
-body.is-registry .card{
-  background: var(--bg-elevated) !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-
-/* Header (JSR-like): NOT fixed, same bg, no border/shadow */
+/* Header */
 body.is-registry .topbar{
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 40;
-
-  background: var(--bg) !important; /* match registry bg */
-  border: 0 !important;
+  position: static !important;
+  background: rgba(20,24,27,.86) !important;
+  border-bottom: 1px solid var(--divider) !important;
+  backdrop-filter: blur(10px);
   box-shadow: none !important;
-  backdrop-filter: none !important;
 }
 
 /* Search */
 body.is-registry .search{
   background: var(--bg-soft) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
+  border: 1px solid var(--border) !important;
   box-shadow: none !important;
 }
 
 body.is-registry .search:focus-within{
   border-color: var(--accent) !important;
-  box-shadow: 0 0 0 2px rgba(30,230,163,.25) !important;
+  box-shadow: 0 0 0 3px rgba(30,230,163,.16) !important;
 }
 
-/* README render */
+/* Cards / package rows / panels */
+body.is-registry .card,
+body.is-registry .panel,
+body.is-registry .package-card,
+body.is-registry .registry-list{
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* Tabs */
+body.is-registry .tab,
+body.is-registry .tab-btn{
+  color: var(--text-2) !important;
+}
+
+body.is-registry .tab.active,
+body.is-registry .tab-btn.active{
+  color: var(--text) !important;
+  background: var(--accent-soft) !important;
+  border-color: rgba(30,230,163,.28) !important;
+}
+
+/* Links */
+body.is-registry a{
+  color: var(--accent);
+}
+
+body.is-registry a:hover{
+  color: #5ef0bd;
+}
+
+/* Text */
+body.is-registry .muted,
+body.is-registry .desc,
+body.is-registry .subtitle,
+body.is-registry .nav-support{
+  color: var(--text-2) !important;
+}
+
+/* README / markdown */
 body.is-registry .readme,
 body.is-registry .markdown-body{
-  background: var(--bg-elevated) !important;
-  color: rgba(255,255,255,.92);
+  background: transparent !important;
+  color: var(--text) !important;
 }
 
 body.is-registry .markdown-body pre,
 body.is-registry .markdown-body .shiki{
-  background: var(--bg-elevated) !important;
+  background: var(--bg-soft) !important;
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
 
 body.is-registry .markdown-body code{
-  background: var(--bg-soft) !important;
+  background: var(--bg-alt) !important;
+  color: var(--text) !important;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-body.is-registry .markdown-body,
-body.is-registry .readme{
-  padding: 24px 8px;
+/* Subtle separators */
+body.is-registry hr,
+body.is-registry .divider{
+  border-color: var(--divider) !important;
 }
 
-/* Sticky needs no scroll-container clipping */
+/* Keep layout natural */
 html.is-registry,
 body.is-registry,
 body.is-registry #app,
 body.is-registry .app,
-body.is-registry .main,
-body.is-registry .content,
-body.is-registry .layout,
-body.is-registry .app-shell{
+body.is-registry .main{
   overflow: visible !important;
 }
-/* ======================================================
-   REGISTRY FINAL OVERRIDE (fix bg mismatch)
-====================================================== */
+/* =========================================
+   REGISTRY SHOW PAGE - REMOVE BOXES FOR REAL
+   GLOBAL FINAL OVERRIDE
+========================================= */
 
-body.is-registry .page{
-  --bg: #0a0a0a !important;
-  --panel: rgba(255,255,255,.03) !important;
-  --border: rgba(255,255,255,.10) !important;
-
-  --text: rgba(255,255,255,.96) !important;
-  --muted: rgba(255,255,255,.70) !important;
-}
-
-body.is-registry .topbar{
-  background: #0a0a0a !important;  /* direct color, no variable */
+/* main content area */
+body.is-registry .layout > .main{
+  background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-/* ===============================
-   REGISTRY: header must NOT be fixed
-   Put this at the VERY END (global)
-================================ */
-
-/* 1) Remove any global top padding that was made for the main SiteHeader */
-html.is-registry body{
-  padding-top: 0 !important;
+  outline: 0 !important;
 }
 
-/* 2) Ensure no container blocks normal flow or sticky behavior */
-html.is-registry,
-html.is-registry body,
-html.is-registry #app,
-html.is-registry .app,
-html.is-registry .main{
-  overflow: visible !important;
+/* right column container */
+body.is-registry .layout > .side{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
-/* 3) Force the registry header to be normal flow (NOT fixed) */
-html.is-registry .topbar{
-  position: static !important;   /* <- this kills fixed and sticky */
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
+/* sidebar sections */
+body.is-registry .layout > .side .panel{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
-.nav-support {
-  color: var(--accent);
-  opacity: 0.9;
+/* readme wrapper */
+body.is-registry .layout > .main .readme{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+/* if article/main/aside/section get generic global boxes */
+body.is-registry .layout > main,
+body.is-registry .layout > aside,
+body.is-registry .layout > aside section,
+body.is-registry .layout > main article{
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* keep only subtle separators between sidebar blocks */
+body.is-registry .layout > .side .panel + .panel{
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  padding-top: 12px !important;
+  margin-top: 12px !important;
+}
+/* =========================================
+   REGISTRY SHOW PAGE - SAME BACKGROUND
+========================================= */
+
+body.is-registry .layout,
+body.is-registry .layout > .main,
+body.is-registry .layout > .side,
+body.is-registry .layout > .side .panel,
+body.is-registry .layout > .main .readme,
+body.is-registry .layout > main,
+body.is-registry .layout > aside,
+body.is-registry .layout > article,
+body.is-registry .layout > aside section{
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Optional: if parent page has the real registry color */
+body.is-registry .page,
+body.is-registry .pkg-page,
+body.is-registry .package-page,
+body.is-registry .show-page{
+  background: #14181b !important;
 }

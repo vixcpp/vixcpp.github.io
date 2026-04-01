@@ -409,7 +409,7 @@ watch(
   box-shadow: none;
 
   /* subtle glass */
-  background: rgba(5,8,11,.72);
+ background: rgba(20,24,27,.72);
   backdrop-filter: blur(10px);
 }
 

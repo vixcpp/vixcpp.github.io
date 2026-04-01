@@ -71,7 +71,7 @@ function fixBrokenLinksInHtml(html) {
   );
 }
 
-const readmeHtmlFixed = computed(() => fixBrokenLinksInHtml(props.readmeHtml));
+const readmeHtmlFixed = computed(() => props.readmeHtml || "");
 
 /* -------------------------
    Shiki syntax highlighting (sidebar)
@@ -181,7 +181,6 @@ onBeforeUnmount(() => {
   io = null;
 });
 </script>
-
 
 <template>
   <div class="layout">
@@ -303,7 +302,6 @@ onBeforeUnmount(() => {
   --max: 1180px;
   --pad: 24px;
 
-  --panel-bg: rgba(255,255,255,.03);
   --panel-border: rgba(255,255,255,.10);
 
   --text: rgba(255,255,255,.92);
@@ -940,7 +938,7 @@ onBeforeUnmount(() => {
 }
 .codeblock :deep(pre){
   margin: 0 !important;
-  padding: 0 !important;   /* 🔥 retire le padding double */
+  padding: 0 !important;
   background: transparent !important;
   overflow: visible !important;
 }
@@ -949,5 +947,39 @@ onBeforeUnmount(() => {
   padding: 0 !important;
 }
 
+/* =========================================
+   README SHIKI FIX
+========================================= */
+
+.readme :deep(pre.shiki){
+  display: block !important;
+  margin: 14px 0 !important;
+  padding: 12px 14px !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+  line-height: 1.6 !important;
+  border-radius: 12px;
+}
+
+.readme :deep(pre.shiki code){
+  display: block !important;
+  white-space: pre !important;
+  line-height: 1.6 !important;
+}
+
+.readme :deep(pre.shiki .line){
+  display: block !important;
+  line-height: 1.6 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* protection contre un global .line ailleurs */
+.readme :deep(.line){
+  min-height: 0 !important;
+  height: auto !important;
+}
 </style>
 

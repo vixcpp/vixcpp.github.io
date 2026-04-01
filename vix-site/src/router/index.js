@@ -96,6 +96,18 @@ const routes = [
         },
       },
       {
+        path: "ns/:namespace",
+        name: "registry_namespace",
+        component: () => import("../pages/registry/NamespacePage.vue"),
+        meta: {
+          seo: {
+            title: "Namespace",
+            description: "Browse packages in a namespace.",
+            path: "/registry/ns",
+          },
+        },
+      },
+      {
         path: "pkg/:namespace/:name",
         name: "registry_pkg_show",
         component: RegistryPkgShow,

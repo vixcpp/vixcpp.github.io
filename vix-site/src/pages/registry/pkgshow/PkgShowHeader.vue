@@ -83,15 +83,24 @@ function clickTab(t) {
       <div class="pkg-block">
 
         <!-- Breadcrumb -->
-        <div class="breadcrumb">
+       <div class="breadcrumb">
           <RouterLink to="/registry/browse" class="crumb-link">
             Registry
           </RouterLink>
 
           <span class="crumb-sep">/</span>
 
+          <RouterLink
+            class="crumb-link"
+            :to="`/registry/ns/${pkg?.namespace || id.split('/')[0]}`"
+          >
+            @{{ pkg?.namespace || id.split('/')[0] }}
+          </RouterLink>
+
+          <span class="crumb-sep">/</span>
+
           <span class="crumb-current">
-            @{{ id }}
+            {{ pkgDisplayName || id.split('/').pop() }}
           </span>
         </div>
 
@@ -604,5 +613,7 @@ function clickTab(t) {
 .crumb-current{
   color: rgba(255,255,255,.90);
 }
-
+.breadcrumb .crumb-link:last-of-type{
+  color: rgba(140,200,255,.95);
+}
 </style>
