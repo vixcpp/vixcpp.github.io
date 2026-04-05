@@ -60,7 +60,7 @@ step() {
 }
 
 banner() {
-  printf "%s" "\n" >&2
+  printf '\n' >&2
   printf "%sVix.cpp installer%s\n" "$C_BOLD" "$C_RESET" >&2
   printf "%sNative runtime and SDK installer%s\n" "$C_DIM" "$C_RESET" >&2
 }
