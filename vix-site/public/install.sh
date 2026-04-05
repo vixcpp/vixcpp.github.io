@@ -5,8 +5,14 @@ set -eu
 MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
 REPO="${VIX_REPO:-vixcpp/vix}"
-VERSION="${VIX_VERSION:-latest}"   # "latest" or "v1.20.1"
-INSTALL_DIR="${VIX_INSTALL_DIR:-$HOME/.local/bin}"
+VERSION="${VIX_VERSION:-latest}"   # "latest" or "vX.Y.Z"
+
+# install kind: sdk or cli
+INSTALL_KIND="${VIX_INSTALL_KIND:-sdk}"
+
+# SDK installs a full prefix, CLI installs only the binary
+PREFIX_DIR="${VIX_INSTALL_PREFIX:-$HOME/.local}"
+BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
 BIN_NAME="vix"
 
 die() { printf "vix install: %s\n" "$*" >&2; exit 1; }
@@ -63,48 +69,51 @@ resolve_version() {
 }
 
 TAG="$(resolve_version)"
-info "repo=$REPO version=$TAG os=$OS arch=$ARCH"
+info "repo=$REPO version=$TAG os=$OS arch=$ARCH kind=$INSTALL_KIND"
 
-ASSET="vix-${OS}-${ARCH}.tar.gz"
+case "$INSTALL_KIND" in
+  sdk)
+    ASSET="vix-sdk-${OS}-${ARCH}.tar.gz"
+    ;;
+  cli)
+    ASSET="vix-${OS}-${ARCH}.tar.gz"
+    ;;
+  *)
+    die "unsupported VIX_INSTALL_KIND='$INSTALL_KIND' (expected sdk or cli)"
+    ;;
+esac
+
 BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
 URL_BIN="${BASE_URL}/${ASSET}"
 URL_SHA="${URL_BIN}.sha256"
 URL_MINISIG="${URL_BIN}.minisig"
 
-bin_tgz="${TMP_DIR}/${ASSET}"
-sha_file="${TMP_DIR}/${ASSET}.sha256"
-sig_file="${TMP_DIR}/${ASSET}.minisig"
+ARCHIVE_PATH="${TMP_DIR}/${ASSET}"
+SHA_PATH="${TMP_DIR}/${ASSET}.sha256"
+SIG_PATH="${TMP_DIR}/${ASSET}.minisig"
+EXTRACT_DIR="${TMP_DIR}/extract"
 
 info "downloading: $URL_BIN"
-fetch "$URL_BIN" "$bin_tgz" || die "download failed"
-
-# ---- Verification policy ----
-# Require at least one verification method (sha256 or minisign).
-have_sha=0
-have_sig=0
+fetch "$URL_BIN" "$ARCHIVE_PATH" || die "download failed"
 
 info "trying sha256 verification..."
-if fetch "$URL_SHA" "$sha_file"; then
-  have_sha=1
+if fetch "$URL_SHA" "$SHA_PATH"; then
   if ! have sha256sum && ! have shasum; then
     die "need sha256sum (Linux) or shasum (macOS) for verification"
   fi
 
-  # support both formats:
-  # 1) "<sha>  <file>"
-  # 2) "SHA256 (file) = <sha>"
   expected="$(
     awk '
       /^[0-9a-fA-F]{64}/ { print $1; exit }
       /^SHA256 \(/ { print $NF; exit }
-    ' "$sha_file"
+    ' "$SHA_PATH"
   )"
   [ -n "$expected" ] || die "invalid sha256 file"
 
   if have sha256sum; then
-    actual="$(sha256sum "$bin_tgz" | awk '{print $1}')"
+    actual="$(sha256sum "$ARCHIVE_PATH" | awk '{print $1}')"
   else
-    actual="$(shasum -a 256 "$bin_tgz" | awk '{print $1}')"
+    actual="$(shasum -a 256 "$ARCHIVE_PATH" | awk '{print $1}')"
   fi
 
   [ "$expected" = "$actual" ] || die "sha256 mismatch"
@@ -114,38 +123,56 @@ else
 fi
 
 info "trying minisign verification..."
-if fetch "$URL_MINISIG" "$sig_file"; then
-  have_sig=1
+if fetch "$URL_MINISIG" "$SIG_PATH"; then
   if have minisign; then
-    if minisign -Vm "$bin_tgz" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1; then
+    if minisign -Vm "$ARCHIVE_PATH" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1; then
       info "minisign ok"
     else
-      if [ "$have_sha" -eq 1 ]; then
-        info "minisign verification failed (sha256 already ok, continuing)"
-      else
-        die "minisign verification failed"
-      fi
+      die "minisign verification failed"
     fi
   else
-    if [ "$have_sha" -eq 1 ]; then
-      info "minisig is published but minisign is not installed (sha256 already ok, continuing)"
-    else
-      die "minisig is published but minisign is not installed"
-    fi
+    info "minisig is published but minisign is not installed"
+    info "continuing because archive download already succeeded"
   fi
 else
   info "minisig not found"
 fi
 
-# Extract and install
-mkdir -p "$INSTALL_DIR"
-tar -xzf "$bin_tgz" -C "$TMP_DIR"
-[ -f "${TMP_DIR}/${BIN_NAME}" ] || die "archive does not contain '${BIN_NAME}'"
+mkdir -p "$EXTRACT_DIR"
+tar -xzf "$ARCHIVE_PATH" -C "$EXTRACT_DIR"
 
-chmod +x "${TMP_DIR}/${BIN_NAME}"
-dest="${INSTALL_DIR}/${BIN_NAME}"
-info "installing to: $dest"
-mv -f "${TMP_DIR}/${BIN_NAME}" "$dest"
+if [ "$INSTALL_KIND" = "cli" ]; then
+  mkdir -p "$BIN_DIR"
+
+  [ -f "${EXTRACT_DIR}/${BIN_NAME}" ] || die "archive does not contain '${BIN_NAME}'"
+
+  chmod +x "${EXTRACT_DIR}/${BIN_NAME}"
+  dest="${BIN_DIR}/${BIN_NAME}"
+
+  info "installing CLI to: $dest"
+  mv -f "${EXTRACT_DIR}/${BIN_NAME}" "$dest"
+else
+  mkdir -p "$PREFIX_DIR" "$BIN_DIR"
+
+  info "installing SDK to: $PREFIX_DIR"
+  cp -R "${EXTRACT_DIR}/." "$PREFIX_DIR/"
+
+  if [ -f "${PREFIX_DIR}/bin/${BIN_NAME}" ]; then
+    target="${PREFIX_DIR}/bin/${BIN_NAME}"
+  elif [ -f "${PREFIX_DIR}/install/bin/${BIN_NAME}" ]; then
+    target="${PREFIX_DIR}/install/bin/${BIN_NAME}"
+  else
+    target="$(find "$PREFIX_DIR" -type f -path "*/bin/${BIN_NAME}" 2>/dev/null | head -n 1 || true)"
+  fi
+
+  [ -n "$target" ] || die "could not find installed '${BIN_NAME}' in SDK"
+
+  chmod +x "$target"
+  ln -sf "$target" "${BIN_DIR}/${BIN_NAME}"
+  dest="${BIN_DIR}/${BIN_NAME}"
+
+  info "linked CLI to: $dest"
+fi
 
 if "$dest" --version >/dev/null 2>&1; then
   info "installed: $("$dest" --version 2>/dev/null || true)"
@@ -154,11 +181,11 @@ else
 fi
 
 case ":$PATH:" in
-  *":$INSTALL_DIR:"*) : ;;
+  *":$BIN_DIR:"*) : ;;
   *)
-    info "NOTE: '$INSTALL_DIR' is not in your PATH."
+    info "NOTE: '$BIN_DIR' is not in your PATH."
     info "Add this to your shell config:"
-    info "  export PATH=\"$INSTALL_DIR:\$PATH\""
+    info "  export PATH=\"$BIN_DIR:\$PATH\""
     ;;
 esac
 
