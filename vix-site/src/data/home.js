@@ -1,8 +1,8 @@
 export const HOME = {
   hero: {
-    title: "Offline-first C++ runtime.",
+    title: "Modern C++ runtime.",
     subtitle:
-      "Build backend, realtime, and peer-to-peer systems that keep working even when the network doesn’t.",
+      "A modern runtime for building and running C++ applications. No setup. No CMake. No friction.",
     ctas: [
       { label: "Install", to: "/install", kind: "primary" },
       {

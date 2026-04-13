@@ -41,6 +41,27 @@ test -f ~/.bashrc && tail -n 5 ~/.bashrc || true`,
     },
 
     {
+      id: "linux_dependencies",
+      title: "Linux dependencies",
+      desc: "Install the required system packages before building or using advanced features on Linux.",
+      code: `sudo apt update
+sudo apt install -y \\
+  build-essential cmake ninja-build pkg-config git curl unzip zip \\
+  libssl-dev libsqlite3-dev zlib1g-dev libbrotli-dev \\
+  nlohmann-json3-dev \\
+  libspdlog-dev libfmt-dev`,
+      note: "This example uses apt-based distributions such as Ubuntu and Debian.",
+    },
+
+    {
+      id: "mac_dependencies",
+      title: "macOS dependencies (example)",
+      desc: "Install the required development dependencies with Homebrew.",
+      code: `brew install cmake ninja pkg-config openssl@3 spdlog fmt nlohmann-json brotli`,
+      note: "This example assumes Homebrew is already installed.",
+    },
+
+    {
       id: "linux",
       title: "Linux (recommended)",
       desc: "Install using the official installer. This downloads a prebuilt release binary and installs it for the current user.",
@@ -61,7 +82,7 @@ test -f ~/.bashrc && tail -n 5 ~/.bashrc || true`,
       title: "Windows",
       desc: "Install using the official PowerShell installer. This installs Vix for the current user without admin privileges.",
       code: `irm https://vixcpp.com/install.ps1 | iex`,
-      note: "Typical path: `%LOCALAPPDATA%\\Vix`. Install metadata is written for future upgrades. If PowerShell blocks the script, see the Windows notes below.",
+      note: "Typical path: `%LOCALAPPDATA%\\\\Vix`. Install metadata is written for future upgrades. If PowerShell blocks the script, see the Windows notes below.",
     },
 
     {
