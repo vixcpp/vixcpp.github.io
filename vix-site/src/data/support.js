@@ -2,8 +2,14 @@ export const SUPPORT_DATA = {
   hero: {
     title: "Support Vix",
     subtitle:
-      "Vix is built independently and maintained without venture funding. Sponsorship supports long-term development, infrastructure, and documentation.",
+      "Vix is built independently. No funding, no ads, no paywalls. If Vix helps you, even $1 makes a real difference.",
   },
+
+  impact: [
+    "$1 helps keep the registry online",
+    "$5 supports development and bug fixes",
+    "$20 helps improve infrastructure and CI",
+  ],
 
   why: [
     "Maintain the Vix Registry infrastructure",
@@ -39,17 +45,27 @@ export const SUPPORT_DATA = {
       label: "MTN MoMo",
       value: "+256 790 220 177",
       type: "momo",
+      note: "Send via MTN Mobile Money (Uganda)",
     },
   ],
 
+  socialProof: {
+    title: "Early supporters",
+    subtitle:
+      "Be one of the first people to support Vix and help keep it independent.",
+    emptyLabel: "No public supporters yet",
+    emptyNote:
+      "Your support can be the first public sign that Vix matters to developers.",
+  },
+
   principles: [
-    "No features are paywalled",
-    "No advertising",
+    "No features are locked behind paywalls",
+    "No ads, no tracking",
     "No data monetization",
-    "Sponsorship does not influence technical decisions",
-    "Vix remains open and accessible",
+    "Support does not influence technical decisions",
+    "Vix remains open and independent",
   ],
 
   footnote:
-    "Sponsorship is voluntary and non-contractual. Funds are reinvested into infrastructure and development.",
+    "Support is optional. But it directly helps keep Vix alive and improving.",
 };

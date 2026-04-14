@@ -6,18 +6,39 @@
         <p class="subtitle">{{ data.hero.subtitle }}</p>
       </header>
 
-      <section class="section">
-        <h2>Why Support Matters</h2>
-        <ul class="list">
-          <li v-for="(item, i) in data.why" :key="i">{{ item }}</li>
+      <section class="section" v-if="data.impact?.length">
+        <h2>What your support helps with</h2>
+        <ul class="list impact-list">
+          <li v-for="(item, i) in data.impact" :key="`impact-${i}`">{{ item }}</li>
         </ul>
       </section>
 
       <section class="section">
-        <h2>International Support</h2>
+        <h2>Why support matters</h2>
+        <ul class="list">
+          <li v-for="(item, i) in data.why" :key="`why-${i}`">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section class="section" v-if="data.socialProof">
+        <h2>{{ data.socialProof.title }}</h2>
+        <p class="section-subtitle">{{ data.socialProof.subtitle }}</p>
+
+        <div class="social-proof-card">
+          <p class="social-proof-empty">{{ data.socialProof.emptyLabel }}</p>
+          <p class="social-proof-note">{{ data.socialProof.emptyNote }}</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Support from anywhere</h2>
 
         <div class="methods">
-          <article class="method" v-for="(method, i) in data.international" :key="i">
+          <article
+            class="method"
+            v-for="(method, i) in data.international"
+            :key="`international-${i}`"
+          >
             <div class="method-main">
               <h3 class="method-title">{{ method.label }}</h3>
               <p class="mono">{{ method.value }}</p>
@@ -35,13 +56,18 @@
       </section>
 
       <section class="section">
-        <h2>Local Support (Africa)</h2>
+        <h2>Support via Mobile Money</h2>
 
         <div class="methods local">
-          <article class="method" v-for="(method, i) in data.local" :key="i">
+          <article
+            class="method"
+            v-for="(method, i) in data.local"
+            :key="`local-${i}`"
+          >
             <div class="method-main">
               <h3 class="method-title">{{ method.label }}</h3>
               <p class="mono">{{ method.value }}</p>
+              <p v-if="method.note" class="method-note">{{ method.note }}</p>
 
               <button class="copy" @click="copy(method.value, method.type || 'local')">
                 {{ copied === (method.type || "local") ? "Copied" : "Copy number" }}
@@ -54,7 +80,7 @@
       <section class="section">
         <h2>Principles</h2>
         <ul class="list">
-          <li v-for="(item, i) in data.principles" :key="i">{{ item }}</li>
+          <li v-for="(item, i) in data.principles" :key="`principle-${i}`">{{ item }}</li>
         </ul>
       </section>
 
@@ -71,12 +97,13 @@ import QRCode from "qrcode";
 import { SUPPORT_DATA } from "../data/support";
 
 const data = SUPPORT_DATA;
-
 const qrRefs = reactive({});
-const copied = ref(""); // stores last copied method type (usdt/btc/eth/momo/local)
+const copied = ref("");
 
 function setQRRef(type, el) {
-  if (el) qrRefs[type] = el;
+  if (el) {
+    qrRefs[type] = el;
+  }
 }
 
 async function copy(value, type) {
@@ -95,7 +122,6 @@ async function copy(value, type) {
       });
     }
   } catch (e) {
-    // Fallback for older browsers / blocked clipboard
     try {
       const ta = document.createElement("textarea");
       ta.value = value;
@@ -119,12 +145,17 @@ async function copy(value, type) {
 }
 
 onMounted(() => {
+  if (!Array.isArray(data.international)) return;
+
   data.international.forEach((method) => {
-    if (method.qr && qrRefs[method.type]) {
+    if (method.qr && method.type && qrRefs[method.type]) {
       QRCode.toCanvas(qrRefs[method.type], method.value, {
         width: 140,
         margin: 1,
-        color: { dark: "#ffffff", light: "#0a0a0a" },
+        color: {
+          dark: "#ffffff",
+          light: "#0a0a0a",
+        },
       });
     }
   });
@@ -132,14 +163,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.support{
+.support {
   padding: 60px 16px;
   padding-top: 0 !important;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.container{
+.container {
   max-width: none;
   padding: 0;
   margin: 0;
@@ -148,7 +179,7 @@ onMounted(() => {
   gap: 36px;
 }
 
-.hero{
+.hero {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -156,33 +187,40 @@ onMounted(() => {
   padding-bottom: 10px !important;
 }
 
-h1{
+h1 {
   margin: 0;
   font-size: clamp(2rem, 3vw, 2.4rem);
   font-weight: 760;
   letter-spacing: -0.4px;
 }
 
-.subtitle{
+.subtitle {
   margin: 0;
   color: var(--muted);
   max-width: 68ch;
   line-height: 1.6;
 }
 
-.section{
+.section {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-h2{
+h2 {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 760;
 }
 
-.list{
+.section-subtitle {
+  margin: -2px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 65ch;
+}
+
+.list {
   margin: 0;
   padding-left: 1rem;
   display: flex;
@@ -190,41 +228,62 @@ h2{
   gap: 8px;
 }
 
-.list li{
+.list li {
   color: var(--muted);
   line-height: 1.55;
 }
 
-/* INTERNATIONAL GRID */
-.methods{
+.impact-list li {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.methods {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
   margin-top: 8px;
 }
 
-.method{
+.method {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.method-title{
+.method-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.method-title {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 640;
 }
 
-.mono{
+.mono {
   margin: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 0.88rem;
-  color: rgba(255,255,255,.92);
+  color: rgba(255, 255, 255, 0.92);
   overflow-wrap: anywhere;
   line-height: 1.5;
 }
 
-.copy{
+.method-note {
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.copy {
+  width: fit-content;
   padding: 0;
   border: 0;
   background: transparent;
@@ -235,63 +294,84 @@ h2{
   opacity: 0.95;
 }
 
-.copy:hover{
+.copy:hover {
   opacity: 1;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.method-qr{
+.method-qr {
   margin-top: 6px;
 }
 
-.method-qr canvas{
+.method-qr canvas {
   width: 130px;
   height: 130px;
+  display: block;
 }
 
-/* LOCAL stays column */
-.methods.local{
+.methods.local {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-top: 6px;
 }
 
-.footnote{
+.social-proof-card {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.social-proof-empty {
+  margin: 0 0 6px;
+  font-weight: 640;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.social-proof-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.footnote {
   font-size: 0.85rem;
   color: var(--muted);
   line-height: 1.55;
 }
 
-.footnote p{
+.footnote p {
   margin: 0;
 }
 
-section{
+section {
   padding-top: 0 !important;
   padding-bottom: 20px !important;
 }
 
-/* Tablet */
-@media (max-width: 1000px){
-  .methods{
+@media (max-width: 1000px) {
+  .methods {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Mobile */
-@media (max-width: 640px){
-  .methods{
+@media (max-width: 640px) {
+  .methods {
     grid-template-columns: 1fr;
   }
 
-  .support{
+  .support {
     padding: 50px 14px;
   }
 
-  .container{
+  .container {
     gap: 28px;
+  }
+
+  .method {
+    padding: 16px;
   }
 }
 </style>
