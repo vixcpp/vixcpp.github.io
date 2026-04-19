@@ -2,105 +2,173 @@
 
 This page covers:
 
--   Installing the Vix CLI
--   Platform prerequisites
--   Verifying your installation
+- Installing Vix
+- Platform prerequisites
+- Verifying your installation
+- Fixing common issues
 
-------------------------------------------------------------------------
-
-## Install Vix CLI
+## Install Vix
 
 ### Linux / macOS
 
-``` bash
+```bash
 curl -fsSL https://vixcpp.com/install.sh | bash
 ```
 
-After installation, ensure `~/.local/bin` is in your PATH:
-
-``` bash
-echo $PATH
-```
-
-Verify:
-
-``` bash
-which vix
-vix --version
-```
-
-------------------------------------------------------------------------
-
 ### Windows (PowerShell)
 
-``` powershell
+```powershell
 irm https://vixcpp.com/install.ps1 | iex
 ```
 
-Verify:
+⚠️ The default installer installs the full SDK (CLI + headers + libraries).
+This is required if you want to use `#include <vix.hpp>`.
 
-``` powershell
-Get-Command vix
+## Verify installation
+
+Check that the CLI is available:
+
+```bash
 vix --version
 ```
 
-------------------------------------------------------------------------
+Check that headers are installed:
+
+```bash
+find ~/.local/include -name vix.hpp 2>/dev/null
+```
+
+Expected output:
+
+```bash
+~/.local/include/vix.hpp
+```
+
+## PATH check
+
+If `vix` is not found:
+
+```bash
+echo $PATH
+which vix
+```
+
+Make sure this path exists:
+
+```bash
+~/.local/bin
+```
+
+If not, add it:
+
+### bash
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### zsh
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
 
 ## Build prerequisites
 
 Vix projects are modern C++ projects. You need:
 
--   A C++20 compiler
--   CMake 3.20+
--   Ninja (recommended)
-
-------------------------------------------------------------------------
+- C++20 compiler
+- CMake 3.20+
+- Ninja (recommended)
 
 ### Ubuntu example
 
-``` bash
+```bash
 sudo apt update
-sudo apt install -y   build-essential cmake ninja-build pkg-config   libboost-all-dev libssl-dev libsqlite3-dev
+sudo apt install -y \
+  build-essential cmake ninja-build pkg-config \
+  libssl-dev libsqlite3-dev zlib1g-dev libbrotli-dev \
+  nlohmann-json3-dev libspdlog-dev libfmt-dev
 ```
-
-------------------------------------------------------------------------
 
 ### macOS (Homebrew)
 
-``` bash
-brew install cmake ninja pkg-config boost openssl@3
+```bash
+brew install cmake ninja pkg-config openssl@3 spdlog fmt nlohmann-json brotli
 ```
-
-------------------------------------------------------------------------
 
 ### Windows
 
 Use:
 
--   Visual Studio Build Tools (MSVC)\
-    or
--   clang-cl
+- Visual Studio Build Tools (MSVC)
+- or
+- clang-cl
 
-Install dependencies using vcpkg if required by your project.
+Use `vcpkg` if your project requires additional dependencies.
 
-------------------------------------------------------------------------
+## Common issues
 
-## Troubleshooting
+### `#include <vix.hpp>` not found
 
-### "vix not found"
+Example:
 
--   Restart your terminal
--   Ensure `~/.local/bin` is in PATH
--   Run `which vix` (Linux/macOS)
--   Run `Get-Command vix` (Windows)
+```cpp
+#include <vix.hpp>
+           ^ not found
+```
 
-------------------------------------------------------------------------
+Cause:
+
+- Vix headers are not installed
+
+Fix:
+
+Reinstall using the official installer (SDK mode)
+
+```bash
+curl -fsSL https://vixcpp.com/install.sh | bash
+```
+
+### `vix: command not found`
+
+- Restart your terminal
+- Ensure `~/.local/bin` is in `PATH`
+
+Run:
+
+```bash
+which vix
+```
 
 ### Download failures
 
 If installation fails:
 
--   Check your internet connection
--   Verify DNS resolution
--   Ensure GitHub releases are accessible from your network
+- Check your internet connection
+- Verify DNS resolution
+- Ensure GitHub releases are accessible
+
+## Build from source
+
+If you prefer building manually:
+
+```bash
+git clone --recursive https://github.com/vixcpp/vix.git
+cd vix
+
+cmake -S . -B build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DVIX_ENABLE_INSTALL=ON
+
+cmake --build build -j
+cmake --install build
+```
+
+## Next steps
+
+- Docs: https://vixcpp.com/docs/quick-start
+- Examples: https://vixcpp.com/docs/examples
 
