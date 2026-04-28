@@ -3,12 +3,17 @@ export const NAV = [
 
   {
     label: "Docs",
-    href: "/docs/",
+    href: "https://docs.vixcpp.com",
     external: true,
-    match: "/docs",
+    match: "https://docs.vixcpp.com",
   },
 
-  { label: "Registry", to: "/registry", match: "/registry" },
+  {
+    label: "Registry",
+    href: "https://registry.vixcpp.com/",
+    external: true,
+    match: "https://registry.vixcpp.com",
+  },
 
   {
     label: "About",

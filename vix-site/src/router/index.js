@@ -1,4 +1,3 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "../pages/Home.vue";
@@ -14,12 +13,6 @@ import Team from "../pages/about/Team.vue";
 import FAQ from "../pages/about/FAQ.vue";
 import Documentary from "../pages/about/Documentary.vue";
 
-import RegistryLayout from "../pages/registry/RegistryLayout.vue";
-import RegistryHome from "../pages/registry/RegistryHome.vue";
-import RegistryBrowse from "../pages/registry/RegistryBrowse.vue";
-import RegistryDocs from "../pages/registry/RegistryDocs.vue";
-import RegistryPublish from "../pages/registry/RegistryPublish.vue";
-import RegistryPkgShow from "../pages/registry/RegistryPkgShow.vue";
 import Support from "../pages/Support.vue";
 
 import { setSEO } from "../utils/seo";
@@ -64,87 +57,6 @@ const routes = [
     },
   },
 
-  // -------------------------
-  // Registry (internal SPA page)
-  // -------------------------
-  {
-    path: "/registry",
-    component: RegistryLayout,
-    children: [
-      {
-        path: "",
-        name: "registry_home",
-        component: RegistryHome,
-        meta: {
-          seo: {
-            title: "Vix Registry",
-            description: "Discover Vix packages. Search, browse, and publish.",
-            path: "/registry",
-          },
-        },
-      },
-      {
-        path: "browse",
-        name: "registry_browse",
-        component: RegistryBrowse,
-        meta: {
-          seo: {
-            title: "Browse packages",
-            description: "Browse packages in the Vix Registry.",
-            path: "/registry/browse",
-          },
-        },
-      },
-      {
-        path: "ns/:namespace",
-        name: "registry_namespace",
-        component: () => import("../pages/registry/NamespacePage.vue"),
-        meta: {
-          seo: {
-            title: "Namespace",
-            description: "Browse packages in a namespace.",
-            path: "/registry/ns",
-          },
-        },
-      },
-      {
-        path: "pkg/:namespace/:name",
-        name: "registry_pkg_show",
-        component: RegistryPkgShow,
-        meta: {
-          seo: {
-            title: "Package",
-            description: "Package details and stats in the Vix Registry.",
-            path: "/registry/pkg",
-          },
-        },
-      },
-      {
-        path: "docs",
-        name: "registry_docs",
-        component: RegistryDocs,
-        meta: {
-          seo: {
-            title: "Registry docs",
-            description: "How the Vix Registry works.",
-            path: "/registry/docs",
-          },
-        },
-      },
-      {
-        path: "publish",
-        name: "registry_publish",
-        component: RegistryPublish,
-        meta: {
-          seo: {
-            title: "Publish a package",
-            description: "Publish packages to the Vix Registry.",
-            path: "/registry/publish",
-          },
-        },
-      },
-    ],
-  },
   // -------------------------
   // Community
   // -------------------------

@@ -7,7 +7,7 @@ export const HOME = {
       { label: "Install", to: "/install", kind: "primary" },
       {
         label: "Get started",
-        href: "/docs/",
+        href: "https://docs.vixcpp.com",
         kind: "secondary",
         external: true,
       },
@@ -139,7 +139,7 @@ Hello, Vix!`,
       text: "Run C++ instantly with zero setup. No build system. No config. No friction. Just write and run.",
       cta: {
         label: "More about running with Vix",
-        to: "/docs/modules/cli/run",
+        to: "https://docs.vixcpp.com/modules/cli/run",
       },
     },
   },
@@ -150,7 +150,7 @@ Hello, Vix!`,
     text: "Install packages from Vix Registry and use them in your C++ projects with a simple workflow.",
     cta: {
       label: "Explore Vix Registry",
-      to: "/registry",
+      to: "https://registry.vixcpp.com",
     },
     cards: {
       top: {
@@ -262,10 +262,14 @@ Hello, Vix!`,
       "Sync once, search locally, pin dependencies with vix.lock, and keep working even when your connection is unreliable.",
     note: "The registry supports offline-first development workflows, not just package installation.",
     ctas: [
-      { label: "Registry docs", to: "/registry", kind: "primary" },
+      {
+        label: "Registry docs",
+        to: "https://registry.vixcpp.com",
+        kind: "primary",
+      },
       {
         label: "Try vix search",
-        to: "/registry#search",
+        to: "/https://registry.vixcpp.com#search",
         kind: "secondary",
       },
     ],
@@ -313,7 +317,7 @@ $ cat vix.lock`,
       {
         title: "Fast project workflow",
         text: "Create projects, run them instantly, and iterate with dev mode.",
-        href: "/docs/modules/cli/new",
+        href: "https://docs.vixcpp.com/modules/cli/new",
         preview: {
           title: "workflow",
           lines: [
@@ -326,7 +330,7 @@ $ cat vix.lock`,
       {
         title: "Realtime and network modules",
         text: "Use modules for websocket, transport, and peer-to-peer capabilities when your application grows beyond plain HTTP.",
-        href: "/docs/modules/cli/modules",
+        href: "https://docs.vixcpp.com/modules/cli/modules",
         preview: {
           title: "modules",
           lines: ["$ vix modules init", "$ vix modules add websocket"],
@@ -335,7 +339,7 @@ $ cat vix.lock`,
       {
         title: "Offline dependency workflows",
         text: "Sync dependencies once, lock them, and keep building even in unstable environments.",
-        href: "/docs/modules/cli/registry",
+        to: "https://docs.vixcpp.com/modules/cli/",
         preview: {
           title: "registry",
           lines: [
@@ -349,7 +353,7 @@ $ cat vix.lock`,
       {
         title: "Packaging and verification",
         text: "Package artifacts and verify what you ship with a security-focused workflow.",
-        href: "/docs/modules/cli/pack",
+        href: "https://docs.vixcpp.com/modules/cli/pack",
         preview: {
           title: "pack + verify",
           lines: ["$ vix pack --version 1.0.0", "$ vix verify"],
