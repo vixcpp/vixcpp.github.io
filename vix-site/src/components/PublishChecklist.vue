@@ -1,4 +1,3 @@
-<!-- src/components/PublishChecklist.vue -->
 <script setup>
 import { computed, reactive } from "vue";
 

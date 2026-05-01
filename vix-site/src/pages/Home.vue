@@ -4,7 +4,6 @@ import { ref, onMounted } from "vue";
 
 import Hero from "@/components/Hero.vue";
 import Section from "@/components/Section.vue";
-import CardGrid from "@/components/CardGrid.vue";
 import CodeBlock from "@/components/CodeBlock.vue";
 import SignalsGrid from "@/components/SignalsGrid.vue";
 import BatteriesIncluded from "@/components/BatteriesIncluded.vue";
@@ -54,6 +53,9 @@ onMounted(async () => {
     </div>
 
     <template v-else>
+
+      <!-- ===================== HERO ===================== -->
+
       <Hero
         v-if="HOME.hero"
         :title="HOME.hero.title"
@@ -66,96 +68,66 @@ onMounted(async () => {
 
       <div class="section-sep hero-sep"></div>
 
-      <section v-if="HOME?.install" class="install">
+       <!-- ===================== INSTALL ===================== -->
+      <section class="install">
         <div class="container install-inner">
+
           <h2 class="install-title">
-            <span>{{ HOME.install.title }}</span>
+            {{ HOME.install.title }}
             <span class="install-version">{{ HOME.install.version }}</span>
           </h2>
-
           <p class="install-note">{{ HOME.install.note }}</p>
 
           <div class="install-card code-card">
-            <!-- HEADER -->
             <div class="code-head install-head">
-              <div class="head-left install-head-left">
+              <div class="head-left">
                 <span class="dot dot-red"></span>
                 <span class="dot dot-yellow"></span>
                 <span class="dot dot-green"></span>
                 <span class="head-title">install</span>
               </div>
-
-              <!-- COPY ICON -->
               <button
                 type="button"
-                class="copy install-copy"
+                class="install-copy-btn"
                 @click="copyCommand"
-                :aria-label="copied ? 'Copied' : 'Copy command'"
-                :title="copied ? 'Copied' : 'Copy'"
+                :aria-label="installCopied ? 'Copied' : 'Copy command'"
               >
-                <!-- COPY ICON -->
-                <svg
-                  v-if="!copied"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
+                <svg v-if="!installCopied" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="9" y="9" width="13" height="13" rx="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-
-                <!-- CHECK ICON -->
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
+                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6L9 17l-5-5"></path>
                 </svg>
               </button>
             </div>
 
-            <!-- TABS -->
             <div class="install-tabs-wrap">
-              <div class="tabs install-tabs">
+              <div class="install-tabs">
                 <button
                   type="button"
-                  :class="['tab', { active: activePlatform === 'unix' }]"
+                  :class="['install-tab', { active: activePlatform === 'unix' }]"
                   @click="activePlatform = 'unix'"
-                >
-                  MacOS / Linux
-                </button>
-
+                >macOS / Linux</button>
                 <button
                   type="button"
-                  :class="['tab', { active: activePlatform === 'windows' }]"
+                  :class="['install-tab', { active: activePlatform === 'windows' }]"
                   @click="activePlatform = 'windows'"
-                >
-                  Windows
-                </button>
+                >Windows</button>
               </div>
             </div>
 
-            <!-- COMMAND -->
             <div class="code-body install-code-body">
-              <pre class="code-pre install-code-pre">
-      <code>{{ HOME.install.commands?.[activePlatform] || "" }}</code>
-              </pre>
+              <pre class="code-pre install-code-pre"><code>{{ HOME.install.commands?.[activePlatform] || '' }}</code></pre>
             </div>
-
           </div>
+
         </div>
       </section>
 
+      <div class="section-sep"></div>
+
+      <!-- ===================== SHOWCASE ===================== -->
       <section v-if="HOME.showcase" class="vix-showcase">
         <div class="container vix-showcase-header">
           <h2 class="vix-showcase-heading">{{ HOME.showcase.heading }}</h2>
@@ -210,6 +182,8 @@ onMounted(async () => {
 
      <div class="section-sep"></div>
 
+     <!-- ===================== REGISTRY ===================== -->
+
       <section v-if="HOME.registry" class="registry">
         <div class="container registry-layout">
           <div class="registry-left">
@@ -253,6 +227,8 @@ onMounted(async () => {
       </section>
 
       <div class="section-sep"></div>
+
+      <!-- ===================== REGISTRY SHOWCASE ===================== -->
 
       <section v-if="HOME.registryShowcase" class="registry-showcase">
         <div class="container registry-showcase-inner">
@@ -324,52 +300,25 @@ onMounted(async () => {
         </div>
       </section>
 
-      <!-- <Section
-        v-if="HOME.mission"
-        :title="HOME.mission.title"
-        :subtitle="HOME.mission.subtitle"
-      >
-        <CardGrid :items="HOME.mission.items || []" />
-      </Section>
-
-      <div v-if="HOME.mission" class="section-sep"></div>
-
-      <Section
-        v-if="HOME.useCases"
-        :title="HOME.useCases.title"
-        :subtitle="HOME.useCases.subtitle"
-        alt
-      >
-        <CardGrid :items="HOME.useCases.items || []" />
-      </Section>
-
-      <div v-if="HOME.useCases" class="section-sep"></div>
-
-      <Section
-        v-if="HOME.principles"
-        :title="HOME.principles.title"
-        :subtitle="HOME.principles.subtitle"
-      >
-        <CardGrid :items="HOME.principles.items || []" />
-      </Section> -->
 
       <div v-if="HOME.registry" class="section-sep"></div>
 
+       <!-- ===================== SIGNALS ===================== -->
       <section v-if="HOME.signals" class="signals">
-        <div class="container signals-layout">
+        <div class="container signals-inner">
           <div class="signals-left">
-            <h2 class="signals-title">{{ HOME.signals.title }}</h2>
-            <p class="signals-subtitle">{{ HOME.signals.subtitle }}</p>
+            <h2 class="section-title">{{ HOME.signals.title }}</h2>
+            <p class="section-subtitle">{{ HOME.signals.subtitle }}</p>
           </div>
-
           <div class="signals-right">
             <SignalsGrid :items="HOME.signals.items || []" :github="github" />
           </div>
         </div>
       </section>
 
-      <div v-if="HOME.signals" class="section-sep"></div>
+      <div class="section-sep"></div>
 
+      <!-- ===================== BATTERIES ===================== -->
       <BatteriesIncluded
         v-if="HOME.batteries"
         :title="HOME.batteries.title"
@@ -377,51 +326,62 @@ onMounted(async () => {
         :items="HOME.batteries.items || []"
       />
 
-      <div v-if="HOME.batteries" class="section-sep"></div>
+      <div class="section-sep"></div>
 
-
-      <section class="support-cta">
-        <div class="container support-cta-inner">
-          <div class="support-cta-left">
-            <h2 class="support-cta-title">Support</h2>
-            <p class="support-cta-subtitle">
-              Help keep Vix.cpp moving fast. Support the runtime, the tooling,
-              and the growing ecosystem.
-            </p>
+      <!-- ===================== GET STARTED ===================== -->
+      <section v-if="HOME.getStarted" class="get-started">
+        <div class="container get-started-inner">
+          <div class="get-started-left">
+            <h2 class="section-title">{{ HOME.getStarted.title }}</h2>
+            <p class="section-subtitle">{{ HOME.getStarted.subtitle }}</p>
+            <div class="get-started-ctas" v-if="HOME.getStarted.ctas?.length">
+              <a
+                v-for="cta in HOME.getStarted.ctas"
+                :key="cta.label"
+                :href="cta.href || cta.to"
+                :class="['btn', cta.kind]"
+                :target="cta.external ? '_blank' : null"
+                :rel="cta.external ? 'noreferrer' : null"
+              >{{ cta.label }}</a>
+            </div>
           </div>
 
-          <div class="support-cta-right">
-            <a class="btn primary" href="/support">Go to Support</a>
+          <div class="get-started-right">
+            <div class="code-card">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">terminal</span>
+                </div>
+              </div>
+              <div class="code-body">
+                <pre class="code-pre"><code>{{ HOME.getStarted.code }}</code></pre>
+              </div>
+              <div v-if="HOME.getStarted.note" class="code-foot">
+                <p class="code-note">{{ HOME.getStarted.note }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div class="section-sep"></div>
 
-      <Section
-        v-if="HOME.getStarted"
-        :title="HOME.getStarted.title"
-        :subtitle="HOME.getStarted.subtitle"
-        alt
-      >
-        <CodeBlock
-          :code="HOME.getStarted.code || ''"
-          :note="HOME.getStarted.note || ''"
-        />
-
-        <div v-if="HOME.getStarted.ctas?.length" class="cta-row">
-          <a
-            v-for="cta in HOME.getStarted.ctas"
-            :key="cta.label"
-            :href="cta.href || cta.to"
-            :class="['btn', cta.kind]"
-            :target="cta.external ? '_blank' : null"
-            :rel="cta.external ? 'noreferrer' : null"
-          >
-            {{ cta.label }}
-          </a>
+      <!-- ===================== SUPPORT CTA ===================== -->
+      <section class="support-cta">
+        <div class="container support-cta-inner">
+          <div>
+            <h2 class="section-title">Support</h2>
+            <p class="section-subtitle">
+              Help keep Vix.cpp moving fast. Support the runtime, the tooling, and the growing ecosystem.
+            </p>
+          </div>
+          <a class="btn primary" href="/support">Go to Support</a>
         </div>
-      </Section>
+      </section>
+
     </template>
   </div>
 </template>
@@ -430,6 +390,7 @@ onMounted(async () => {
 <style scoped>
 .page {
   width: 100%;
+  padding-top: var(--hdr-h);
 }
 
 .loading {
@@ -1557,6 +1518,605 @@ onMounted(async () => {
   .registry-showcase-visual .registry-code-card .code-pre {
     font-size: 0.72rem;
     line-height: 1.4;
+  }
+}
+
+.page {
+  width: 100%;
+  padding-top: var(--hdr-h);
+}
+
+.loading {
+  padding: 56px 0;
+  opacity: 0.85;
+}
+
+.loading-title {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+}
+
+.loading-sub {
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* ===================== SECTION SEP ===================== */
+.section-sep {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.14), transparent);
+}
+
+/* ===================== SHARED SECTION TITLES ===================== */
+.section-title {
+  margin: 0 0 12px;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #f1f5f9;
+}
+
+.section-subtitle {
+  margin: 0;
+  font-size: 0.98rem;
+  color: rgba(203, 213, 225, 0.72);
+  line-height: 1.7;
+  max-width: 52ch;
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  padding: 48px 0 96px;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  border-radius: 999px;
+  padding: 4px 13px;
+  font-size: 0.73rem;
+  color: #4ade80;
+  margin-bottom: 20px;
+}
+
+.hero-tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+.hero-title {
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: #f1f5f9;
+  margin: 0 0 16px;
+}
+
+.hero-subtitle {
+  font-size: 0.97rem;
+  color: rgba(203, 213, 225, 0.72);
+  line-height: 1.65;
+  max-width: 44ch;
+  margin: 0 0 28px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: rgba(148, 163, 184, 0.7);
+}
+
+.hero-meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+/* Hero editor */
+.hero-editor {
+  width: 100%;
+}
+
+.hero-tabs-row {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hero-tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-tab {
+  padding: 4px 11px;
+  border-radius: 6px;
+  font-size: 0.73rem;
+  color: rgba(203, 213, 225, 0.6);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.hero-tab:hover {
+  color: #e2e8f0;
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.hero-tab.active {
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.22);
+}
+
+.hero-code-body {
+  min-height: 160px;
+}
+
+.hero-term {
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  overflow: hidden;
+}
+
+.hero-term-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(2, 6, 23, 0.95);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.hero-term-body {
+  padding: 10px 14px 12px;
+  background: rgba(2, 6, 23, 0.7);
+}
+
+.hero-term-body pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hero-term-body code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #4ade80;
+}
+
+/* ===================== INSTALL ===================== */
+.install {
+  padding: 48px 0;
+  background: rgba(34, 197, 94, 0.03);
+}
+
+.install-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.install-title {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f1f5f9;
+}
+
+.install-version {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: #22c55e;
+  color: #021a10;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.install-note {
+  margin: 10px 0 0;
+  color: rgba(203, 213, 225, 0.6);
+  font-size: 0.88rem;
+}
+
+.install-card {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 28px;
+  text-align: left;
+}
+
+.install-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.install-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 8px;
+  color: #4ade80;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.install-copy-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.install-copy-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(34, 197, 94, 0.18);
+}
+
+.install-tabs-wrap {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.install-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.install-tab {
+  font-size: 0.78rem;
+  color: rgba(203, 213, 225, 0.55);
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.install-tab:hover {
+  color: #e2e8f0;
+}
+
+.install-tab.active {
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.install-code-body {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.install-code-pre {
+  margin: 0;
+  padding: 14px 16px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+/* ===================== SHOWCASE ===================== */
+.showcase {
+  padding: 56px 0;
+}
+
+.showcase-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 48px;
+}
+
+.showcase-header .section-subtitle {
+  max-width: none;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.showcase-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.showcase-term .code-body {
+  min-height: auto;
+}
+
+.showcase-content-title {
+  margin: 0 0 14px;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f1f5f9;
+  line-height: 1.15;
+}
+
+.showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 0 12px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.9);
+  color: #94a3b8;
+  font-size: 0.52em;
+  font-weight: 700;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  vertical-align: middle;
+  letter-spacing: 0.03em;
+}
+
+.showcase-content-text {
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+  color: rgba(203, 213, 225, 0.72);
+  line-height: 1.7;
+}
+
+.showcase-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===================== REGISTRY SHOWCASE ===================== */
+.reg-showcase {
+  padding: 56px 0;
+}
+
+.reg-showcase-inner {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.reg-showcase-content .section-subtitle {
+  margin: 12px 0 24px;
+}
+
+.reg-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 0 12px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  font-size: 0.5em;
+  font-weight: 800;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  vertical-align: middle;
+}
+
+.reg-showcase-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reg-code-body {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.reg-code-pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+/* ===================== REGISTRY ===================== */
+.registry {
+  padding: 56px 0;
+}
+
+.registry-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.registry-ctas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* ===================== SIGNALS ===================== */
+.signals {
+  padding: 56px 0;
+}
+
+.signals-inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(240px, 0.8fr);
+  gap: 48px;
+  align-items: center;
+}
+
+/* ===================== GET STARTED ===================== */
+.get-started {
+  padding: 56px 0;
+}
+
+.get-started-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.get-started-ctas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* ===================== SUPPORT CTA ===================== */
+.support-cta {
+  padding: 48px 0;
+}
+
+.support-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 980px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .hero-subtitle {
+    max-width: none;
+  }
+
+  .showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .reg-showcase-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .registry-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .signals-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .get-started-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .support-cta-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 40px 0 36px;
+  }
+
+  .install {
+    padding: 40px 0;
+  }
+
+  .install-card {
+    max-width: 100%;
+  }
+
+  .showcase,
+  .reg-showcase,
+  .registry,
+  .signals,
+  .get-started {
+    padding: 40px 0;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reg-showcase-content .btn,
+  .get-started-ctas .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

@@ -4,6 +4,7 @@ import router from "./router";
 
 import "./assets/styles/codeblock.css";
 import "./style.css";
+import "./main.css";
 
 import PwaUpdateToast from "./components/PwaUpdateToast.vue";
 

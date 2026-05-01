@@ -19,11 +19,9 @@ export const NAV = [
     label: "About",
     match: "/about",
     items: [
-      { label: "Community Guide", to: "/about/community-guide" },
+      { label: "Community", to: "/about/community" },
       { label: "Releases", to: "/about/releases" },
-      { label: "Team", to: "/about/team" },
       { label: "FAQ", to: "/about/faq" },
-      { label: "The Documentary", to: "/about/documentary" },
     ],
   },
 

@@ -111,7 +111,6 @@
   border-color: rgba(34,197,154,.28);
 }
 
-/* Footer note */
 .code-foot{
   border-top: 1px solid rgba(148,163,184,.12);
   background: rgba(2,6,23,.62);
@@ -125,7 +124,6 @@
   line-height: 1.55;
 }
 
-/* Scrollbars */
 .code-body::-webkit-scrollbar{ height: 8px; width: 10px; }
 .code-body::-webkit-scrollbar-thumb{
   background: rgba(34,197,154,.35);
@@ -135,7 +133,6 @@
   background: rgba(2,6,23,.9);
 }
 
-/* Highlight colors */
 .cpp-directive { color:#60a5fa; }
 .cpp-include { color:#38bdf8; }
 .cpp-keyword { color:#fb7185; }
@@ -164,14 +161,12 @@ pre,
 code {
   max-width: 100%;
 }
-/* ✅ le card ne doit jamais dépasser son parent */
 .code-card{
   width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
-/* ✅ le scroll reste DEDANS */
 .code-body{
   width: 100%;
   max-width: 100%;
@@ -196,7 +191,7 @@ code {
 
   width: 100%;
   max-width: 100%;
-  min-width: 0;            /* ✅ */
+  min-width: 0;
   white-space: pre;
   line-height: 1.65;
 
@@ -205,10 +200,9 @@ code {
   color: #e2e8f0;
 }
 
-/* ✅ permet le scroll horizontal SANS forcer la largeur du card */
 .code-pre > code{
-  display: inline-block;   /* ✅ important */
-  min-width: 100%;         /* ✅ fond plein */
+  display: inline-block;
+  min-width: 100%;
 }
 
 

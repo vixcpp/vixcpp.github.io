@@ -544,7 +544,6 @@ async function copy(text) {
   opacity: .5;
 }
 
-
 .dot-sep{
   opacity: .45;
   font-weight: 700;
@@ -567,7 +566,6 @@ async function copy(text) {
     font-size: .98rem;
   }
 }
-
 
 .pill{
   font-size: 0.85rem;
@@ -619,12 +617,9 @@ async function copy(text) {
   max-width: 100%;
   min-width: 0;
   margin: 0 auto;
-
-  border: 1px solid rgba(148,163,184,.18);
   background: rgba(2,6,23,.72);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 18px 46px rgba(0,0,0,.55);
 }
 
 @media (max-width: 720px){
@@ -640,7 +635,6 @@ async function copy(text) {
   justify-content:space-between;
   gap: 12px;
   padding: 10px 12px;
-  background: linear-gradient(to bottom, rgba(2,6,23,.92), rgba(2,6,23,.72));
   border-bottom: 1px solid rgba(148,163,184,.14);
 }
 
