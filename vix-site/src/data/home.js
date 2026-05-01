@@ -123,7 +123,7 @@ int main()
 
   install: {
     title: "Install Vix.cpp",
-    version: "1.47.0",
+    version: "2.5.2",
     note: "Latest stable release",
     commands: {
       unix: "curl -fsSL https://vixcpp.com/install.sh | bash",
