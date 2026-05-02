@@ -2328,17 +2328,42 @@ onMounted(async () => {
 @media (max-width: 720px) {
   .template-engine {
     padding: 56px 0 72px;
+    overflow: hidden;
+  }
+
+  .template-engine-inner {
+    gap: 36px;
   }
 
   .template-engine-content {
     text-align: left;
+    max-width: 100%;
+  }
+
+  .template-engine-title {
+    font-size: clamp(1.75rem, 8vw, 2.35rem);
+    line-height: 1.08;
+  }
+
+  .template-engine-subtitle {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .template-engine-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .template-engine-visual {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     min-height: auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow: hidden;
   }
 
   .template-code-card,
@@ -2348,15 +2373,38 @@ onMounted(async () => {
     top: auto;
     left: auto;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
-  .template-engine-btn {
+  .template-code-body {
     width: 100%;
-    justify-content: center;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .template-code-pre {
-    font-size: 0.78rem;
+    margin: 0;
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
+    padding: 18px 20px;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .template-code-pre code {
+    display: inline-block;
+    min-width: 100%;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
   }
 }
 
