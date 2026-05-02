@@ -301,7 +301,74 @@ onMounted(async () => {
       </section>
 
 
-      <div v-if="HOME.registry" class="section-sep"></div>
+      <div v-if="HOME.templateEngine" class="section-sep"></div>
+
+      <!-- ===================== TEMPLATE ENGINE ===================== -->
+      <section v-if="HOME.templateEngine" class="template-engine">
+        <div class="container template-engine-inner">
+          <div class="template-engine-content">
+            <span class="template-engine-badge">
+              {{ HOME.templateEngine.badge }}
+            </span>
+
+            <h2 class="template-engine-title">
+              {{ HOME.templateEngine.title }}
+            </h2>
+
+            <p class="template-engine-subtitle">
+              {{ HOME.templateEngine.subtitle }}
+            </p>
+
+            <a
+              class="template-engine-btn"
+              :href="HOME.templateEngine.cta.to"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ HOME.templateEngine.cta.label }}
+              <span>›</span>
+            </a>
+          </div>
+
+          <div class="template-engine-visual">
+            <div class="code-card template-code-card template-card-top">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">
+                    {{ HOME.templateEngine.cards.template.fileName }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="code-body template-code-body">
+                <pre class="code-pre template-code-pre"><code v-html="HOME.templateEngine.cards.template.code"></code></pre>
+              </div>
+            </div>
+
+            <div class="code-card template-code-card template-card-bottom">
+              <div class="code-head">
+                <div class="head-left">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="head-title">
+                    {{ HOME.templateEngine.cards.cpp.fileName }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="code-body template-code-body">
+                <pre class="code-pre template-code-pre"><code v-html="HOME.templateEngine.cards.cpp.code"></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div v-if="HOME.registry" class="section-sep" style="margin-bottom: 10px;"></div>
 
        <!-- ===================== SIGNALS ===================== -->
       <section v-if="HOME.signals" class="signals">
@@ -1361,9 +1428,6 @@ onMounted(async () => {
   min-width: 0 !important;
   font-size: 0.8rem;
   line-height: 1.5;
-  white-space: pre-wrap !important;
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 
 .registry-showcase-visual .registry-code-card .code-pre code {
@@ -2119,4 +2183,181 @@ onMounted(async () => {
     justify-content: center;
   }
 }
+
+/* ===================== TEMPLATE ENGINE ===================== */
+.template-engine {
+  padding: 72px 0 140px;
+  overflow: hidden;
+}
+
+.template-engine-inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
+  gap: 72px;
+  align-items: center;
+}
+
+.template-engine-content {
+  max-width: 430px;
+}
+
+.template-engine-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  background: rgba(34, 197, 94, 0.08);
+  color: #4ade80;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.template-engine-title {
+  margin: 0;
+  color: #ecfdf5;
+  font-size: clamp(1.8rem, 2.7vw, 2.5rem);
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -0.035em;
+}
+
+.template-engine-subtitle {
+  margin: 18px 0 0;
+  color: rgba(236, 253, 245, 0.76);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.template-engine-btn {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: #67f0a8;
+  color: #052e16;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.template-engine-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(16, 185, 129, 0.24);
+}
+
+.template-engine-visual {
+  position: relative;
+  min-height: 620px;
+  width: 100%;
+}
+
+.template-code-card {
+  position: absolute;
+  width: min(480px, 100%);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.template-card-top {
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.template-card-bottom {
+  top: 185px;
+  left: 12%;
+  z-index: 2;
+}
+
+.template-code-body {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.template-code-pre {
+  margin: 0;
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.template-code-pre code {
+  display: inline-block;
+  min-width: 100%;
+  white-space: pre;
+}
+
+.tpl-tag {
+  color: #38bdf8;
+}
+
+@media (max-width: 980px) {
+  .template-engine {
+    padding-bottom: 140px;
+  }
+
+  .template-engine-inner {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .template-engine-content {
+    max-width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .template-engine-visual {
+    max-width: 620px;
+    min-height: 620px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .template-engine {
+    padding: 56px 0 72px;
+  }
+
+  .template-engine-content {
+    text-align: left;
+  }
+
+  .template-engine-visual {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .template-code-card,
+  .template-card-top,
+  .template-card-bottom {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+  }
+
+  .template-engine-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .template-code-pre {
+    font-size: 0.78rem;
+  }
+}
+
 </style>

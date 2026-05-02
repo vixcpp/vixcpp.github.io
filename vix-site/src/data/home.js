@@ -76,7 +76,6 @@ int main()
   auto db = vix::db::Database::sqlite("app.db");
 
   db.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");
-
   db.exec("INSERT INTO users (name) VALUES (?)", "Ada");
 
   auto rows = db.query("SELECT id, name FROM users");
@@ -89,17 +88,19 @@ int main()
         label: "WebSocket",
         lang: "cpp",
         file: "ws.cpp",
-        code: `#include <vix/websocket.hpp>
+        code: `#include <vix/websocket/Runtime.hpp>
 
 int main()
 {
-  vix::websocket::Server ws;
+  vix::config::Config config{".env"};
+  auto executor = std::make_shared<vix::executor::RuntimeExecutor>(1u);
+  vix::websocket::Server ws{config, executor};
 
-  ws.on_text([](auto&, std::string_view msg) {
-    // realtime messaging
+  ws.on_message([](auto &, const std::string &msg) {
+    // realtime message
   });
 
-  ws.listen_blocking(9090);
+  ws.listen_blocking();
 }`,
       },
       {
@@ -107,15 +108,19 @@ int main()
         label: "P2P",
         lang: "cpp",
         file: "p2p.cpp",
-        code: `#include <vix/p2p/P2P.hpp>
+        code: `#include <vix/p2p/all.hpp>
 
 int main()
 {
-  vix::p2p::P2PRuntime p2p;
-  p2p.listen(9001);
+  vix::p2p::NodeConfig cfg;
+  cfg.node_id = "node-a";
+  cfg.listen_port = 9001;
+
+  auto node = vix::p2p::make_tcp_node(cfg);
+  vix::p2p::P2PRuntime p2p(node);
 
   p2p.start();
-  p2p.wait();
+  p2p.stop();
 }`,
       },
     ],
@@ -137,19 +142,22 @@ int main()
       "Write a C++ file, run it directly, and move from prototype to real application without fighting the build system first.",
     visual: {
       fileName: "main.cpp",
-      code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;iostream&gt;</span>
+      code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;vix/print.hpp&gt;</span>
 
-<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
-  std::cout &lt;&lt; <span class="cpp-string">"Hello, Vix!"</span> &lt;&lt; "\n";
-  <span class="cpp-keyword">return</span> 0;
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
+  std::vector&lt;<span class="cpp-keyword">int</span>&gt; ports{8080, 9090, 3000};
+  vix::print(<span class="cpp-string">"Vix is ready"</span>);
+
+  vix::print(<span class="cpp-string">"ports:"</span>, ports);
 }`,
       terminal: `<span class="shell-prompt">$</span> <span class="shell-cmd">vix run</span> main.cpp
-Hello, Vix!`,
+Vix is ready
+ports: [8080, 9090, 3000]`,
     },
     content: {
       title: "Write. Run. Ship.",
       badge: "C++ runtime",
-      text: "Vix removes the early friction from C++ development. Start with a single file, then grow into projects, packages, servers, realtime systems, and production binaries.",
+      text: "Vix removes the early friction from C++ development. Start with a single file, run it directly, then grow into projects, packages, servers, realtime systems, and production binaries.",
       cta: {
         label: "More about vix run",
         to: "https://docs.vixcpp.com/modules/cli/run",
@@ -168,25 +176,66 @@ Hello, Vix!`,
     cards: {
       top: {
         fileName: "main.cpp",
-        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;pdf/pdf.hpp&gt;</span>
+        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;cnerium/app/app.hpp&gt;</span>
 
-<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>() {
-  pdf::Document doc;
-  <span class="cpp-keyword">auto</span>&amp; page = doc.add_page();
-  page.text(50, 759, <span class="cpp-string">"Hello, world!"</span>, pdf::Font::Helvetica, 24);
-  doc.save(<span class="cpp-string">"hello.pdf"</span>);
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
+{
+  cnerium::app::App app;
+  app.listen(<span class="cpp-string">"127.0.0.1"</span>, <span class="cpp-type">8080</span>);
 }`,
       },
       bottom: {
         fileName: "terminal",
-        code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix add</span> <span class="shell-flag">@gk/pdf</span>
-<span class="shell-success">✔ added:</span> gk/pdf@0.1.0
-
-<span class="shell-path">~$</span> <span class="shell-cmd">vix install</span>
-<span class="shell-success">✔ Dependencies ready</span>
+        code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix install</span> <span class="shell-flag">-g</span> cnerium/app
+<span class="shell-success">✔</span> Installed cnerium/app
 
 <span class="shell-path">~$</span> <span class="shell-cmd">vix run</span> main.cpp
-<span class="shell-success">✔ hello.pdf generated</span>`,
+<span class="shell-success">✔</span> Running on 127.0.0.1:8080`,
+      },
+    },
+  },
+
+  templateEngine: {
+    title: "Built-in template engine",
+    subtitle:
+      "Render dynamic HTML from C++ with variables, loops, conditions, includes, layouts, caching, and streaming.",
+    badge: "Template",
+    cta: {
+      label: "Read template docs",
+      to: "https://docs.vixcpp.com/modules/template",
+    },
+    cards: {
+      template: {
+        fileName: "index.html",
+        code: `<span class="tpl-tag">&lt;h1&gt;</span>{{ title }}<span class="tpl-tag">&lt;/h1&gt;</span>
+
+<span class="tpl-tag">&lt;ul&gt;</span>
+  {% for feature in features %}
+    <span class="tpl-tag">&lt;li&gt;</span>{{ feature }}<span class="tpl-tag">&lt;/li&gt;</span>
+  {% endfor %}
+<span class="tpl-tag">&lt;/ul&gt;</span>`,
+      },
+      cpp: {
+        fileName: "main.cpp",
+        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;vix.hpp&gt;</span>
+<span class="cpp-keyword">using namespace</span> vix;
+
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
+{
+  App app;
+  app.templates(<span class="cpp-string">"./views"</span>);
+
+  app.get(<span class="cpp-string">"/"</span>, [](Request &, Response &res) {
+    vix::template_::Context ctx;
+    ctx.set(<span class="cpp-string">"title"</span>, <span class="cpp-string">"Template Features"</span>);
+    vix::template_::Array features;
+    features.emplace_back(<span class="cpp-string">"Built-in template engine"</span>);
+    ctx.set(<span class="cpp-string">"features"</span>, features);
+    res.render(<span class="cpp-string">"index.html"</span>, ctx);
+  });
+
+  app.run(<span class="cpp-type">8080</span>);
+}`,
       },
     },
   },
@@ -331,6 +380,7 @@ $ cat vix.lock`,
       "Create a project, start dev mode, and begin building native backend, realtime, CLI, or systems applications with Vix.",
     code: `vix new api
 cd api
+vix build
 vix dev`,
     note: "Start with dev mode, then move to run, package, registry, and deployment workflows as your project grows.",
     ctas: [
