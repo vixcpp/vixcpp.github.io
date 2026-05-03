@@ -302,7 +302,7 @@ $ cat vix.lock`,
       {
         title: "Start a project in seconds",
         text: "Create a Vix project, install dependencies, and start the development server with a workflow designed for fast iteration.",
-        href: "https://docs.vixcpp.com/getting-started/create-project",
+        href: "https://docs.vixcpp.com/book/06-create-your-first-project",
         preview: {
           title: "start",
           lines: ["$ vix new api", "$ cd api", "$ vix install", "$ vix dev"],
