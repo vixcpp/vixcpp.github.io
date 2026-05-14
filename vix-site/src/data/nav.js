@@ -1,6 +1,8 @@
 export const NAV = [
   { label: "Install", to: "/install", match: "/install" },
 
+  { label: "Roadmap", to: "/roadmap", match: "/roadmap" },
+
   {
     label: "Docs",
     href: "https://docs.vixcpp.com",

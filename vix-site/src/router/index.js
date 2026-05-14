@@ -4,6 +4,7 @@ import Home from "../pages/Home.vue";
 import Install from "../pages/Install.vue";
 import Community from "../pages/Community.vue";
 import Support from "../pages/Support.vue";
+import Roadmap from "../pages/Roadmap.vue";
 import NotFound from "../pages/NotFound.vue";
 
 import Releases from "../pages/about/Releases.vue";
@@ -58,6 +59,29 @@ const routes = [
           "Install Vix.cpp, create your first project, and start building native C++ applications.",
         path: "/install",
         type: "website",
+      },
+    },
+  },
+
+  {
+    path: "/roadmap",
+    name: "roadmap",
+    component: Roadmap,
+    meta: {
+      seo: {
+        title: "Roadmap",
+        description:
+          "Explore the Vix.cpp roadmap: runtime direction, CLI improvements, modules, registry, tooling, and long-term platform goals.",
+        path: "/roadmap",
+        type: "website",
+        jsonLd: {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Vix.cpp Roadmap",
+          description:
+            "The public roadmap for Vix.cpp, covering runtime, CLI, modules, registry, tooling, and long-term platform direction.",
+          url: "https://vixcpp.com/roadmap",
+        },
       },
     },
   },
