@@ -40,7 +40,13 @@ body.nav-open {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Text",
+    "Segoe UI",
+    sans-serif;
   color: var(--text);
   background: #020d0a;
   -webkit-font-smoothing: antialiased;
@@ -57,7 +63,9 @@ a {
 }
 
 code {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
   font-size: 0.9em;
 }
 
@@ -81,7 +89,11 @@ code {
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
   white-space: nowrap;
 }
 
@@ -215,7 +227,10 @@ code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease;
 }
 
 .nav-toggle-icon {
@@ -280,7 +295,10 @@ code {
   align-items: center;
   gap: 0.35rem;
   cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease;
   white-space: nowrap;
 }
 
@@ -365,18 +383,40 @@ code {
   flex-shrink: 0;
 }
 
-.icon-github { background: #0d1117; color: #e5e7eb; border: 1px solid #30363d; }
-.icon-x { background: #000; color: #f9fafb; border: 1px solid #333; }
-.icon-linkedin { background: #0a66c2; color: #f9fafb; border: 1px solid #1d4ed8; }
-.icon-youtube { background: #b91c1c; color: #fef2f2; border: 1px solid #dc2626; }
+.icon-github {
+  background: #0d1117;
+  color: #e5e7eb;
+  border: 1px solid #30363d;
+}
+.icon-x {
+  background: #000;
+  color: #f9fafb;
+  border: 1px solid #333;
+}
+.icon-linkedin {
+  background: #0a66c2;
+  color: #f9fafb;
+  border: 1px solid #1d4ed8;
+}
+.icon-youtube {
+  background: #b91c1c;
+  color: #fef2f2;
+  border: 1px solid #dc2626;
+}
 
 .community-link-label {
   white-space: nowrap;
 }
 
 @keyframes dropdown-fade {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav.is-open .community-wrapper {
@@ -550,12 +590,25 @@ body.nav-open {
   gap: 3px;
 }
 
-.pwa-dot { display: inline-block; width: 6px; height: 6px; border-radius: 999px; }
-.pwa-dot-red { background: #f97316; }
-.pwa-dot-yellow { background: #eab308; }
-.pwa-dot-green { background: #22c55e; }
+.pwa-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+.pwa-dot-red {
+  background: #f97316;
+}
+.pwa-dot-yellow {
+  background: #eab308;
+}
+.pwa-dot-green {
+  background: #22c55e;
+}
 
-.pwa-toast-text { min-width: 0; }
+.pwa-toast-text {
+  min-width: 0;
+}
 
 .pwa-toast-title {
   font-size: 0.88rem;
@@ -598,11 +651,15 @@ body.nav-open {
   padding: 6px 14px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform 0.12s ease, background 0.15s ease;
+  transition:
+    transform 0.12s ease,
+    background 0.15s ease;
   white-space: nowrap;
 }
 
-.pwa-btn:active { transform: translateY(1px); }
+.pwa-btn:active {
+  transform: translateY(1px);
+}
 
 .pwa-btn-ghost {
   background: transparent;
@@ -627,8 +684,14 @@ body.nav-open {
 }
 
 @keyframes pwa-in {
-  from { opacity: 0; transform: translateY(8px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 640px) {
@@ -675,8 +738,12 @@ body.is-registry .page {
   background: transparent !important;
 }
 
-body.is-registry a { color: var(--accent); }
-body.is-registry a:hover { color: #5ef0bd; }
+body.is-registry a {
+  color: var(--accent);
+}
+body.is-registry a:hover {
+  color: #5ef0bd;
+}
 
 body.is-registry .muted,
 body.is-registry .desc,

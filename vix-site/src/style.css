@@ -37,12 +37,16 @@ body.nav-open {
   overflow: hidden;
 }
 
-
 body {
   margin: 0;
   padding: 3.5rem 0 0 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Text",
+    "Segoe UI",
+    sans-serif;
   color: var(--text);
   background: radial-gradient(
     circle at top,
@@ -56,7 +60,8 @@ body {
 body {
   padding: 0; /* au lieu de 3.5rem 0 0 0 */
 }
-html, body {
+html,
+body {
   min-height: 100%;
   background: radial-gradient(
     circle at top,
@@ -71,12 +76,20 @@ html, body {
   background: transparent;
 }
 
-#app { background: transparent; min-height: 100vh; }
+#app {
+  background: transparent;
+  min-height: 100vh;
+}
 
-.section.alt, .site-footer { background: transparent; }
+.section.alt,
+.site-footer {
+  background: transparent;
+}
 
-.card, .terminal, .code-card {
-  background: rgba(0,0,0,.22);
+.card,
+.terminal,
+.code-card {
+  background: rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(10px);
 }
 
@@ -86,8 +99,9 @@ a {
 }
 
 code {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   font-size: 0.9em;
 }
 
@@ -231,7 +245,10 @@ code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
 }
 
 .nav-toggle-icon {
@@ -305,7 +322,9 @@ code {
   align-items: center;
   gap: 0.35rem;
   cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease,
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
     transform 0.12s ease;
   white-space: nowrap;
 }
@@ -609,11 +628,11 @@ body.nav-open {
   overflow: hidden;
 }
 
-.terminal{
-  background: rgba(0,0,0,.25);
+.terminal {
+  background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
 }
-.terminal-body{
+.terminal-body {
   background: transparent;
 }
 
@@ -665,8 +684,8 @@ body.nav-open {
   padding: 0;
   white-space: pre;
   min-width: 520px;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
-    monospace;
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.88rem;
   color: #e2e8f0;
 }
@@ -690,7 +709,7 @@ body.nav-open {
   padding: 3.6rem 0;
 }
 
-.section.alt{
+.section.alt {
   background: transparent;
 }
 .section.tight {
@@ -739,8 +758,8 @@ body.nav-open {
   position: relative;
   overflow: hidden;
 }
-.card{
-  background: rgba(0,0,0,.18);
+.card {
+  background: rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(10px);
 }
 
@@ -880,7 +899,9 @@ td {
   padding: 0.25rem 0.6rem;
   font-size: 0.75rem;
   cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease,
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
     transform 0.12s ease;
 }
 
@@ -903,7 +924,9 @@ td {
   padding: 0.25rem 0.65rem;
   font-size: 0.75rem;
   cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease,
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
     transform 0.12s ease;
 }
 
@@ -1105,7 +1128,9 @@ td {
 .reveal {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 420ms ease, transform 420ms ease;
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease;
   will-change: opacity, transform;
 }
 
@@ -1116,7 +1141,9 @@ td {
 
 /* small premium hover */
 .reveal.card {
-  transition: transform 160ms ease, box-shadow 160ms ease,
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
     border-color 160ms ease;
 }
 
@@ -1275,10 +1302,10 @@ td {
   border-radius: 18px;
 
   background: linear-gradient(
-      to bottom,
-      rgba(1, 24, 22, 0.92),
-      rgba(2, 6, 23, 0.82)
-    );
+    to bottom,
+    rgba(1, 24, 22, 0.92),
+    rgba(2, 6, 23, 0.82)
+  );
   border: 1px solid rgba(45, 212, 191, 0.28);
   box-shadow: 0 22px 45px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(18px);
@@ -1324,7 +1351,7 @@ td {
   gap: 4px;
 }
 
-.pwa-dot{
+.pwa-dot {
   display: inline-block;
   width: 7px;
   height: 7px;
@@ -1377,7 +1404,10 @@ td {
   padding: 0.46rem 0.85rem;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform 0.12s ease, background 0.16s ease, border-color 0.16s ease,
+  transition:
+    transform 0.12s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
     box-shadow 0.16s ease;
   white-space: nowrap;
 }
@@ -1465,43 +1495,43 @@ main,
 section,
 .section,
 .section.alt,
-.site-footer{
+.site-footer {
   background: transparent !important;
   background-image: none !important;
 }
 
 /* 2) Cards: glass but NO separate background layer feeling
       (keep border/shadow, but no hard fill) */
-.card{
-  background: rgba(255,255,255,.03) !important;
+.card {
+  background: rgba(255, 255, 255, 0.03) !important;
   backdrop-filter: blur(10px);
 }
 
 /* 3) Terminal / code card: keep its own dark surface for readability */
 .terminal,
-.code-card{
-  background: rgba(2,6,23,.78) !important;
+.code-card {
+  background: rgba(2, 6, 23, 0.78) !important;
   backdrop-filter: blur(12px);
 }
 
 /* 4) Terminal inner areas: slightly different shades (still dark) */
 .terminal-head,
 .code-head,
-.code-header{
-  background: rgba(2,6,23,.88) !important;
+.code-header {
+  background: rgba(2, 6, 23, 0.88) !important;
   background-image: none !important;
 }
 
 .terminal-body,
-.code-body{
-  background: rgba(2,6,23,.68) !important;
+.code-body {
+  background: rgba(2, 6, 23, 0.68) !important;
   background-image: none !important;
 }
 
 /* 5) Pre/code must not paint a new background */
 .terminal-body pre,
 .code-pre,
-.code-pre > code{
+.code-pre > code {
   background: transparent !important;
 }
 
@@ -1513,7 +1543,7 @@ section,
 .section,
 .section.alt,
 .site-footer,
-.card{
+.card {
   border: none !important;
   border-top: none !important;
   border-bottom: none !important;
@@ -1522,7 +1552,7 @@ section,
 /* 2) Kill shadows that look like separators */
 .section,
 .section.alt,
-.site-footer{
+.site-footer {
   box-shadow: none !important;
 }
 
@@ -1530,7 +1560,7 @@ section,
 .section::before,
 .section::after,
 .site-footer::before,
-.site-footer::after{
+.site-footer::after {
   content: none !important;
   display: none !important;
 }
@@ -1539,27 +1569,23 @@ section,
 .divider,
 .section-divider,
 .hr,
-hr{
+hr {
   display: none !important;
   height: 0 !important;
   border: 0 !important;
   background: none !important;
 }
 .section,
-.site-footer{
+.site-footer {
   border: 0 !important;
 }
 
-hr{
+hr {
   display: none !important;
 }
 /* Default app background (existing) */
 #app {
-  background: linear-gradient(
-    to bottom,
-    #003a2f,
-    #021b16
-  );
+  background: linear-gradient(to bottom, #003a2f, #021b16);
 }
 
 /* ===============================
@@ -1576,51 +1602,50 @@ body.is-registry .main {
   padding-top: 0 !important;
 }
 
-.main{
+.main {
   padding-top: 30px !important;
 }
-.signals{
+.signals {
   padding-bottom: 0 !important;
   padding-top: 0 !important;
 }
-.batteries .container{
+.batteries .container {
   padding: 0 !important;
 }
 html.is-registry main,
-html.is-registry #app{
+html.is-registry #app {
   padding-top: 0 !important;
 }
-html.is-registry .container{
+html.is-registry .container {
   max-width: none !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-
 
 /* =========================================
    VIX REGISTRY THEME
    Best choice: docs-like dark + Vix green
 ========================================= */
 
-body.is-registry{
+body.is-registry {
   --bg: #14181b;
   --bg-soft: #1b2024;
   --bg-alt: #232a2f;
 
   --panel: #14181b;
-  --panel-2: rgba(37,38,43,.78);
+  --panel-2: rgba(37, 38, 43, 0.78);
 
-  --border: rgba(255,255,255,.08);
-  --divider: rgba(255,255,255,.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --divider: rgba(255, 255, 255, 0.06);
 
-  --text: rgba(255,255,255,.92);
-  --text-2: rgba(255,255,255,.70);
+  --text: rgba(255, 255, 255, 0.92);
+  --text-2: rgba(255, 255, 255, 0.7);
 
   --accent: #1ee6a3;
   --accent-strong: #17c98f;
-  --accent-soft: rgba(30,230,163,.14);
+  --accent-soft: rgba(30, 230, 163, 0.14);
 
-  --shadow: 0 22px 60px rgba(0,0,0,.40);
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.4);
 
   background: var(--bg) !important;
   color: var(--text);
@@ -1629,43 +1654,43 @@ body.is-registry{
 /* Global */
 html.is-registry,
 body.is-registry,
-body.is-registry #app{
+body.is-registry #app {
   background: var(--bg) !important;
 }
 
 body.is-registry main,
 body.is-registry section,
 body.is-registry .main,
-body.is-registry .page{
+body.is-registry .page {
   background: transparent !important;
 }
 
 /* Header */
-body.is-registry .topbar{
+body.is-registry .topbar {
   position: static !important;
-  background: rgba(20,24,27,.86) !important;
+  background: rgba(20, 24, 27, 0.86) !important;
   border-bottom: 1px solid var(--divider) !important;
   backdrop-filter: blur(10px);
   box-shadow: none !important;
 }
 
 /* Search */
-body.is-registry .search{
+body.is-registry .search {
   background: var(--bg-soft) !important;
   border: 1px solid var(--border) !important;
   box-shadow: none !important;
 }
 
-body.is-registry .search:focus-within{
+body.is-registry .search:focus-within {
   border-color: var(--accent) !important;
-  box-shadow: 0 0 0 3px rgba(30,230,163,.16) !important;
+  box-shadow: 0 0 0 3px rgba(30, 230, 163, 0.16) !important;
 }
 
 /* Cards / package rows / panels */
 body.is-registry .card,
 body.is-registry .panel,
 body.is-registry .package-card,
-body.is-registry .registry-list{
+body.is-registry .registry-list {
   background: var(--panel) !important;
   border: 1px solid var(--border) !important;
   box-shadow: var(--shadow) !important;
@@ -1674,23 +1699,23 @@ body.is-registry .registry-list{
 
 /* Tabs */
 body.is-registry .tab,
-body.is-registry .tab-btn{
+body.is-registry .tab-btn {
   color: var(--text-2) !important;
 }
 
 body.is-registry .tab.active,
-body.is-registry .tab-btn.active{
+body.is-registry .tab-btn.active {
   color: var(--text) !important;
   background: var(--accent-soft) !important;
-  border-color: rgba(30,230,163,.28) !important;
+  border-color: rgba(30, 230, 163, 0.28) !important;
 }
 
 /* Links */
-body.is-registry a{
+body.is-registry a {
   color: var(--accent);
 }
 
-body.is-registry a:hover{
+body.is-registry a:hover {
   color: #5ef0bd;
 }
 
@@ -1698,25 +1723,25 @@ body.is-registry a:hover{
 body.is-registry .muted,
 body.is-registry .desc,
 body.is-registry .subtitle,
-body.is-registry .nav-support{
+body.is-registry .nav-support {
   color: var(--text-2) !important;
 }
 
 /* README / markdown */
 body.is-registry .readme,
-body.is-registry .markdown-body{
+body.is-registry .markdown-body {
   background: transparent !important;
   color: var(--text) !important;
 }
 
 body.is-registry .markdown-body pre,
-body.is-registry .markdown-body .shiki{
+body.is-registry .markdown-body .shiki {
   background: var(--bg-soft) !important;
   border: 1px solid var(--border);
   border-radius: 14px;
 }
 
-body.is-registry .markdown-body code{
+body.is-registry .markdown-body code {
   background: var(--bg-alt) !important;
   color: var(--text) !important;
   padding: 2px 6px;
@@ -1725,7 +1750,7 @@ body.is-registry .markdown-body code{
 
 /* Subtle separators */
 body.is-registry hr,
-body.is-registry .divider{
+body.is-registry .divider {
   border-color: var(--divider) !important;
 }
 
@@ -1734,6 +1759,247 @@ html.is-registry,
 body.is-registry,
 body.is-registry #app,
 body.is-registry .app,
-body.is-registry .main{
+body.is-registry .main {
   overflow: visible !important;
+}
+/* =========================================
+   vix.app showcase terminal position
+========================================= */
+
+.vix-showcase-visual {
+  min-height: 500px !important;
+}
+
+.vix-terminal-card {
+  bottom: 8px !important;
+}
+/* =========================================
+   Registry showcase terminal position
+========================================= */
+
+.registry-showcase-visual {
+  min-height: 560px !important;
+}
+
+.registry-showcase-visual .registry-code-card-bottom {
+  top: 285px !important;
+}
+/* =========================================
+   Template engine cards position
+========================================= */
+
+.template-engine-visual {
+  min-height: 540px !important;
+}
+
+.template-card-top {
+  min-height: 330px !important;
+}
+
+.template-card-top .template-code-body {
+  min-height: 270px !important;
+}
+
+.template-card-bottom {
+  top: 255px !important;
+}
+/* =========================================
+   Batteries section simple clean override
+========================================= */
+
+body:not(.is-registry) .batteries {
+  padding: 72px 0 !important;
+  background: transparent !important;
+}
+
+body:not(.is-registry) .batteries .container {
+  padding: 0 !important;
+}
+
+body:not(.is-registry) .batteries h2,
+body:not(.is-registry) .batteries .section-title {
+  max-width: 760px;
+  margin: 0 0 14px !important;
+  font-size: clamp(1.8rem, 3vw, 2.7rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.045em !important;
+  color: #f8fafc !important;
+}
+
+body:not(.is-registry) .batteries .section-subtitle,
+body:not(.is-registry) .batteries > .container > p {
+  max-width: 760px;
+  margin: 0 0 42px !important;
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+  color: rgba(203, 213, 225, 0.74) !important;
+}
+
+body:not(.is-registry) .batteries-grid,
+body:not(.is-registry) .batteries .grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+body:not(.is-registry) .battery-card,
+body:not(.is-registry) .batteries .card {
+  min-height: 230px;
+  padding: 20px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(45, 212, 191, 0.14) !important;
+  background: rgba(2, 6, 23, 0.34) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+body:not(.is-registry) .battery-card:hover,
+body:not(.is-registry) .batteries .card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(30, 230, 163, 0.32) !important;
+  background: rgba(2, 6, 23, 0.42) !important;
+}
+
+body:not(.is-registry) .battery-card h3,
+body:not(.is-registry) .batteries .card h3,
+body:not(.is-registry) .batteries .card-title {
+  margin: 0 0 10px !important;
+  font-size: 1.02rem !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.02em !important;
+  color: #f8fafc !important;
+}
+
+body:not(.is-registry) .battery-card p,
+body:not(.is-registry) .batteries .card p,
+body:not(.is-registry) .batteries .card-text {
+  margin: 0 !important;
+  color: rgba(203, 213, 225, 0.72) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.65 !important;
+}
+
+body:not(.is-registry) .battery-preview,
+body:not(.is-registry) .batteries pre {
+  margin-top: 16px !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(45, 212, 191, 0.12) !important;
+  background: rgba(2, 6, 23, 0.38) !important;
+  box-shadow: none !important;
+}
+
+body:not(.is-registry) .battery-preview-title,
+body:not(.is-registry) .batteries .preview-title {
+  margin-bottom: 8px !important;
+  color: #4ade80 !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+@media (max-width: 980px) {
+  body:not(.is-registry) .batteries-grid,
+  body:not(.is-registry) .batteries .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body:not(.is-registry) .batteries {
+    padding: 54px 0 !important;
+  }
+
+  body:not(.is-registry) .batteries-grid,
+  body:not(.is-registry) .batteries .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body:not(.is-registry) .battery-card,
+  body:not(.is-registry) .batteries .card {
+    min-height: auto;
+  }
+}
+/* =========================================
+   Mobile visual cards layout fix
+   Prevent huge empty gaps and hidden cards
+========================================= */
+
+@media (max-width: 820px) {
+  body:not(.is-registry) .vix-showcase-visual,
+  body:not(.is-registry) .registry-showcase-visual,
+  body:not(.is-registry) .template-engine-visual {
+    min-height: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  body:not(.is-registry) .vix-terminal-card,
+  body:not(.is-registry) .registry-showcase-visual .registry-code-card,
+  body:not(.is-registry) .registry-showcase-visual .registry-code-card-top,
+  body:not(.is-registry) .registry-showcase-visual .registry-code-card-bottom,
+  body:not(.is-registry) .template-card-top,
+  body:not(.is-registry) .template-card-bottom {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    margin: 0 !important;
+  }
+
+  body:not(.is-registry) .template-card-top,
+  body:not(.is-registry) .template-card-bottom {
+    min-height: 0 !important;
+  }
+
+  body:not(.is-registry) .template-card-top .template-code-body {
+    min-height: 0 !important;
+  }
+}
+/* =========================================
+   Section buttons size override
+========================================= */
+
+body:not(.is-registry) section:not(.hero) .btn,
+body:not(.is-registry) section:not(.hero) a[class*="btn"],
+body:not(.is-registry) .vix-showcase-btn,
+body:not(.is-registry) .registry-showcase-btn,
+body:not(.is-registry) .template-engine-btn,
+body:not(.is-registry) .home-roadmap-btn {
+  min-height: 42px !important;
+  padding: 0.55rem 1rem !important;
+  font-size: 0.88rem !important;
+  line-height: 1.1 !important;
+  border-radius: 999px !important;
+}
+
+body:not(.is-registry) section:not(.hero) .btn span,
+body:not(.is-registry) .vix-showcase-btn span,
+body:not(.is-registry) .registry-showcase-btn span,
+body:not(.is-registry) .template-engine-btn span,
+body:not(.is-registry) .home-roadmap-btn span {
+  font-size: 1rem !important;
+  line-height: 1 !important;
+}
+@media (max-width: 640px) {
+  body:not(.is-registry) section:not(.hero) .btn,
+  body:not(.is-registry) section:not(.hero) a[class*="btn"],
+  body:not(.is-registry) .vix-showcase-btn,
+  body:not(.is-registry) .registry-showcase-btn,
+  body:not(.is-registry) .template-engine-btn,
+  body:not(.is-registry) .home-roadmap-btn {
+    width: auto !important;
+    min-height: 40px !important;
+    padding: 0.52rem 0.95rem !important;
+    font-size: 0.86rem !important;
+  }
 }

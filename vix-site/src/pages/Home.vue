@@ -7,6 +7,7 @@ import Section from "@/components/Section.vue";
 import CodeBlock from "@/components/CodeBlock.vue";
 import SignalsGrid from "@/components/SignalsGrid.vue";
 import BatteriesIncluded from "@/components/BatteriesIncluded.vue";
+import LazySection from "@/components/LazySection.vue";
 
 import { getInitialGithubStats, refreshGithubStats } from "@/lib/githubStats";
 
@@ -53,7 +54,6 @@ onMounted(async () => {
     </div>
 
     <template v-else>
-
       <!-- ===================== HERO ===================== -->
 
       <Hero
@@ -68,10 +68,9 @@ onMounted(async () => {
 
       <div class="section-sep hero-sep"></div>
 
-       <!-- ===================== INSTALL ===================== -->
+      <!-- ===================== INSTALL ===================== -->
       <section class="install">
         <div class="container install-inner">
-
           <h2 class="install-title">
             {{ HOME.install.title }}
             <span class="install-version">{{ HOME.install.version }}</span>
@@ -92,11 +91,31 @@ onMounted(async () => {
                 @click="copyCommand"
                 :aria-label="installCopied ? 'Copied' : 'Copy command'"
               >
-                <svg v-if="!installCopied" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  v-if="!installCopied"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  ></path>
                 </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <path d="M20 6L9 17l-5-5"></path>
                 </svg>
               </button>
@@ -106,271 +125,300 @@ onMounted(async () => {
               <div class="install-tabs">
                 <button
                   type="button"
-                  :class="['install-tab', { active: activePlatform === 'unix' }]"
+                  :class="[
+                    'install-tab',
+                    { active: activePlatform === 'unix' },
+                  ]"
                   @click="activePlatform = 'unix'"
-                >macOS / Linux</button>
+                >
+                  macOS / Linux
+                </button>
                 <button
                   type="button"
-                  :class="['install-tab', { active: activePlatform === 'windows' }]"
+                  :class="[
+                    'install-tab',
+                    { active: activePlatform === 'windows' },
+                  ]"
                   @click="activePlatform = 'windows'"
-                >Windows</button>
+                >
+                  Windows
+                </button>
               </div>
             </div>
 
             <div class="code-body install-code-body">
-              <pre class="code-pre install-code-pre"><code>{{ HOME.install.commands?.[activePlatform] || '' }}</code></pre>
+              <pre
+                class="code-pre install-code-pre"
+              ><code>{{ HOME.install.commands?.[activePlatform] || '' }}</code></pre>
             </div>
           </div>
-
         </div>
       </section>
 
-      <div class="section-sep"></div>
+      <LazySection>
+        <div class="section-sep"></div>
 
-      <!-- ===================== SHOWCASE ===================== -->
-      <section v-if="HOME.showcase" class="vix-showcase">
-        <div class="container vix-showcase-header">
-          <h2 class="vix-showcase-heading">{{ HOME.showcase.heading }}</h2>
-          <p class="vix-showcase-subheading">{{ HOME.showcase.subheading }}</p>
-        </div>
+        <!-- ===================== SHOWCASE ===================== -->
+        <section v-if="HOME.showcase" class="vix-showcase">
+          <div class="container vix-showcase-header">
+            <h2 class="vix-showcase-heading">{{ HOME.showcase.heading }}</h2>
+            <p class="vix-showcase-subheading">
+              {{ HOME.showcase.subheading }}
+            </p>
+          </div>
 
-        <div class="container vix-showcase-inner">
-          <div class="vix-showcase-visual">
-            <div class="code-card vix-code-editor-card">
-              <div class="code-head">
-                <div class="head-left">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                  <span class="head-title">{{ HOME.showcase.visual.fileName }}</span>
+          <div class="container vix-showcase-inner">
+            <div class="vix-showcase-visual">
+              <div class="code-card vix-code-editor-card">
+                <div class="code-head">
+                  <div class="head-left">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="head-title">{{
+                      HOME.showcase.visual.fileName
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="code-body">
+                  <pre
+                    class="code-pre"
+                  ><code v-html="HOME.showcase.visual.code"></code></pre>
                 </div>
               </div>
 
-              <div class="code-body">
-                <pre class="code-pre"><code v-html="HOME.showcase.visual.code"></code></pre>
+              <div class="vix-terminal-card">
+                <div class="vix-terminal-head">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+
+                <div class="vix-terminal-body">
+                  <pre><code v-html="HOME.showcase.visual.terminal"></code></pre>
+                </div>
               </div>
             </div>
 
-            <div class="vix-terminal-card">
-              <div class="vix-terminal-head">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
-              </div>
+            <div class="vix-showcase-content">
+              <h3 class="vix-showcase-title">
+                {{ HOME.showcase.content.title }}
+                <span class="vix-badge vix-badge-cpp">{{
+                  HOME.showcase.content.badge
+                }}</span>
+              </h3>
 
-              <div class="vix-terminal-body">
-                <pre><code v-html="HOME.showcase.visual.terminal"></code></pre>
-              </div>
-            </div>
-          </div>
+              <p class="vix-showcase-text">{{ HOME.showcase.content.text }}</p>
 
-          <div class="vix-showcase-content">
-            <h3 class="vix-showcase-title">
-              {{ HOME.showcase.content.title }}
-              <span class="vix-badge vix-badge-cpp">{{ HOME.showcase.content.badge }}</span>
-            </h3>
-
-            <p class="vix-showcase-text">{{ HOME.showcase.content.text }}</p>
-
-            <a :href="HOME.showcase.content.cta.to" class="vix-showcase-btn">
-              {{ HOME.showcase.content.cta.label }}
-              <span class="vix-showcase-btn-arrow">›</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-     <div class="section-sep"></div>
-
-     <!-- ===================== REGISTRY ===================== -->
-
-      <section v-if="HOME.registry" class="registry">
-        <div class="container registry-layout">
-          <div class="registry-left">
-            <h2 class="registry-title">{{ HOME.registry.title }}</h2>
-            <p class="registry-subtitle">{{ HOME.registry.subtitle }}</p>
-
-            <div class="registry-cta" v-if="HOME.registry.ctas?.length">
-              <a
-                v-for="cta in HOME.registry.ctas"
-                :key="cta.label"
-                :href="cta.href || cta.to"
-                :class="['btn', cta.kind]"
-                :target="cta.external ? '_blank' : null"
-                :rel="cta.external ? 'noreferrer' : null"
-              >
-                {{ cta.label }}
+              <a :href="HOME.showcase.content.cta.to" class="vix-showcase-btn">
+                {{ HOME.showcase.content.cta.label }}
+                <span class="vix-showcase-btn-arrow">›</span>
               </a>
             </div>
           </div>
+        </section>
 
-          <div class="registry-right">
-            <div class="registry-card">
-              <div class="registry-head">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
-                <span class="registry-head-title">
-                  {{ HOME.registry.preview?.title || "registry" }}
-                </span>
-              </div>
-
-              <div class="registry-body">
-                <pre class="registry-pre"><code class="registry-code">{{ HOME.registry.preview?.code || "" }}</code></pre>
-                <p v-if="HOME.registry.note" class="registry-note">
-                  {{ HOME.registry.note }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="section-sep"></div>
+        <div class="section-sep"></div>
+      </LazySection>
 
       <!-- ===================== REGISTRY SHOWCASE ===================== -->
+      <LazySection>
+        <section v-if="HOME.registryShowcase" class="registry-showcase">
+          <div class="container registry-showcase-inner">
+            <!-- LEFT -->
+            <div class="registry-showcase-content">
+              <h2 class="registry-showcase-title">
+                {{ HOME.registryShowcase.title }}
+                <span class="registry-badge">{{
+                  HOME.registryShowcase.badge
+                }}</span>
+              </h2>
 
-      <section v-if="HOME.registryShowcase" class="registry-showcase">
-        <div class="container registry-showcase-inner">
+              <p class="registry-showcase-text">
+                {{ HOME.registryShowcase.text }}
+              </p>
 
-          <!-- LEFT -->
-          <div class="registry-showcase-content">
-            <h2 class="registry-showcase-title">
-              {{ HOME.registryShowcase.title }}
-              <span class="registry-badge">{{ HOME.registryShowcase.badge }}</span>
-            </h2>
+              <a
+                :href="HOME.registryShowcase.cta.to"
+                class="registry-showcase-btn"
+              >
+                {{ HOME.registryShowcase.cta.label }}
+                <span class="registry-showcase-btn-arrow">›</span>
+              </a>
+            </div>
 
-            <p class="registry-showcase-text">
-              {{ HOME.registryShowcase.text }}
-            </p>
-
-            <a
-              :href="HOME.registryShowcase.cta.to"
-              class="registry-showcase-btn"
-            >
-              {{ HOME.registryShowcase.cta.label }}
-              <span class="registry-showcase-btn-arrow">›</span>
-            </a>
-          </div>
-
-          <!-- RIGHT -->
-          <div class="registry-showcase-visual">
-
-            <!-- TOP CARD -->
-            <div class="code-card registry-code-card registry-code-card-top">
-              <div class="code-head">
-                <div class="head-left">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                  <span class="head-title">
-                    {{ HOME.registryShowcase.cards.top.fileName }}
-                  </span>
+            <!-- RIGHT -->
+            <div class="registry-showcase-visual">
+              <!-- TOP CARD -->
+              <div class="code-card registry-code-card registry-code-card-top">
+                <div class="code-head">
+                  <div class="head-left">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="head-title">
+                      {{ HOME.registryShowcase.cards.top.fileName }}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div class="code-body">
-                <pre class="code-pre">
+                <div class="code-body">
+                  <pre class="code-pre">
                   <code v-html="HOME.registryShowcase.cards.top.code"></code>
                 </pre>
-              </div>
-            </div>
-
-            <!-- BOTTOM CARD -->
-            <div class="code-card registry-code-card registry-code-card-bottom">
-              <div class="code-head">
-                <div class="head-left">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                  <span class="head-title">
-                    {{ HOME.registryShowcase.cards.bottom.fileName }}
-                  </span>
                 </div>
               </div>
 
-              <div class="code-body">
-                <pre class="code-pre">
+              <!-- BOTTOM CARD -->
+              <div
+                class="code-card registry-code-card registry-code-card-bottom"
+              >
+                <div class="code-head">
+                  <div class="head-left">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="head-title">
+                      {{ HOME.registryShowcase.cards.bottom.fileName }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="code-body">
+                  <pre class="code-pre">
                   <code v-html="HOME.registryShowcase.cards.bottom.code"></code>
                 </pre>
+                </div>
               </div>
             </div>
-
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
+      <LazySection>
+        <div v-if="HOME.templateEngine" class="section-sep"></div>
 
-      <div v-if="HOME.templateEngine" class="section-sep"></div>
+        <!-- ===================== TEMPLATE ENGINE ===================== -->
+        <section v-if="HOME.templateEngine" class="template-engine">
+          <div class="container template-engine-inner">
+            <div class="template-engine-content">
+              <span class="template-engine-badge">
+                {{ HOME.templateEngine.badge }}
+              </span>
 
-      <!-- ===================== TEMPLATE ENGINE ===================== -->
-      <section v-if="HOME.templateEngine" class="template-engine">
-        <div class="container template-engine-inner">
-          <div class="template-engine-content">
-            <span class="template-engine-badge">
-              {{ HOME.templateEngine.badge }}
-            </span>
+              <h2 class="template-engine-title">
+                {{ HOME.templateEngine.title }}
+              </h2>
 
-            <h2 class="template-engine-title">
-              {{ HOME.templateEngine.title }}
-            </h2>
+              <p class="template-engine-subtitle">
+                {{ HOME.templateEngine.subtitle }}
+              </p>
 
-            <p class="template-engine-subtitle">
-              {{ HOME.templateEngine.subtitle }}
-            </p>
+              <a
+                class="template-engine-btn"
+                :href="HOME.templateEngine.cta.to"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ HOME.templateEngine.cta.label }}
+                <span>›</span>
+              </a>
+            </div>
 
-            <a
-              class="template-engine-btn"
-              :href="HOME.templateEngine.cta.to"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ HOME.templateEngine.cta.label }}
-              <span>›</span>
-            </a>
-          </div>
+            <div class="template-engine-visual">
+              <div class="code-card template-code-card template-card-top">
+                <div class="code-head">
+                  <div class="head-left">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="head-title">
+                      {{ HOME.templateEngine.cards.template.fileName }}
+                    </span>
+                  </div>
+                </div>
 
-          <div class="template-engine-visual">
-            <div class="code-card template-code-card template-card-top">
-              <div class="code-head">
-                <div class="head-left">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                  <span class="head-title">
-                    {{ HOME.templateEngine.cards.template.fileName }}
-                  </span>
+                <div class="code-body template-code-body">
+                  <pre
+                    class="code-pre template-code-pre"
+                  ><code v-html="HOME.templateEngine.cards.template.code"></code></pre>
                 </div>
               </div>
 
-              <div class="code-body template-code-body">
-                <pre class="code-pre template-code-pre"><code v-html="HOME.templateEngine.cards.template.code"></code></pre>
-              </div>
-            </div>
-
-            <div class="code-card template-code-card template-card-bottom">
-              <div class="code-head">
-                <div class="head-left">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                  <span class="head-title">
-                    {{ HOME.templateEngine.cards.cpp.fileName }}
-                  </span>
+              <div class="code-card template-code-card template-card-bottom">
+                <div class="code-head">
+                  <div class="head-left">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="head-title">
+                      {{ HOME.templateEngine.cards.cpp.fileName }}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div class="code-body template-code-body">
-                <pre class="code-pre template-code-pre"><code v-html="HOME.templateEngine.cards.cpp.code"></code></pre>
+                <div class="code-body template-code-body">
+                  <pre
+                    class="code-pre template-code-pre"
+                  ><code v-html="HOME.templateEngine.cards.cpp.code"></code></pre>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div v-if="HOME.registry" class="section-sep" style="margin-bottom: 10px;"></div>
+        <div v-if="HOME.templateEngine" class="section-sep"></div>
 
-       <!-- ===================== SIGNALS ===================== -->
+        <section v-if="HOME.releaseFocus" class="registry">
+          <div class="container registry-layout">
+            <div class="registry-left">
+              <h2 class="registry-title">{{ HOME.releaseFocus.title }}</h2>
+              <p class="registry-subtitle">{{ HOME.releaseFocus.subtitle }}</p>
+
+              <div class="registry-cta" v-if="HOME.releaseFocus.ctas?.length">
+                <a
+                  v-for="cta in HOME.releaseFocus.ctas"
+                  :key="cta.label"
+                  :href="cta.href || cta.to"
+                  :class="['btn', cta.kind]"
+                  :target="cta.external ? '_blank' : null"
+                  :rel="cta.external ? 'noreferrer' : null"
+                >
+                  {{ cta.label }}
+                </a>
+              </div>
+            </div>
+
+            <div class="registry-right">
+              <div class="registry-card">
+                <div class="registry-head">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                  <span class="registry-head-title">
+                    {{ HOME.releaseFocus.preview?.title || "v2.6.0" }}
+                  </span>
+                </div>
+
+                <div class="registry-body">
+                  <pre
+                    class="registry-pre"
+                  ><code class="registry-code">{{ HOME.releaseFocus.preview?.code || "" }}</code></pre>
+
+                  <p v-if="HOME.releaseFocus.note" class="registry-note">
+                    {{ HOME.releaseFocus.note }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </LazySection>
+
+      <div v-if="HOME.releaseFocus" class="section-sep"></div>
+
+      <!-- ===================== SIGNALS ===================== -->
       <section v-if="HOME.signals" class="signals">
         <div class="container signals-inner">
           <div class="signals-left">
@@ -383,67 +431,69 @@ onMounted(async () => {
         </div>
       </section>
 
-      <div class="section-sep"></div>
-
       <!-- ===================== BATTERIES ===================== -->
-      <BatteriesIncluded
-        v-if="HOME.batteries"
-        :title="HOME.batteries.title"
-        :subtitle="HOME.batteries.subtitle"
-        :items="HOME.batteries.items || []"
-      />
+      <LazySection>
+        <div class="section-sep"></div>
 
-<div v-if="HOME.stableFoundation" class="section-sep"></div>
+        <BatteriesIncluded
+          v-if="HOME.batteries"
+          :title="HOME.batteries.title"
+          :subtitle="HOME.batteries.subtitle"
+          :items="HOME.batteries.items || []"
+        />
+      </LazySection>
 
-<!-- ===================== STABLE FOUNDATION ===================== -->
-<section v-if="HOME.stableFoundation" class="home-roadmap">
-  <div class="container home-roadmap-inner">
-    <div class="home-roadmap-head">
-      <p class="home-roadmap-eyebrow">
-        {{ HOME.stableFoundation.eyebrow }}
-      </p>
+      <div v-if="HOME.stableFoundation" class="section-sep"></div>
 
-      <h2 class="section-title">
-        {{ HOME.stableFoundation.title }}
-      </h2>
+      <!-- ===================== STABLE FOUNDATION ===================== -->
+      <section v-if="HOME.stableFoundation" class="home-roadmap">
+        <div class="container home-roadmap-inner">
+          <div class="home-roadmap-head">
+            <p class="home-roadmap-eyebrow">
+              {{ HOME.stableFoundation.eyebrow }}
+            </p>
 
-      <p class="section-subtitle">
-        {{ HOME.stableFoundation.subtitle }}
-      </p>
+            <h2 class="section-title">
+              {{ HOME.stableFoundation.title }}
+            </h2>
 
-      <a
-        v-if="HOME.stableFoundation.cta"
-        class="btn secondary home-roadmap-btn"
-        :href="HOME.stableFoundation.cta.to"
-      >
-        {{ HOME.stableFoundation.cta.label }}
-        <span>›</span>
-      </a>
-    </div>
+            <p class="section-subtitle">
+              {{ HOME.stableFoundation.subtitle }}
+            </p>
 
-    <div class="home-roadmap-timeline">
-      <article
-        v-for="item in HOME.stableFoundation.items"
-        :key="item.title"
-        class="home-roadmap-phase"
-      >
-        <div class="home-roadmap-marker">
-          <span></span>
+            <a
+              v-if="HOME.stableFoundation.cta"
+              class="btn secondary home-roadmap-btn"
+              :href="HOME.stableFoundation.cta.to"
+            >
+              {{ HOME.stableFoundation.cta.label }}
+              <span>›</span>
+            </a>
+          </div>
+
+          <div class="home-roadmap-timeline">
+            <article
+              v-for="item in HOME.stableFoundation.items"
+              :key="item.title"
+              class="home-roadmap-phase"
+            >
+              <div class="home-roadmap-marker">
+                <span></span>
+              </div>
+
+              <div class="home-roadmap-card">
+                <p class="home-roadmap-phase-label">
+                  {{ item.label }}
+                </p>
+
+                <h3>{{ item.title }}</h3>
+
+                <p>{{ item.text }}</p>
+              </div>
+            </article>
+          </div>
         </div>
-
-        <div class="home-roadmap-card">
-          <p class="home-roadmap-phase-label">
-            {{ item.label }}
-          </p>
-
-          <h3>{{ item.title }}</h3>
-
-          <p>{{ item.text }}</p>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
+      </section>
 
       <div class="section-sep"></div>
 
@@ -461,7 +511,8 @@ onMounted(async () => {
                 :class="['btn', cta.kind]"
                 :target="cta.external ? '_blank' : null"
                 :rel="cta.external ? 'noreferrer' : null"
-              >{{ cta.label }}</a>
+                >{{ cta.label }}</a
+              >
             </div>
           </div>
 
@@ -476,7 +527,9 @@ onMounted(async () => {
                 </div>
               </div>
               <div class="code-body">
-                <pre class="code-pre"><code>{{ HOME.getStarted.code }}</code></pre>
+                <pre
+                  class="code-pre"
+                ><code>{{ HOME.getStarted.code }}</code></pre>
               </div>
               <div v-if="HOME.getStarted.note" class="code-foot">
                 <p class="code-note">{{ HOME.getStarted.note }}</p>
@@ -494,17 +547,16 @@ onMounted(async () => {
           <div>
             <h2 class="section-title">Support</h2>
             <p class="section-subtitle">
-              Help keep Vix.cpp moving fast. Support the runtime, the tooling, and the growing ecosystem.
+              Help keep Vix.cpp moving fast. Support the runtime, the tooling,
+              and the growing ecosystem.
             </p>
           </div>
           <a class="btn primary" href="/support">Go to Support</a>
         </div>
       </section>
-
     </template>
   </div>
 </template>
-
 
 <style scoped>
 .page {
@@ -579,11 +631,11 @@ onMounted(async () => {
     font-size: 1.9rem;
   }
 }
-.registry{
+.registry {
   padding: 4rem 0;
 }
 
-.section-sep{
+.section-sep {
   width: 100%;
   height: 1px;
   margin: 3.2rem 0;
@@ -591,26 +643,26 @@ onMounted(async () => {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(148,163,184,.18),
+    rgba(148, 163, 184, 0.18),
     transparent
   );
 }
 
-.registry-layout{
+.registry-layout {
   display: grid;
   grid-template-columns: minmax(320px, 560px) minmax(260px, 520px);
   gap: 3rem;
   align-items: center;
 }
 
-.registry-title{
+.registry-title {
   margin: 0;
   font-size: 2.2rem;
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
 
-.registry-subtitle{
+.registry-subtitle {
   margin: 0.95rem 0 0;
   max-width: 62ch;
   font-size: 1.05rem;
@@ -618,7 +670,7 @@ onMounted(async () => {
   opacity: 0.82;
 }
 
-.registry-cta{
+.registry-cta {
   margin-top: 1.35rem;
   display: flex;
   gap: 0.85rem;
@@ -626,74 +678,90 @@ onMounted(async () => {
 }
 
 /* Card style aligned with your code card language */
-.registry-card{
+.registry-card {
   border-radius: 16px;
-  border: 1px solid rgba(148,163,184,.16);
-  background: linear-gradient(180deg, rgba(2,6,23,.55), rgba(2,6,23,.38));
-  box-shadow: 0 18px 46px rgba(0,0,0,.35);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(
+    180deg,
+    rgba(2, 6, 23, 0.55),
+    rgba(2, 6, 23, 0.38)
+  );
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
 
-.registry-head{
+.registry-head {
   display: flex;
   align-items: center;
   gap: 0.45rem;
   padding: 10px 12px;
-  background: linear-gradient(to bottom, rgba(2,6,23,.92), rgba(2,6,23,.72));
-  border-bottom: 1px solid rgba(148,163,184,.14);
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 6, 23, 0.92),
+    rgba(2, 6, 23, 0.72)
+  );
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
 }
 
-.dot{
+.dot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
   opacity: 0.95;
 }
-.dot-red{ background:#fb923c; }
-.dot-yellow{ background:#facc15; }
-.dot-green{ background:#22c55e; }
+.dot-red {
+  background: #fb923c;
+}
+.dot-yellow {
+  background: #facc15;
+}
+.dot-green {
+  background: #22c55e;
+}
 
-.registry-head-title{
+.registry-head-title {
   margin-left: 0.35rem;
   font-size: 0.84rem;
-  color: rgba(226,232,240,.8);
+  color: rgba(226, 232, 240, 0.8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.registry-body{
+.registry-body {
   padding: 12px 12px 14px;
 }
 
-.registry-pre{
+.registry-pre {
   margin: 0;
   white-space: pre;
   overflow: auto;
   max-width: 100%;
 }
 
-.registry-code{
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+.registry-code {
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   font-size: 0.86rem;
   line-height: 1.65;
-  color: rgba(226,232,240,.9);
+  color: rgba(226, 232, 240, 0.9);
 }
 
-.registry-note{
+.registry-note {
   margin: 10px 0 0;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: rgba(226,232,240,.78);
+  color: rgba(226, 232, 240, 0.78);
 }
 
-@media (max-width: 980px){
-  .registry-layout{
+@media (max-width: 980px) {
+  .registry-layout {
     grid-template-columns: 1fr;
     gap: 1.6rem;
   }
 
-  .registry-title{
+  .registry-title {
     font-size: 1.85rem;
   }
 }
@@ -701,7 +769,7 @@ onMounted(async () => {
 .install {
   padding: 32px 0 40px;
   background:
-    radial-gradient(circle at top, rgba(34, 197, 94, 0.10), transparent 42%),
+    radial-gradient(circle at top, rgba(34, 197, 94, 0.1), transparent 42%),
     linear-gradient(180deg, #031f1a 0%, #042a23 100%);
 }
 
@@ -786,7 +854,10 @@ onMounted(async () => {
   white-space: nowrap;
   align-self: center;
 
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .install-copy svg {
@@ -923,11 +994,11 @@ onMounted(async () => {
   }
 }
 
-.install-card{
+.install-card {
   max-width: 620px;
 }
 
-.install-copy{
+.install-copy {
   width: 40px !important;
   min-width: 40px;
   max-width: 40px;
@@ -936,45 +1007,45 @@ onMounted(async () => {
   align-self: center;
 }
 
-.install-head{
+.install-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.install-head-left{
+.install-head-left {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.install-tabs{
+.install-tabs {
   display: flex !important;
   flex-direction: row !important;
   align-items: center;
   gap: 8px;
 }
 
-.install-tabs .tab{
+.install-tabs .tab {
   flex: 1 1 0;
   width: auto !important;
   min-width: 0;
 }
 
-@media (max-width: 420px){
-  .install-tabs{
+@media (max-width: 420px) {
+  .install-tabs {
     flex-direction: column !important;
   }
 
-  .install-tabs .tab{
+  .install-tabs .tab {
     width: 100% !important;
   }
 }
 
-.install-code-body{
+.install-code-body {
   padding: 0;
 }
 
-.install-code-pre{
+.install-code-pre {
   padding: 10px 14px;
   line-height: 4;
   white-space: nowrap;
@@ -982,26 +1053,26 @@ onMounted(async () => {
   overflow-y: hidden;
 }
 
-.install-card .code-body{
+.install-card .code-body {
   min-height: auto;
   height: auto;
 }
 
-.install-tabs-wrap{
+.install-tabs-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 12px;
 }
 
-.install-tabs{
+.install-tabs {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 50px;
 }
 
-.install-tabs .tab{
+.install-tabs .tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1012,46 +1083,46 @@ onMounted(async () => {
   color: #cbd5e1;
   background: transparent;
 
-  border: 1px solid rgba(148,163,184,.25);
+  border: 1px solid rgba(148, 163, 184, 0.25);
   border-radius: 999px;
 
   cursor: pointer;
   white-space: nowrap;
 
   transition:
-    background .15s ease,
-    color .15s ease,
-    border-color .15s ease,
-    transform .12s ease;
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
 }
 
 /* hover */
-.install-tabs .tab:hover{
+.install-tabs .tab:hover {
   color: #ffffff;
-  background: rgba(148,163,184,.08);
+  background: rgba(148, 163, 184, 0.08);
   transform: translateY(-1px);
 }
 
 /* actif */
-.install-tabs .tab.active{
+.install-tabs .tab.active {
   color: #d1fae5;
-  border-color: rgba(34,197,94,.35);
+  border-color: rgba(34, 197, 94, 0.35);
 }
 
 /* mobile */
-@media (max-width: 640px){
-  .install-tabs{
+@media (max-width: 640px) {
+  .install-tabs {
     flex-direction: row;
     justify-content: center;
   }
 }
 
-.install-tabs .tab.active{
+.install-tabs .tab.active {
   color: #22c55e;
   position: relative;
 }
 
-.install-tabs .tab.active::after{
+.install-tabs .tab.active::after {
   content: "";
   position: absolute;
   left: 0;
@@ -1096,10 +1167,10 @@ onMounted(async () => {
   bottom: 26px;
   width: min(100%, 420px);
   background: #0b0f17;
-  border: 1px solid rgba(255,255,255,.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0,0,0,.22);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
   z-index: 3;
 }
 
@@ -1109,7 +1180,7 @@ onMounted(async () => {
   gap: 8px;
   padding: 12px 14px;
   background: #0f141b;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .vix-terminal-body {
@@ -1123,7 +1194,9 @@ onMounted(async () => {
 }
 
 .vix-terminal-body code {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
   color: #e6edf3;
   font-size: 0.88rem;
   line-height: 1.8;
@@ -1194,7 +1267,7 @@ onMounted(async () => {
 
   .code-pre {
     font-size: 0.8rem;
-    min-width: 0;           /* important */
+    min-width: 0; /* important */
     width: max-content;
   }
 
@@ -1204,7 +1277,7 @@ onMounted(async () => {
   }
 
   .vix-terminal-card {
-    position: relative;     /* important */
+    position: relative; /* important */
     left: 0;
     bottom: 0;
     width: 100%;
@@ -1289,7 +1362,10 @@ onMounted(async () => {
   border: none;
 
   box-shadow: 0 10px 24px rgba(34, 197, 94, 0.22);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
 }
 
 .vix-showcase-btn:hover {
@@ -1408,7 +1484,7 @@ onMounted(async () => {
   font-size: 0.5em;
   font-weight: 800;
   vertical-align: middle;
-  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.20);
+  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
 }
 
 .registry-showcase-text {
@@ -1430,7 +1506,9 @@ onMounted(async () => {
   text-decoration: none;
   font-weight: 700;
   box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .registry-showcase-btn:hover {
@@ -1498,7 +1576,11 @@ onMounted(async () => {
 .home-roadmap {
   padding: 72px 0;
   background:
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.1), transparent 34%),
+    radial-gradient(
+      circle at top left,
+      rgba(34, 197, 94, 0.1),
+      transparent 34%
+    ),
     rgba(34, 197, 94, 0.02);
 }
 
@@ -1576,7 +1658,11 @@ onMounted(async () => {
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.015)
+    ),
     rgba(2, 13, 10, 0.7);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
 }
@@ -1803,7 +1889,12 @@ onMounted(async () => {
   width: 100%;
   height: 1px;
   margin: 0;
-  background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.14), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.14),
+    transparent
+  );
 }
 
 /* ===================== SHARED SECTION TITLES ===================== */
@@ -1932,7 +2023,10 @@ onMounted(async () => {
   border: 1px solid transparent;
   background: transparent;
   white-space: nowrap;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .hero-tab:hover {
@@ -2054,7 +2148,9 @@ onMounted(async () => {
   border-radius: 8px;
   color: #4ade80;
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
 }
 
 .install-copy-btn svg {
@@ -2085,7 +2181,9 @@ onMounted(async () => {
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .install-tab:hover {
@@ -2436,7 +2534,9 @@ onMounted(async () => {
   text-decoration: none;
   font-weight: 800;
   box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .template-engine-btn:hover {
@@ -2601,8 +2701,8 @@ onMounted(async () => {
   }
 }
 @media (max-width: 640px) {
-    .hero {
-        padding: 10px 0 36px;
-    }
+  .hero {
+    padding: 10px 0 36px;
+  }
 }
 </style>

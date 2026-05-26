@@ -2,7 +2,7 @@ export const HOME = {
   hero: {
     title: "A modern C++ runtime.",
     subtitle:
-      "Build fast, reliable, and offline-first C++ applications. Start with a single file, then grow into HTTP services, databases, realtime systems, P2P nodes, and durable sync workflows.",
+      "Build fast native applications with a modern developer workflow. Start with a single file, then grow into HTTP services, games, AI agents, WebSocket apps, P2P nodes, databases, and offline-first sync workflows.",
     ctas: [
       { label: "Install", to: "/install", kind: "primary" },
       {
@@ -17,8 +17,8 @@ export const HOME = {
       title: "What Vix gives you",
       meta: [
         "Run C++ files directly",
-        "Build native services",
-        "Sync data offline",
+        "Build native applications",
+        "Use runtime modules",
         "Ship MIT-licensed apps",
       ],
     },
@@ -35,7 +35,7 @@ int main()
 {
   App app;
 
-  app.get("/", [](Request&, Response& res) {
+  app.get("/", [](Request &, Response &res) {
     res.send("Hello from Vix");
   });
 
@@ -43,44 +43,44 @@ int main()
 }`,
       },
       {
-        key: "sync",
-        label: "Sync",
+        key: "game",
+        label: "Game",
         lang: "cpp",
-        file: "sync.cpp",
-        code: `#include <vix/sync/Sync.hpp>
+        file: "game.cpp",
+        code: `#include <vix/game/game.hpp>
 
 int main()
 {
-  using namespace vix::sync;
-  using namespace vix::sync::outbox;
+  vix::game::App app;
 
-  Operation op;
-  op.kind = "fs.write.sync";
-  op.target = "/sync/file";
-  op.payload = R"({"path":"note.txt","content":"hello"})";
+  app.set_title("Tiny Adventure");
+  app.set_target_fps(60);
 
-  // Local writes stay durable.
-  // Network sync can happen later.
-  return 0;
+  app.on_update([](const vix::game::Frame &frame) {
+    // update player, world, physics, assets
+  });
+
+  app.run();
 }`,
       },
       {
-        key: "db",
-        label: "Database",
+        key: "agent",
+        label: "Agent",
         lang: "cpp",
-        file: "db.cpp",
-        code: `#include <vix/db/db.hpp>
+        file: "agent.cpp",
+        code: `#include <vix/agent.hpp>
 
 int main()
 {
-  auto db = vix::db::Database::sqlite("app.db");
+  vix::ai::Agent agent;
 
-  db.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");
-  db.exec("INSERT INTO users (name) VALUES (?)", "Ada");
+  agent
+    .set_model("local:llama")
+    .set_workspace(".")
+    .add_tool("filesystem")
+    .add_memory(".vix/ai/memory");
 
-  auto rows = db.query("SELECT id, name FROM users");
-
-  return 0;
+  agent.run("Analyze this project.");
 }`,
       },
       {
@@ -93,7 +93,9 @@ int main()
 int main()
 {
   vix::config::Config config{".env"};
-  auto executor = std::make_shared<vix::executor::RuntimeExecutor>(1u);
+  auto executor =
+    std::make_shared<vix::executor::RuntimeExecutor>(1u);
+
   vix::websocket::Server ws{config, executor};
 
   ws.on_message([](auto &, const std::string &msg) {
@@ -123,44 +125,92 @@ int main()
   p2p.stop();
 }`,
       },
+      {
+        key: "sync",
+        label: "Sync",
+        lang: "cpp",
+        file: "sync.cpp",
+        code: `#include <vix/sync/Sync.hpp>
+
+int main()
+{
+  using namespace vix::sync;
+  using namespace vix::sync::outbox;
+
+  Operation op;
+  op.kind = "fs.write.sync";
+  op.target = "/sync/file";
+  op.payload = R"({"path":"note.txt","content":"hello"})";
+
+  return 0;
+}`,
+      },
+      {
+        key: "db",
+        label: "Database",
+        lang: "cpp",
+        file: "db.cpp",
+        code: `#include <vix/db/db.hpp>
+
+int main()
+{
+  auto db = vix::db::Database::sqlite("app.db");
+
+  db.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");
+  db.exec("INSERT INTO users (name) VALUES (?)", "Ada");
+
+  auto rows = db.query("SELECT id, name FROM users");
+
+  return 0;
+}`,
+      },
     ],
   },
 
+  // ---------------------------------------------------------------------------
+  // INSTALL — bandeau central, one-liner copy
+  // ---------------------------------------------------------------------------
   install: {
     title: "Install Vix.cpp",
-    version: "2.5.2",
-    note: "Latest stable release",
+    version: "2.6.0",
+    note: "Latest stable release • Updated this week",
     commands: {
       unix: "curl -fsSL https://vixcpp.com/install.sh | bash",
       windows: "irm https://vixcpp.com/install.ps1 | iex",
+      brew: "brew install vixcpp/tap/vix",
     },
   },
 
   showcase: {
-    heading: "Run C++ like a modern runtime",
+    heading: "Describe a C++ app in one small file",
     subheading:
-      "Write a C++ file, run it directly, and move from prototype to real application without fighting the build system first.",
+      "Use vix.app to start real C++ projects without writing CMake configuration first.",
     visual: {
-      fileName: "main.cpp",
-      code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;vix/print.hpp&gt;</span>
+      fileName: "vix.app",
+      code: `<span class="cpp-var">name</span> = <span class="cpp-string">hello</span>
+<span class="cpp-var">type</span> = <span class="cpp-string">executable</span>
+<span class="cpp-var">standard</span> = <span class="cpp-string">c++20</span>
 
-<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
-  std::vector&lt;<span class="cpp-keyword">int</span>&gt; ports{8080, 9090, 3000};
-  vix::print(<span class="cpp-string">"Vix is ready"</span>);
+<span class="cpp-var">sources</span> = [
+  <span class="cpp-string">src/main.cpp</span>,
+]
 
-  vix::print(<span class="cpp-string">"ports:"</span>, ports);
-}`,
-      terminal: `<span class="shell-prompt">$</span> <span class="shell-cmd">vix run</span> main.cpp
-Vix is ready
-ports: [8080, 9090, 3000]`,
+<span class="cpp-var">include_dirs</span> = [
+  <span class="cpp-string">include</span>,
+]`,
+      terminal: `<span class="shell-prompt">$</span> <span class="shell-cmd">vix build</span>
+✔ Built hello
+
+<span class="shell-prompt">$</span> <span class="shell-cmd">vix run</span>
+Hello from Vix`,
     },
     content: {
-      title: "Write. Run. Ship.",
-      badge: "C++ runtime",
-      text: "Vix removes the early friction from C++ development. Start with a single file, run it directly, then grow into projects, packages, servers, realtime systems, and production binaries.",
+      title: "Start simple. Grow when needed.",
+      badge: "vix.app",
+      text: "vix.app lets you describe a C++ application with a small manifest. Vix generates the internal build project and keeps the workflow simple while staying compatible with CMake.",
       cta: {
-        label: "More about vix run",
-        to: "https://docs.vixcpp.com/modules/cli/run",
+        label: "More about vix.app",
+        to: "https://docs.vixcpp.com/vix-app/",
       },
     },
   },
@@ -168,29 +218,36 @@ ports: [8080, 9090, 3000]`,
   registryShowcase: {
     title: "Packages without the friction",
     badge: "Registry",
-    text: "Install packages from Vix Registry and use them in your C++ projects with a simple, predictable workflow.",
+    text: "Add dependencies, lock versions, install packages, and reuse cached builds with a predictable C++ workflow.",
     cta: {
       label: "Explore Vix Registry",
       to: "https://registry.vixcpp.com",
     },
     cards: {
       top: {
-        fileName: "main.cpp",
-        code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;cnerium/app/app.hpp&gt;</span>
+        fileName: "vix.app",
+        code: `<span class="cpp-var">name</span> = <span class="cpp-string">api</span>
+<span class="cpp-var">type</span> = <span class="cpp-string">executable</span>
+<span class="cpp-var">standard</span> = <span class="cpp-string">c++20</span>
 
-<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
-{
-  cnerium::app::App app;
-  app.listen(<span class="cpp-string">"127.0.0.1"</span>, <span class="cpp-type">8080</span>);
-}`,
+<span class="cpp-var">sources</span> = [
+  <span class="cpp-string">src/main.cpp</span>,
+]
+
+<span class="cpp-var">deps</span> = [
+  <span class="cpp-string">@softadastra/json</span>,
+]`,
       },
       bottom: {
         fileName: "terminal",
-        code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix install</span> <span class="shell-flag">-g</span> cnerium/app
-<span class="shell-success">✔</span> Installed cnerium/app
+        code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix add</span> @softadastra/json
+<span class="shell-success">✔</span> Added package
 
-<span class="shell-path">~$</span> <span class="shell-cmd">vix run</span> main.cpp
-<span class="shell-success">✔</span> Running on 127.0.0.1:8080`,
+<span class="shell-path">~$</span> <span class="shell-cmd">vix install</span>
+<span class="shell-success">✔</span> Dependencies installed
+
+<span class="shell-path">~$</span> <span class="shell-cmd">vix build</span>
+<span class="shell-success">✔</span> Build completed`,
       },
     },
   },
@@ -198,7 +255,7 @@ ports: [8080, 9090, 3000]`,
   templateEngine: {
     title: "Built-in template engine",
     subtitle:
-      "Render dynamic HTML from C++ with variables, loops, conditions, includes, layouts, caching, and streaming.",
+      "Render HTML from C++ with variables, conditions, loops, includes, layouts, caching, and streaming.",
     badge: "Template",
     cta: {
       label: "Read template docs",
@@ -206,31 +263,30 @@ ports: [8080, 9090, 3000]`,
     },
     cards: {
       template: {
-        fileName: "index.html",
+        fileName: "views/index.html",
         code: `<span class="tpl-tag">&lt;h1&gt;</span>{{ title }}<span class="tpl-tag">&lt;/h1&gt;</span>
 
-<span class="tpl-tag">&lt;ul&gt;</span>
-  {% for feature in features %}
-    <span class="tpl-tag">&lt;li&gt;</span>{{ feature }}<span class="tpl-tag">&lt;/li&gt;</span>
-  {% endfor %}
-<span class="tpl-tag">&lt;/ul&gt;</span>`,
+{% if user %}
+  <span class="tpl-tag">&lt;p&gt;</span>Hello {{ user.name }}<span class="tpl-tag">&lt;/p&gt;</span>
+{% endif %}
+
+{% for item in items %}
+  <span class="tpl-tag">&lt;span&gt;</span>{{ item }}<span class="tpl-tag">&lt;/span&gt;</span>
+{% endfor %}`,
       },
       cpp: {
         fileName: "main.cpp",
         code: `<span class="cpp-directive">#include</span> <span class="cpp-include">&lt;vix.hpp&gt;</span>
 <span class="cpp-keyword">using namespace</span> vix;
 
-<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>()
-{
+<span class="cpp-keyword">int</span> <span class="cpp-fn">main</span>(){
   App app;
   app.templates(<span class="cpp-string">"./views"</span>);
 
   app.get(<span class="cpp-string">"/"</span>, [](Request &, Response &res) {
-    vix::template_::Context ctx;
-    ctx.set(<span class="cpp-string">"title"</span>, <span class="cpp-string">"Template Features"</span>);
-    vix::template_::Array features;
-    features.emplace_back(<span class="cpp-string">"Built-in template engine"</span>);
-    ctx.set(<span class="cpp-string">"features"</span>, features);
+    tmpl::Context ctx;
+    ctx.set(<span class="cpp-string">"title"</span>, <span class="cpp-string">"Vix Templates"</span>);
+
     res.render(<span class="cpp-string">"index.html"</span>, ctx);
   });
 
@@ -240,30 +296,30 @@ ports: [8080, 9090, 3000]`,
     },
   },
 
-  registry: {
-    title: "A registry designed for real development",
+  releaseFocus: {
+    title: "Vix.cpp 2.6.0 expands the runtime",
     subtitle:
-      "Sync packages, lock dependencies with vix.lock, search locally, and keep your C++ workflow predictable even when connectivity is unreliable.",
-    note: "The registry supports offline-first development workflows, not just package installation.",
+      "This release makes the direction clearer: Vix is not only for web backends. It is becoming a broader runtime for C++ applications.",
+    note: "Web is one use case. The runtime is bigger.",
     ctas: [
       {
-        label: "Registry docs",
-        to: "https://registry.vixcpp.com",
+        label: "Read release notes",
+        to: "https://docs.vixcpp.com/releases/v2.6.0",
         kind: "primary",
       },
       {
-        label: "Try vix search",
-        to: "https://registry.vixcpp.com#search",
+        label: "Read the blog",
+        to: "https://blog.vixcpp.com",
         kind: "secondary",
       },
     ],
     preview: {
-      title: "registry",
-      code: `$ vix registry sync
-$ vix search jwt
-$ vix add @gk/jwt
-$ vix install
-$ cat vix.lock`,
+      title: "v2.6.0",
+      code: `$ vix new mario --template game
+$ vix agent analyze .
+$ vix build --fast
+$ vix check --san --tests
+$ vix deploy --dry-run`,
     },
   },
 
@@ -294,81 +350,84 @@ $ cat vix.lock`,
   },
 
   batteries: {
-    title: "Everything you need to build real C++ apps",
+    title: "One runtime for many C++ applications",
     subtitle:
-      "Vix gives C++ a complete application workflow: create projects, run files, generate code, check reliability, manage packages, and build networked systems.",
+      "Vix is not limited to web backends. It gives C++ a modern foundation for building services, games, AI tools, realtime apps, distributed systems, and production software.",
 
     items: [
       {
-        title: "Start a project in seconds",
-        text: "Create a Vix project, install dependencies, and start the development server with a workflow designed for fast iteration.",
-        href: "https://docs.vixcpp.com/book/06-create-your-first-project",
+        title: "Backend services",
+        text: "Build fast HTTP APIs, WebSocket services, middleware pipelines, template-rendered pages, and database-backed applications.",
+        href: "https://docs.vixcpp.com",
         preview: {
-          title: "start",
-          lines: ["$ vix new api", "$ cd api", "$ vix install", "$ vix dev"],
+          title: "backend",
+          lines: ["$ vix new api --template backend", "$ cd api", "$ vix dev"],
         },
       },
 
       {
-        title: "Run C++ like a script",
-        text: "Execute a single C++ file directly with vix run. Perfect for examples, experiments, small tools, and quick backend prototypes.",
-        href: "https://docs.vixcpp.com/cli/run",
+        title: "Games",
+        text: "Create game projects with a runtime foundation for loops, frames, scenes, assets, jobs, and export workflows.",
+        href: "https://docs.vixcpp.com/modules/game",
         preview: {
-          title: "run",
-          lines: ["$ vix run main.cpp", "$ vix run server.cpp"],
-        },
-      },
-
-      {
-        title: "Generate C++ scaffolding",
-        text: "Use vix make to generate classes, structs, functions, tests, exceptions, concepts, and runtime config files from your terminal.",
-        href: "https://docs.vixcpp.com/cli/make",
-        preview: {
-          title: "make",
+          title: "game",
           lines: [
-            "$ vix make class User",
-            "$ vix make function parse_token --in src/auth",
-            "$ vix make test AuthService",
+            "$ vix new tiny-adventure --template game",
+            "$ cd tiny-adventure",
+            "$ vix run",
           ],
         },
       },
 
       {
-        title: "Check before you ship",
-        text: "Validate projects and single files with builds, tests, runtime checks, and sanitizers using one command.",
-        href: "https://docs.vixcpp.com/cli/check",
+        title: "AI agents",
+        text: "Run local AI workflows that can analyze projects, inspect files, use memory, and work with your C++ codebase.",
+        href: "https://docs.vixcpp.com/cli/agent",
         preview: {
-          title: "check",
+          title: "agent",
           lines: [
-            "$ vix check",
-            "$ vix check --tests --run",
-            "$ vix check main.cpp --san",
+            '$ vix agent ask "Explain this code"',
+            "$ vix agent analyze .",
+            "$ vix agent scan .",
           ],
         },
       },
 
       {
-        title: "Manage C++ dependencies",
-        text: "Add, install, update, list, and remove packages with a reproducible workflow built around Vix projects and the registry.",
-        href: "https://docs.vixcpp.com/cli/add",
+        title: "Realtime systems",
+        text: "Build WebSocket and event-driven applications with runtime modules designed for long-running native services.",
+        href: "https://docs.vixcpp.com/modules/websocket",
         preview: {
-          title: "deps",
+          title: "realtime",
           lines: [
-            "$ vix add @org/package",
-            "$ vix install",
-            "$ vix update",
-            "$ vix list",
+            "$ vix new chat --template backend",
+            "$ vix dev",
+            "$ vix ws check",
           ],
         },
       },
 
       {
-        title: "Package and verify releases",
-        text: "Create distributable packages and verify package integrity before sharing or publishing your application.",
-        href: "https://docs.vixcpp.com/cli/pack",
+        title: "P2P applications",
+        text: "Use Vix foundations for peer-to-peer nodes, distributed tools, and resilient systems that can operate beyond a single server.",
+        href: "https://docs.vixcpp.com/modules/p2p",
         preview: {
-          title: "ship",
-          lines: ["$ vix pack", "$ vix verify", "$ vix cache"],
+          title: "p2p",
+          lines: ["$ vix p2p", "$ vix new node", "$ vix run"],
+        },
+      },
+
+      {
+        title: "Production services",
+        text: "Move from local development to real deployment with health checks, service management, proxy validation, logs, and deploy workflows.",
+        href: "https://docs.vixcpp.com/cli/production",
+        preview: {
+          title: "production",
+          lines: [
+            "$ vix health public",
+            "$ vix proxy nginx check",
+            "$ vix deploy --dry-run",
+          ],
         },
       },
     ],
