@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "../pages/Home.vue";
-import Install from "../pages/Install.vue";
 import Community from "../pages/Community.vue";
 import Support from "../pages/Support.vue";
 import Roadmap from "../pages/Roadmap.vue";
@@ -50,39 +49,18 @@ const routes = [
 
   {
     path: "/install",
-    name: "install",
-    component: Install,
-    meta: {
-      seo: {
-        title: "Install Vix.cpp",
-        description:
-          "Install Vix.cpp, create your first project, and start building native C++ applications.",
-        path: "/install",
-        type: "website",
-      },
+    redirect: () => {
+      window.location.href =
+        "https://docs.vixcpp.com/getting-started/installation";
+      return "/";
     },
   },
 
   {
     path: "/roadmap",
-    name: "roadmap",
-    component: Roadmap,
-    meta: {
-      seo: {
-        title: "Roadmap",
-        description:
-          "Explore the Vix.cpp roadmap: runtime direction, CLI improvements, modules, registry, tooling, and long-term platform goals.",
-        path: "/roadmap",
-        type: "website",
-        jsonLd: {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          name: "Vix.cpp Roadmap",
-          description:
-            "The public roadmap for Vix.cpp, covering runtime, CLI, modules, registry, tooling, and long-term platform direction.",
-          url: "https://vixcpp.com/roadmap",
-        },
-      },
+    redirect: () => {
+      window.location.href = "https://blog.vixcpp.com/posts/roadmap/";
+      return "/";
     },
   },
 
@@ -103,16 +81,9 @@ const routes = [
 
   {
     path: "/about/releases",
-    name: "releases",
-    component: Releases,
-    meta: {
-      seo: {
-        title: "Releases",
-        description:
-          "Read Vix.cpp release notes, version updates, and stability information.",
-        path: "/about/releases",
-        type: "website",
-      },
+    redirect: () => {
+      window.location.href = "https://blog.vixcpp.com/posts/changelog/";
+      return "/";
     },
   },
 
