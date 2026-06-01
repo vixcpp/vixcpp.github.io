@@ -217,12 +217,18 @@ function Install-Cli([string]$archivePath, [string]$tmpDir) {
     Select-Object -First 1
 
   if (-not $exeCandidate) {
-    Die "archive does not contain $BinName"
+    Die "SDK archive does not contain $BinName"
   }
 
   $exe = Join-Path $BinDir $BinName
 
-  Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
+  if (-not [string]::Equals(
+    $exeCandidate.FullName,
+    $exe,
+    [System.StringComparison]::OrdinalIgnoreCase
+  )) {
+    Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
+  }
 
   return $exe
 }

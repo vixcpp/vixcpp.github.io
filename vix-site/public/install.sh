@@ -267,9 +267,12 @@ install_sdk() {
   [ -n "$target" ] || die "could not find installed '$BIN_NAME'"
 
   chmod +x "$target"
-  ln -sf "$target" "$VIX_INSTALL_BIN_DIR/$BIN_NAME"
 
   DEST="$VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
+  if [ "$target" != "$DEST" ]; then
+    ln -sf "$target" "$DEST"
+  fi
 }
 
 detect_platform
