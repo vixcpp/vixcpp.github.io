@@ -162,10 +162,22 @@ function Download-And-Verify-Asset([string]$baseUrl, [string]$asset, [string]$tm
   $archivePath = Join-Path $tmpDir $asset
   $shaPath = Join-Path $tmpDir ($asset + ".sha256")
 
+  $assetUrl = "$baseUrl/$asset"
+  $shaUrl = "$baseUrl/$asset.sha256"
+
   Info "downloading $asset"
 
-  Invoke-WebRequest -Uri "$baseUrl/$asset" -OutFile $archivePath
-  Invoke-WebRequest -Uri "$baseUrl/$asset.sha256" -OutFile $shaPath
+  try {
+    Invoke-WebRequest -Uri $assetUrl -OutFile $archivePath
+  } catch {
+    Die "release asset not found: $asset. Check that the GitHub release contains this file: $assetUrl"
+  }
+
+  try {
+    Invoke-WebRequest -Uri $shaUrl -OutFile $shaPath
+  } catch {
+    Die "checksum file not found: $asset.sha256. Check that the GitHub release contains this file: $shaUrl"
+  }
 
   Verify-Checksum $archivePath $shaPath
 
@@ -217,8 +229,8 @@ function Install-Cli([string]$archivePath, [string]$tmpDir) {
     Select-Object -First 1
 
   if (-not $exeCandidate) {
-    Die "SDK archive does not contain $BinName"
-  }
+  Die "CLI archive does not contain $BinName"
+}
 
   $exe = Join-Path $BinDir $BinName
 
