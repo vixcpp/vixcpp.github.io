@@ -273,7 +273,13 @@ function Install-Sdk([string]$archivePath, [string]$tmpDir) {
 
   $exe = Join-Path $BinDir $BinName
 
-  Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
+  if (-not [string]::Equals(
+    $exeCandidate.FullName,
+    $exe,
+    [System.StringComparison]::OrdinalIgnoreCase
+  )) {
+    Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
+  }
 
   return $exe
 }
