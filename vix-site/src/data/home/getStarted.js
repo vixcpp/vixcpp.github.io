@@ -1,12 +1,12 @@
 export const getStarted = {
-  title: "Start building fast and reliable C++ applications",
+  title: "Start building native C++ applications with Vix.cpp",
   subtitle:
-    "Create a project, start dev mode, and begin building native backend, realtime, CLI, or systems applications with Vix.",
-  code: `vix new api
+    "Create a project, build it, run it, and grow into backend services, realtime apps, CLI tools, production systems, or package-based C++ applications with one workflow.",
+  code: `vix new api --app
 cd api
 vix build
-vix dev`,
-  note: "Start with dev mode, then move to run, package, registry, and deployment workflows as your project grows.",
+vix run`,
+  note: "Start with a simple C++ application, then add dev mode, packages, registry dependencies, tests, services, and deployment workflows as the project grows.",
   ctas: [
     { label: "Install Vix.cpp", to: "/install", kind: "primary" },
     {

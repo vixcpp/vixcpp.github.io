@@ -1,11 +1,11 @@
 export const hero = {
-  title: "A modern C++ runtime.",
+  title: "Build real applications with modern C++.",
   subtitle:
-    "Build fast native applications with a modern developer workflow. Start with a single file, then grow into HTTP services, games, AI agents, WebSocket apps, P2P nodes, databases, and offline-first sync workflows.",
+    "Vix.cpp is a modern C++ runtime and developer toolkit for building fast, reliable, production-ready applications. Start with a single C++ file, then grow into HTTP services, WebSocket apps, games, AI agents, P2P nodes, databases, package-based projects, and offline-first workflows.",
   ctas: [
-    { label: "Install", to: "/install", kind: "primary" },
+    { label: "Install Vix.cpp", to: "/install", kind: "primary" },
     {
-      label: "Get started",
+      label: "Read the docs",
       href: "https://docs.vixcpp.com",
       kind: "secondary",
       external: true,
@@ -13,12 +13,13 @@ export const hero = {
   ],
   badges: [],
   support: {
-    title: "What Vix gives you",
+    title: "What Vix.cpp gives you",
     meta: [
       "Run C++ files directly",
       "Build native applications",
       "Use runtime modules",
-      "Ship MIT-licensed apps",
+      "Manage packages with the registry",
+      "Ship MIT-licensed software",
     ],
   },
   examples: [

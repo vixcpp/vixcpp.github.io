@@ -1,8 +1,8 @@
 export const stableFoundation = {
   eyebrow: "Stable foundation",
-  title: "What Vix.cpp already provides",
+  title: "A real C++ runtime and developer toolkit",
   subtitle:
-    "Vix.cpp already includes the core pieces needed to build, run, test, package, and document modern C++ applications with less friction.",
+    "Vix.cpp already provides the foundation for creating, building, running, testing, packaging, and deploying modern native C++ applications with less friction.",
   cta: {
     label: "View the roadmap",
     to: "/roadmap",
@@ -10,23 +10,23 @@ export const stableFoundation = {
   items: [
     {
       label: "Developer workflow",
-      title: "Project workflow",
-      text: "Create projects, install dependencies, run locally, build, test, format, verify, and package C++ applications with a cleaner workflow.",
+      title: "Create, build, run, and test C++ projects",
+      text: "Start from a single C++ file or a full project, then use Vix.cpp to run locally, build targets, test code, format files, verify projects, and package applications with one workflow.",
     },
     {
       label: "Runtime foundation",
-      title: "Runtime and modules",
-      text: "Use a growing runtime foundation with modules such as async, cache, core, db, fs, json, kv, log, middleware, net, orm, p2p, process, sync, threadpool, validation, websocket, and webrpc.",
+      title: "Modules for real applications",
+      text: "Use runtime modules for HTTP, WebSocket, async, thread pools, JSON, database access, key-value storage, middleware, validation, logging, P2P, sync, processes, and production services.",
     },
     {
       label: "Registry",
-      title: "Package and registry workflow",
-      text: "Install, publish, cache, verify, and reuse Vix packages through the registry and local package store.",
+      title: "Packages and reproducible dependencies",
+      text: "Use the Vix Registry to add C++ packages, lock exact versions, install project dependencies, reuse cached package sources, and keep builds predictable across machines.",
     },
     {
-      label: "Platform",
-      title: "Application foundation",
-      text: "Build native applications, backend services, local-first systems, offline-first workflows, and production-ready tools on top of Vix.cpp.",
+      label: "Application platform",
+      title: "From local development to production",
+      text: "Build native applications, backend services, realtime systems, CLI tools, local-first software, offline-ready workflows, and production deployments on top of Vix.cpp.",
     },
   ],
 };

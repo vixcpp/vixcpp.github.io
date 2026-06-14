@@ -10,6 +10,11 @@ import HomeInstall from "@/components/home/HomeInstall.vue";
 import HomeShowcase from "@/components/home/HomeShowcase.vue";
 import HomeRegistryShowcase from "@/components/home/HomeRegistryShowcase.vue";
 import HomeTemplateEngine from "@/components/home/HomeTemplateEngine.vue";
+import HomeVixReply from "@/components/home/HomeVixReply.vue";
+import HomeRixEcosystem from "@/components/home/HomeRixEcosystem.vue";
+import HomeProductionWorkflow from "@/components/home/HomeProductionWorkflow.vue";
+import HomeCneriumReliability from "@/components/home/HomeCneriumReliability.vue";
+import HomePerformance from "@/components/home/HomePerformance.vue";
 import HomeReleaseFocus from "@/components/home/HomeReleaseFocus.vue";
 import HomeSignals from "@/components/home/HomeSignals.vue";
 import HomeStableFoundation from "@/components/home/HomeStableFoundation.vue";
@@ -45,7 +50,6 @@ onMounted(async () => {
 
     <template v-else>
       <!-- ===================== HERO ===================== -->
-
       <Hero
         v-if="HOME.hero"
         :title="HOME.hero.title"
@@ -89,6 +93,46 @@ onMounted(async () => {
 
         <div v-if="HOME.templateEngine" class="section-sep"></div>
 
+        <!-- ===================== VIX REPLY ===================== -->
+        <HomeVixReply v-if="HOME.vixReply" :vix-reply="HOME.vixReply" />
+
+        <div v-if="HOME.vixReply" class="section-sep"></div>
+
+        <!-- ===================== RIX ECOSYSTEM ===================== -->
+        <HomeRixEcosystem
+          v-if="HOME.rixEcosystem"
+          :rix-ecosystem="HOME.rixEcosystem"
+        />
+
+        <div v-if="HOME.rixEcosystem" class="section-sep"></div>
+
+        <!-- ===================== PRODUCTION WORKFLOW ===================== -->
+        <HomeProductionWorkflow
+          v-if="HOME.productionWorkflow"
+          :production-workflow="HOME.productionWorkflow"
+        />
+
+        <div v-if="HOME.productionWorkflow" class="section-sep"></div>
+
+        <!-- ===================== CNERIUM RELIABILITY ===================== -->
+
+        <HomeCneriumReliability
+          v-if="HOME.cneriumReliability"
+          :cnerium-reliability="HOME.cneriumReliability"
+        />
+
+        <div v-if="HOME.cneriumReliability" class="section-sep"></div>
+
+        <!-- ===================== PERFORMANCE ===================== -->
+
+        <HomePerformance
+          v-if="HOME.performance"
+          :performance="HOME.performance"
+        />
+
+        <div v-if="HOME.performance" class="section-sep"></div>
+
+        <!-- ===================== RELEASE FOCUS ===================== -->
         <HomeReleaseFocus
           v-if="HOME.releaseFocus"
           :release-focus="HOME.releaseFocus"

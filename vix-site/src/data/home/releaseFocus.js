@@ -1,26 +1,28 @@
 export const releaseFocus = {
-  title: "Vix.cpp 2.6.0 expands the runtime",
+  title: "Vix.cpp is growing beyond C++ web backends",
   subtitle:
-    "This release makes the direction clearer: Vix is not only for web backends. It is becoming a broader runtime for C++ applications.",
-  note: "Web is one use case. The runtime is bigger.",
+    "Vix.cpp is becoming a broader runtime and developer toolkit for native C++ applications: backend services, games, AI workflows, realtime systems, packages, and production deployment.",
+  note: "Web is one use case. Vix.cpp is a runtime foundation for modern C++ software.",
   ctas: [
     {
       label: "Read release notes",
-      to: "https://docs.vixcpp.com/releases/v2.6.0",
+      href: "https://github.com/vixcpp/vix/releases/tag/v2.6.0",
       kind: "primary",
+      external: true,
     },
     {
-      label: "Read the blog",
-      to: "https://blog.vixcpp.com",
+      label: "View the roadmap",
+      to: "/roadmap",
       kind: "secondary",
     },
   ],
   preview: {
-    title: "v2.6.0",
+    title: "Vix.cpp workflow",
     code: `$ vix new mario --template game
 $ vix agent analyze .
-$ vix build --fast
-$ vix check --san --tests
-$ vix deploy --dry-run`,
+$ vix add rix/rix
+$ vix install
+$ vix build
+$ vix run`,
   },
 };

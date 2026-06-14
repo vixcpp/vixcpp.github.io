@@ -8,6 +8,11 @@ import { signals } from "./home/signals";
 import { batteries } from "./home/batteries";
 import { getStarted } from "./home/getStarted";
 import { stableFoundation } from "./home/stableFoundation";
+import { vixReply } from "./home/vixReply";
+import { rixEcosystem } from "./home/rixEcosystem";
+import { productionWorkflow } from "./home/productionWorkflow";
+import { cneriumReliability } from "./home/cneriumReliability";
+import { performance } from "./home/performance";
 
 export const HOME = {
   hero,
@@ -15,6 +20,11 @@ export const HOME = {
   showcase,
   registryShowcase,
   templateEngine,
+  vixReply,
+  rixEcosystem,
+  productionWorkflow,
+  cneriumReliability,
+  performance,
   releaseFocus,
   signals,
   batteries,

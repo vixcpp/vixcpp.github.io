@@ -1,7 +1,7 @@
 export const registryShowcase = {
-  title: "Packages without the friction",
+  title: "A package registry for modern C++ projects",
   badge: "Registry",
-  text: "Add dependencies, lock versions, install packages, and reuse cached builds with a predictable C++ workflow.",
+  text: "Use the Vix Registry to add C++ packages, lock exact versions, install dependencies, and keep builds reproducible with the normal Vix.cpp workflow.",
   cta: {
     label: "Explore Vix Registry",
     to: "https://registry.vixcpp.com",
@@ -9,21 +9,24 @@ export const registryShowcase = {
   cards: {
     top: {
       fileName: "vix.app",
-      code: `<span class="cpp-var">name</span> = <span class="cpp-string">api</span>
-<span class="cpp-var">type</span> = <span class="cpp-string">executable</span>
-<span class="cpp-var">standard</span> = <span class="cpp-string">c++20</span>
+      code: `<span class="cpp-var">name</span> = <span class="cpp-string">"api"</span>
+<span class="cpp-var">type</span> = <span class="cpp-string">"executable"</span>
+<span class="cpp-var">standard</span> = <span class="cpp-string">"c++20"</span>
 
 <span class="cpp-var">sources</span> = [
-  <span class="cpp-string">src/main.cpp</span>,
+  <span class="cpp-string">"src/main.cpp"</span>,
 ]
 
 <span class="cpp-var">deps</span> = [
-  <span class="cpp-string">@softadastra/json</span>,
+  <span class="cpp-string">"rix/rix"</span>,
 ]`,
     },
     bottom: {
       fileName: "terminal",
-      code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix add</span> @softadastra/json
+      code: `<span class="shell-path">~$</span> <span class="shell-cmd">vix registry sync</span>
+<span class="shell-success">✔</span> Registry synchronized
+
+<span class="shell-path">~$</span> <span class="shell-cmd">vix add</span> rix/rix
 <span class="shell-success">✔</span> Added package
 
 <span class="shell-path">~$</span> <span class="shell-cmd">vix install</span>
