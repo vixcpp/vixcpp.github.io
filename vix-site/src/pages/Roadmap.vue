@@ -95,88 +95,88 @@ const ROADMAP =
         </div>
       </section>
 
-<div class="roadmap-sep"></div>
+      <div class="roadmap-sep"></div>
 
-<!-- MAIN TRACKS -->
-<section v-if="ROADMAP.tracks" class="roadmap-section">
-  <div class="container">
-    <div class="roadmap-section-head">
-      <h2>{{ ROADMAP.tracks.title }}</h2>
-    </div>
+      <!-- MAIN TRACKS -->
+      <section v-if="ROADMAP.tracks" class="roadmap-section">
+        <div class="container">
+          <div class="roadmap-section-head">
+            <h2>{{ ROADMAP.tracks.title }}</h2>
+          </div>
 
-    <div class="roadmap-grid roadmap-grid-3">
-      <article
-        v-for="item in ROADMAP.tracks.items"
-        :key="item.title"
-        class="roadmap-card compact"
-      >
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.text }}</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<div class="roadmap-sep"></div>
-
-<!-- MODULE ECOSYSTEM -->
-<section v-if="ROADMAP.modules" class="roadmap-section">
-  <div class="container">
-    <div class="roadmap-section-head">
-      <h2>{{ ROADMAP.modules.title }}</h2>
-      <p class="roadmap-section-subtitle">
-        {{ ROADMAP.modules.text }}
-      </p>
-    </div>
-
-    <div class="roadmap-module-grid">
-      <article
-        v-for="group in ROADMAP.modules.groups"
-        :key="group.title"
-        class="roadmap-module-card"
-      >
-        <h3>{{ group.title }}</h3>
-
-        <div class="roadmap-module-tags">
-          <span
-            v-for="item in group.items"
-            :key="item"
-            class="roadmap-module-tag"
-          >
-            {{ item }}
-          </span>
+          <div class="roadmap-grid roadmap-grid-3">
+            <article
+              v-for="item in ROADMAP.tracks.items"
+              :key="item.title"
+              class="roadmap-card compact"
+            >
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.text }}</p>
+            </article>
+          </div>
         </div>
-      </article>
-    </div>
-  </div>
-</section>
+      </section>
 
-<div class="roadmap-sep"></div>
+      <div class="roadmap-sep"></div>
 
-<!-- DOCS ROADMAP -->
-<section v-if="ROADMAP.docs" class="roadmap-section">
-  <div class="container">
-    <div class="roadmap-section-head">
-      <h2>{{ ROADMAP.docs.title }}</h2>
-    </div>
+      <!-- MODULE ECOSYSTEM -->
+      <section v-if="ROADMAP.modules" class="roadmap-section">
+        <div class="container">
+          <div class="roadmap-section-head">
+            <h2>{{ ROADMAP.modules.title }}</h2>
+            <p class="roadmap-section-subtitle">
+              {{ ROADMAP.modules.text }}
+            </p>
+          </div>
 
-    <div class="roadmap-grid">
-      <article
-        v-for="item in ROADMAP.docs.items"
-        :key="item.title"
-        class="roadmap-card"
-      >
-        <span :class="['roadmap-status', item.statusType]">
-          {{ item.status }}
-        </span>
+          <div class="roadmap-module-grid">
+            <article
+              v-for="group in ROADMAP.modules.groups"
+              :key="group.title"
+              class="roadmap-module-card"
+            >
+              <h3>{{ group.title }}</h3>
 
-        <h3>{{ item.title }}</h3>
+              <div class="roadmap-module-tags">
+                <span
+                  v-for="item in group.items"
+                  :key="item"
+                  class="roadmap-module-tag"
+                >
+                  {{ item }}
+                </span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-        <p>{{ item.text }}</p>
-      </article>
-    </div>
-  </div>
-</section>
+      <div class="roadmap-sep"></div>
+
+      <!-- DOCS ROADMAP -->
+      <section v-if="ROADMAP.docs" class="roadmap-section">
+        <div class="container">
+          <div class="roadmap-section-head">
+            <h2>{{ ROADMAP.docs.title }}</h2>
+          </div>
+
+          <div class="roadmap-grid">
+            <article
+              v-for="item in ROADMAP.docs.items"
+              :key="item.title"
+              class="roadmap-card"
+            >
+              <span :class="['roadmap-status', item.statusType]">
+                {{ item.status }}
+              </span>
+
+              <h3>{{ item.title }}</h3>
+
+              <p>{{ item.text }}</p>
+            </article>
+          </div>
+        </div>
+      </section>
 
       <div class="roadmap-sep"></div>
 
@@ -259,8 +259,16 @@ const ROADMAP =
   position: relative;
   padding: 96px 0 72px;
   background:
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 34%),
-    radial-gradient(circle at top right, rgba(20, 184, 166, 0.12), transparent 38%);
+    radial-gradient(
+      circle at top left,
+      rgba(34, 197, 94, 0.18),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(20, 184, 166, 0.12),
+      transparent 38%
+    );
 }
 
 .roadmap-hero-inner {
@@ -356,7 +364,11 @@ const ROADMAP =
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 22px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.015)
+    ),
     rgba(2, 13, 10, 0.72);
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
   overflow: hidden;
@@ -366,7 +378,11 @@ const ROADMAP =
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 34%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(34, 197, 94, 0.12),
+    transparent 34%
+  );
   pointer-events: none;
 }
 
@@ -542,7 +558,11 @@ const ROADMAP =
   border: 1px solid rgba(34, 197, 94, 0.16);
   border-radius: 26px;
   background:
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.16), transparent 36%),
+    radial-gradient(
+      circle at top left,
+      rgba(34, 197, 94, 0.16),
+      transparent 36%
+    ),
     rgba(255, 255, 255, 0.025);
 }
 

@@ -1,31 +1,71 @@
 <template>
   <header class="hdr" :class="{ 'hdr--scrolled': scrolled }">
     <div class="hdr-inner">
-
       <!-- Brand -->
-      <RouterLink class="brand" to="/" @click="closeMobile()" aria-label="Vix.cpp home">
-        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <RouterLink
+        class="brand"
+        to="/"
+        @click="closeMobile()"
+        aria-label="Vix.cpp home"
+      >
+        <svg
+          class="brand-mark"
+          viewBox="0 0 36 36"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
           <defs>
-            <linearGradient id="vg-left" x1="5" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#d4fcd4"/>
-              <stop offset="55%" stop-color="#4ade80"/>
-              <stop offset="100%" stop-color="#22c55e"/>
+            <linearGradient
+              id="vg-left"
+              x1="5"
+              y1="6"
+              x2="18"
+              y2="30"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stop-color="#d4fcd4" />
+              <stop offset="55%" stop-color="#4ade80" />
+              <stop offset="100%" stop-color="#22c55e" />
             </linearGradient>
-            <linearGradient id="vg-right" x1="31" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#22c55e"/>
-              <stop offset="100%" stop-color="#15803d"/>
+            <linearGradient
+              id="vg-right"
+              x1="31"
+              y1="6"
+              x2="18"
+              y2="30"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stop-color="#22c55e" />
+              <stop offset="100%" stop-color="#15803d" />
             </linearGradient>
             <filter id="vg-glow">
-              <feGaussianBlur stdDeviation="1.2" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              <feGaussianBlur stdDeviation="1.2" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
             </filter>
           </defs>
           <!-- Left arm -->
-          <polygon points="5,6 12,6 18,28 14,28" fill="url(#vg-left)" filter="url(#vg-glow)"/>
+          <polygon
+            points="5,6 12,6 18,28 14,28"
+            fill="url(#vg-left)"
+            filter="url(#vg-glow)"
+          />
           <!-- Right arm -->
-          <polygon points="31,6 24,6 18,28 22,28" fill="url(#vg-right)"/>
+          <polygon points="31,6 24,6 18,28 22,28" fill="url(#vg-right)" />
           <!-- Speed slash accent -->
-          <line x1="9" y1="16" x2="13.5" y2="29" stroke="#bbf7d0" stroke-width="1.1" stroke-linecap="round" opacity="0.7"/>
+          <line
+            x1="9"
+            y1="16"
+            x2="13.5"
+            y2="29"
+            stroke="#bbf7d0"
+            stroke-width="1.1"
+            stroke-linecap="round"
+            opacity="0.7"
+          />
         </svg>
         <span class="brand-wordmark">
           <span class="brand-name">Vix</span><span class="brand-ext">.cpp</span>
@@ -35,7 +75,6 @@
       <!-- Desktop nav -->
       <nav class="nav" aria-label="Primary">
         <template v-for="item in navItems" :key="itemKey(item)">
-
           <!-- Dropdown -->
           <div
             v-if="Array.isArray(item.items) && item.items.length"
@@ -46,25 +85,45 @@
             <button
               type="button"
               class="nav-link dd-btn"
-              :class="{ active: isActive(item) || item.items.some(isChildActive) }"
+              :class="{
+                active: isActive(item) || item.items.some(isChildActive),
+              }"
               @click="toggleDropdown(item.label)"
               :aria-expanded="String(isOpen(item.label))"
               aria-haspopup="menu"
             >
               {{ item.label }}
-              <svg class="chev" viewBox="0 0 10 6" fill="none" :class="{ flip: isOpen(item.label) }">
-                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                class="chev"
+                viewBox="0 0 10 6"
+                fill="none"
+                :class="{ flip: isOpen(item.label) }"
+              >
+                <path
+                  d="M1 1l4 4 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </button>
 
-            <div class="dd-panel" :class="{ open: isOpen(item.label) }" role="menu">
+            <div
+              class="dd-panel"
+              :class="{ open: isOpen(item.label) }"
+              role="menu"
+            >
               <template v-for="child in item.items" :key="childKey(child)">
                 <a
                   v-if="isExternal(child)"
                   class="dd-item"
                   :class="{ active: isChildActive(child) }"
                   :href="child.href"
-                  :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
+                  :target="
+                    child.target ||
+                    (isSameOrigin(child.href) ? '_self' : '_blank')
+                  "
                   rel="noreferrer"
                   @click="closeAll()"
                 >
@@ -89,9 +148,12 @@
             class="nav-link"
             :class="{ active: isActive(item) }"
             :href="item.href"
-            :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
+            :target="
+              item.target || (isSameOrigin(item.href) ? '_self' : '_blank')
+            "
             rel="noreferrer"
-          >{{ item.label }}</a>
+            >{{ item.label }}</a
+          >
 
           <!-- Internal link -->
           <RouterLink
@@ -100,8 +162,8 @@
             :class="{ active: isActive(item) }"
             :to="item.to"
             @click="closeAll()"
-          >{{ item.label }}</RouterLink>
-
+            >{{ item.label }}</RouterLink
+          >
         </template>
       </nav>
 
@@ -115,13 +177,13 @@
           aria-label="GitHub"
         >
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            <path
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            />
           </svg>
         </a>
 
-        <RouterLink class="hdr-install" to="/install">
-          Install
-        </RouterLink>
+        <RouterLink class="hdr-install" to="/install"> Install </RouterLink>
       </div>
 
       <!-- Burger -->
@@ -136,48 +198,70 @@
         <span></span>
         <span></span>
       </button>
-
     </div>
 
     <!-- Mobile panel -->
     <Transition name="mnav">
       <div v-if="mobileOpen" class="mnav">
         <template v-for="item in navItems" :key="'m-' + itemKey(item)">
-
           <!-- Dropdown group -->
-          <div v-if="Array.isArray(item.items) && item.items.length" class="mgroup">
+          <div
+            v-if="Array.isArray(item.items) && item.items.length"
+            class="mgroup"
+          >
             <button
               type="button"
               class="mlink mgroup-btn"
-              :class="{ active: isActive(item) || item.items.some(isChildActive) }"
+              :class="{
+                active: isActive(item) || item.items.some(isChildActive),
+              }"
               @click="toggleMobileGroup(item.label)"
               :aria-expanded="String(isMobileGroupOpen(item.label))"
             >
               <span>{{ item.label }}</span>
-              <svg class="chev" viewBox="0 0 10 6" fill="none" :class="{ flip: isMobileGroupOpen(item.label) }">
-                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                class="chev"
+                viewBox="0 0 10 6"
+                fill="none"
+                :class="{ flip: isMobileGroupOpen(item.label) }"
+              >
+                <path
+                  d="M1 1l4 4 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </button>
 
             <Transition name="mdd">
               <div v-if="isMobileGroupOpen(item.label)" class="mgroup-items">
-                <template v-for="child in item.items" :key="'mc-' + childKey(child)">
+                <template
+                  v-for="child in item.items"
+                  :key="'mc-' + childKey(child)"
+                >
                   <a
                     v-if="isExternal(child)"
                     class="msublink"
                     :class="{ active: isChildActive(child) }"
                     :href="child.href"
-                    :target="child.target || (isSameOrigin(child.href) ? '_self' : '_blank')"
+                    :target="
+                      child.target ||
+                      (isSameOrigin(child.href) ? '_self' : '_blank')
+                    "
                     rel="noreferrer"
                     @click="closeMobile()"
-                  >{{ child.label }}</a>
+                    >{{ child.label }}</a
+                  >
                   <RouterLink
                     v-else
                     class="msublink"
                     :class="{ active: isChildActive(child) }"
                     :to="child.to"
                     @click="closeMobile()"
-                  >{{ child.label }}</RouterLink>
+                    >{{ child.label }}</RouterLink
+                  >
                 </template>
               </div>
             </Transition>
@@ -189,10 +273,13 @@
             class="mlink"
             :class="{ active: isActive(item) }"
             :href="item.href"
-            :target="item.target || (isSameOrigin(item.href) ? '_self' : '_blank')"
+            :target="
+              item.target || (isSameOrigin(item.href) ? '_self' : '_blank')
+            "
             rel="noreferrer"
             @click="closeMobile()"
-          >{{ item.label }}</a>
+            >{{ item.label }}</a
+          >
 
           <!-- Internal -->
           <RouterLink
@@ -201,8 +288,8 @@
             :class="{ active: isActive(item) }"
             :to="item.to"
             @click="closeMobile()"
-          >{{ item.label }}</RouterLink>
-
+            >{{ item.label }}</RouterLink
+          >
         </template>
 
         <!-- Mobile CTAs -->
@@ -214,7 +301,9 @@
             rel="noreferrer"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              <path
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
             </svg>
             GitHub
           </a>
@@ -224,7 +313,6 @@
         </div>
       </div>
     </Transition>
-
   </header>
 </template>
 
@@ -238,7 +326,9 @@ const navItems = computed(() => NAV);
 
 /* Scroll state */
 const scrolled = ref(false);
-function onScroll() { scrolled.value = window.scrollY > 12; }
+function onScroll() {
+  scrolled.value = window.scrollY > 12;
+}
 onMounted(() => {
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -246,7 +336,9 @@ onMounted(() => {
 onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
 
 /* Helpers */
-function isExternal(item) { return !!item?.external || !!item?.href; }
+function isExternal(item) {
+  return !!item?.external || !!item?.href;
+}
 
 function normalizePath(p) {
   if (!p) return "";
@@ -264,9 +356,12 @@ function isActive(item) {
 }
 
 function isChildActive(child) {
-  if (child?.to) return normalizePath(route.path).startsWith(normalizePath(child.to));
+  if (child?.to)
+    return normalizePath(route.path).startsWith(normalizePath(child.to));
   if (child?.href && isSameOrigin(child.href)) {
-    const path = normalizePath(new URL(child.href, window.location.origin).pathname);
+    const path = normalizePath(
+      new URL(child.href, window.location.origin).pathname,
+    );
     const current = normalizePath(route.path);
     return current === path || current.startsWith(path + "/");
   }
@@ -277,8 +372,12 @@ function isSameOrigin(href) {
   if (!href) return false;
   if (href.startsWith("/")) return true;
   try {
-    return new URL(href, window.location.origin).origin === window.location.origin;
-  } catch { return false; }
+    return (
+      new URL(href, window.location.origin).origin === window.location.origin
+    );
+  } catch {
+    return false;
+  }
 }
 
 function itemKey(item) {
@@ -294,17 +393,32 @@ function childKey(child) {
 
 /* Desktop dropdown */
 const openKey = ref("");
-function isOpen(label) { return openKey.value === label; }
-function openDropdown(label) { openKey.value = label; }
-function closeDropdown(label) { if (openKey.value === label) openKey.value = ""; }
-function toggleDropdown(label) { openKey.value = openKey.value === label ? "" : label; }
-function closeAll() { openKey.value = ""; }
+function isOpen(label) {
+  return openKey.value === label;
+}
+function openDropdown(label) {
+  openKey.value = label;
+}
+function closeDropdown(label) {
+  if (openKey.value === label) openKey.value = "";
+}
+function toggleDropdown(label) {
+  openKey.value = openKey.value === label ? "" : label;
+}
+function closeAll() {
+  openKey.value = "";
+}
 
 function onDocClick(e) {
   if (!(e.target instanceof Element)) return;
   if (!e.target.closest(".hdr")) closeAll();
 }
-function onKey(e) { if (e.key === "Escape") { closeAll(); closeMobile(); } }
+function onKey(e) {
+  if (e.key === "Escape") {
+    closeAll();
+    closeMobile();
+  }
+}
 
 onMounted(() => {
   document.addEventListener("click", onDocClick, { passive: true });
@@ -337,7 +451,9 @@ function toggleMobileGroup(label) {
   mobileGroups.value = s;
 }
 
-function isMobileGroupOpen(label) { return mobileGroups.value.has(label); }
+function isMobileGroupOpen(label) {
+  return mobileGroups.value.has(label);
+}
 
 onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 </script>
@@ -351,7 +467,10 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   right: 0;
   z-index: 80;
   width: 100%;
-  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
   background: rgba(2, 13, 10, 0.72);
   backdrop-filter: blur(20px);
@@ -362,10 +481,14 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 .hdr--scrolled {
   background: rgba(2, 13, 10, 0.95);
   border-bottom-color: rgba(34, 197, 94, 0.14);
-  box-shadow: 0 1px 0 rgba(34, 197, 94, 0.06), 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 1px 0 rgba(34, 197, 94, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-:global(:root) { --hdr-h: 60px; }
+:global(:root) {
+  --hdr-h: 60px;
+}
 :global(main),
 :global(.main),
 :global(#app > .page) {
@@ -448,7 +571,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   background: transparent;
   border: 0;
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
   white-space: nowrap;
 }
 
@@ -505,7 +630,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   border-radius: 12px;
   background: rgba(2, 13, 10, 0.98);
   border: 1px solid rgba(34, 197, 94, 0.2);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(34, 197, 94, 0.06);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(34, 197, 94, 0.06);
   display: none;
   flex-direction: column;
   gap: 2px;
@@ -519,8 +646,14 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 }
 
 @keyframes ddIn {
-  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .dd-item {
@@ -530,7 +663,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   font-size: 0.875rem;
   color: rgba(203, 213, 225, 0.82);
   text-decoration: none;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .dd-item:hover {
@@ -562,7 +697,10 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   border: 1px solid rgba(148, 163, 184, 0.14);
   color: rgba(203, 213, 225, 0.7);
   text-decoration: none;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .hdr-github svg {
@@ -588,7 +726,10 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   color: #021a10;
   text-decoration: none;
   border: none;
-  transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.15s ease;
   box-shadow: 0 4px 14px rgba(34, 197, 94, 0.22);
 }
 
@@ -616,7 +757,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   margin-left: auto;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -631,12 +774,22 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   height: 1.5px;
   border-radius: 999px;
   background: rgba(203, 213, 225, 0.8);
-  transition: transform 0.2s ease, opacity 0.2s ease, width 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    width 0.2s ease;
 }
 
-.burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; width: 0; }
-.burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.burger.open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.burger.open span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+.burger.open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
 
 /* ===================== MOBILE PANEL ===================== */
 .mnav {
@@ -650,7 +803,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 
 .mnav-enter-active,
 .mnav-leave-active {
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .mnav-enter-from,
@@ -674,7 +829,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .mlink:hover {
@@ -699,7 +856,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 
 .mdd-enter-active,
 .mdd-leave-active {
-  transition: opacity 0.14s ease, transform 0.14s ease;
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
 }
 
 .mdd-enter-from,
@@ -715,7 +874,9 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   font-size: 0.875rem;
   color: rgba(203, 213, 225, 0.65);
   text-decoration: none;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .msublink:hover {
@@ -749,7 +910,10 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
   background: rgba(255, 255, 255, 0.03);
   flex: 1;
   justify-content: center;
-  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .mnav-github:hover {
@@ -779,9 +943,15 @@ onBeforeUnmount(() => document.documentElement.classList.remove("nav-open"));
 
 /* ===================== DESKTOP BREAKPOINT ===================== */
 @media (min-width: 900px) {
-  .burger { display: none; }
-  .nav { display: flex; }
-  .hdr-actions { display: flex; }
+  .burger {
+    display: none;
+  }
+  .nav {
+    display: flex;
+  }
+  .hdr-actions {
+    display: flex;
+  }
 }
 
 @media (max-width: 899px) {

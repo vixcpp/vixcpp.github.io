@@ -1,54 +1,120 @@
 <template>
   <footer class="ft">
     <div class="ft-inner">
-
       <!-- Left: brand + tagline -->
       <div class="ft-brand">
         <RouterLink class="ft-logo" to="/" aria-label="Vix.cpp home">
-          <svg class="ft-logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg
+            class="ft-logo-mark"
+            viewBox="0 0 36 36"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
             <defs>
-              <linearGradient id="ftg-left" x1="5" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#d4fcd4"/>
-                <stop offset="55%" stop-color="#4ade80"/>
-                <stop offset="100%" stop-color="#22c55e"/>
+              <linearGradient
+                id="ftg-left"
+                x1="5"
+                y1="6"
+                x2="18"
+                y2="30"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stop-color="#d4fcd4" />
+                <stop offset="55%" stop-color="#4ade80" />
+                <stop offset="100%" stop-color="#22c55e" />
               </linearGradient>
-              <linearGradient id="ftg-right" x1="31" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#22c55e"/>
-                <stop offset="100%" stop-color="#15803d"/>
+              <linearGradient
+                id="ftg-right"
+                x1="31"
+                y1="6"
+                x2="18"
+                y2="30"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stop-color="#22c55e" />
+                <stop offset="100%" stop-color="#15803d" />
               </linearGradient>
             </defs>
-            <polygon points="5,6 12,6 18,28 14,28" fill="url(#ftg-left)"/>
-            <polygon points="31,6 24,6 18,28 22,28" fill="url(#ftg-right)"/>
-            <line x1="9" y1="16" x2="13.5" y2="29" stroke="#bbf7d0" stroke-width="1.1" stroke-linecap="round" opacity="0.65"/>
+            <polygon points="5,6 12,6 18,28 14,28" fill="url(#ftg-left)" />
+            <polygon points="31,6 24,6 18,28 22,28" fill="url(#ftg-right)" />
+            <line
+              x1="9"
+              y1="16"
+              x2="13.5"
+              y2="29"
+              stroke="#bbf7d0"
+              stroke-width="1.1"
+              stroke-linecap="round"
+              opacity="0.65"
+            />
           </svg>
           <span class="ft-logo-wordmark">
-            <span class="ft-logo-name">Vix</span><span class="ft-logo-ext">.cpp</span>
+            <span class="ft-logo-name">Vix</span
+            ><span class="ft-logo-ext">.cpp</span>
           </span>
         </RouterLink>
-        <p class="ft-tagline">A modern C++ runtime for building fast and reliable applications.</p>
+        <p class="ft-tagline">
+          A modern C++ runtime for building fast and reliable applications.
+        </p>
       </div>
 
       <!-- Center: links -->
       <nav class="ft-nav" aria-label="Footer">
         <div class="ft-nav-group">
           <span class="ft-nav-label">Project</span>
-          <a class="ft-link" href="https://github.com/vixcpp/vix" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="ft-link" href="https://github.com/vixcpp/vix/releases" target="_blank" rel="noreferrer">Releases</a>
-          <a class="ft-link" href="https://github.com/vixcpp/vix/issues" target="_blank" rel="noreferrer">Issues</a>
+          <a
+            class="ft-link"
+            href="https://github.com/vixcpp/vix"
+            target="_blank"
+            rel="noreferrer"
+            >GitHub</a
+          >
+          <a
+            class="ft-link"
+            href="https://github.com/vixcpp/vix/releases"
+            target="_blank"
+            rel="noreferrer"
+            >Releases</a
+          >
+          <a
+            class="ft-link"
+            href="https://github.com/vixcpp/vix/issues"
+            target="_blank"
+            rel="noreferrer"
+            >Issues</a
+          >
         </div>
         <div class="ft-nav-group">
           <span class="ft-nav-label">Resources</span>
-          <a class="ft-link" href="https://docs.vixcpp.com" target="_blank" rel="noreferrer">Docs</a>
-          <a class="ft-link" href="https://registry.vixcpp.com" target="_blank" rel="noreferrer">Registry</a>
+          <a
+            class="ft-link"
+            href="https://docs.vixcpp.com"
+            target="_blank"
+            rel="noreferrer"
+            >Docs</a
+          >
+          <a
+            class="ft-link"
+            href="https://registry.vixcpp.com"
+            target="_blank"
+            rel="noreferrer"
+            >Registry</a
+          >
           <RouterLink class="ft-link" to="/install">Install</RouterLink>
         </div>
         <div class="ft-nav-group">
           <span class="ft-nav-label">Community</span>
           <RouterLink class="ft-link" to="/support">Support</RouterLink>
-          <a class="ft-link" href="https://github.com/vixcpp/vix/discussions" target="_blank" rel="noreferrer">Discussions</a>
+          <a
+            class="ft-link"
+            href="https://github.com/vixcpp/vix/discussions"
+            target="_blank"
+            rel="noreferrer"
+            >Discussions</a
+          >
         </div>
       </nav>
-
     </div>
 
     <!-- Bottom bar -->

@@ -1,6 +1,5 @@
 <template>
   <div class="support-page">
-
     <!-- Hero -->
     <div class="sp-hero">
       <div class="sp-hero-inner">
@@ -24,13 +23,18 @@
 
     <div class="sp-body">
       <div class="sp-body-inner">
-
         <!-- Impact tiers -->
         <section class="sp-section">
           <h2 class="sp-h2">What your support makes possible</h2>
-          <p class="sp-section-sub">Every amount has a direct, concrete impact on what Vix can do.</p>
+          <p class="sp-section-sub">
+            Every amount has a direct, concrete impact on what Vix can do.
+          </p>
           <div class="sp-impact-grid">
-            <div v-for="item in data.impact" :key="item.amount" class="sp-impact-card">
+            <div
+              v-for="item in data.impact"
+              :key="item.amount"
+              class="sp-impact-card"
+            >
               <div class="sp-impact-amount">{{ item.amount }}</div>
               <div class="sp-impact-label">{{ item.label }}</div>
               <div class="sp-impact-desc">{{ item.desc }}</div>
@@ -43,7 +47,10 @@
         <!-- Why it matters -->
         <section class="sp-section">
           <h2 class="sp-h2">Why support matters</h2>
-          <p class="sp-section-sub">Vix has no corporate backing, no investors, and no ad revenue. Everything depends on the community.</p>
+          <p class="sp-section-sub">
+            Vix has no corporate backing, no investors, and no ad revenue.
+            Everything depends on the community.
+          </p>
           <ul class="sp-why-list">
             <li v-for="item in data.why" :key="item" class="sp-why-item">
               <span class="sp-why-dot"></span>
@@ -59,7 +66,11 @@
           <h2 class="sp-h2">{{ data.realUsage.title }}</h2>
           <p class="sp-section-sub">{{ data.realUsage.subtitle }}</p>
           <div class="sp-projects">
-            <div v-for="p in data.realUsage.projects" :key="p.name" class="sp-project-card">
+            <div
+              v-for="p in data.realUsage.projects"
+              :key="p.name"
+              class="sp-project-card"
+            >
               <div class="sp-project-top">
                 <span class="sp-project-name">{{ p.name }}</span>
                 <span class="sp-project-tag">{{ p.tag }}</span>
@@ -74,10 +85,17 @@
         <!-- International (crypto) -->
         <section class="sp-section">
           <h2 class="sp-h2">Support from anywhere</h2>
-          <p class="sp-section-sub">Crypto contributions work globally, instantly, and with no fees or intermediaries.</p>
+          <p class="sp-section-sub">
+            Crypto contributions work globally, instantly, and with no fees or
+            intermediaries.
+          </p>
 
           <div class="sp-methods">
-            <article v-for="method in data.international" :key="method.type" class="sp-method">
+            <article
+              v-for="method in data.international"
+              :key="method.type"
+              class="sp-method"
+            >
               <div class="sp-method-top">
                 <div>
                   <div class="sp-method-label">{{ method.label }}</div>
@@ -93,11 +111,29 @@
                   class="sp-copy-btn"
                   @click="copy(method.value, method.type)"
                 >
-                  <svg v-if="copied !== method.type" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-if="copied !== method.type"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    ></path>
                   </svg>
-                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-else
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M20 6L9 17l-5-5"></path>
                   </svg>
                 </button>
@@ -116,16 +152,26 @@
         <!-- Mobile Money -->
         <section class="sp-section">
           <h2 class="sp-h2">Support via Mobile Money</h2>
-          <p class="sp-section-sub">East Africa and nearby regions — send directly via mobile payment.</p>
+          <p class="sp-section-sub">
+            East Africa and nearby regions — send directly via mobile payment.
+          </p>
 
           <div class="sp-local-methods">
-            <article v-for="method in data.local" :key="method.type" class="sp-method sp-method-local">
+            <article
+              v-for="method in data.local"
+              :key="method.type"
+              class="sp-method sp-method-local"
+            >
               <div class="sp-method-top">
                 <div>
                   <div class="sp-method-label">{{ method.label }}</div>
-                  <div v-if="method.note" class="sp-method-network">{{ method.note }}</div>
+                  <div v-if="method.note" class="sp-method-network">
+                    {{ method.note }}
+                  </div>
                 </div>
-                <span class="sp-method-badge sp-method-badge-local">Mobile</span>
+                <span class="sp-method-badge sp-method-badge-local"
+                  >Mobile</span
+                >
               </div>
 
               <div class="sp-method-address">
@@ -135,11 +181,29 @@
                   class="sp-copy-btn"
                   @click="copy(method.value, method.type || 'local')"
                 >
-                  <svg v-if="copied !== (method.type || 'local')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-if="copied !== (method.type || 'local')"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    ></path>
                   </svg>
-                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-else
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M20 6L9 17l-5-5"></path>
                   </svg>
                 </button>
@@ -156,7 +220,12 @@
           <p class="sp-section-sub">{{ data.socialProof.subtitle }}</p>
           <div class="sp-empty-card">
             <div class="sp-empty-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -173,9 +242,15 @@
         <!-- Principles -->
         <section class="sp-section">
           <h2 class="sp-h2">Principles</h2>
-          <p class="sp-section-sub">What support does — and does not — change about Vix.</p>
+          <p class="sp-section-sub">
+            What support does — and does not — change about Vix.
+          </p>
           <ul class="sp-principles">
-            <li v-for="item in data.principles" :key="item" class="sp-principle">
+            <li
+              v-for="item in data.principles"
+              :key="item"
+              class="sp-principle"
+            >
               <span class="sp-principle-check">✓</span>
               {{ item }}
             </li>
@@ -188,11 +263,7 @@
         <section class="sp-section" v-if="data.faq?.length">
           <h2 class="sp-h2">Common questions</h2>
           <div class="sp-faq">
-            <details
-              v-for="item in data.faq"
-              :key="item.q"
-              class="sp-faq-item"
-            >
+            <details v-for="item in data.faq" :key="item.q" class="sp-faq-item">
               <summary class="sp-faq-q">{{ item.q }}</summary>
               <p class="sp-faq-a">{{ item.a }}</p>
             </details>
@@ -203,10 +274,8 @@
         <footer class="sp-footnote">
           <p>{{ data.footnote }}</p>
         </footer>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -233,11 +302,15 @@ async function copy(value, type) {
     document.body.appendChild(ta);
     ta.focus();
     ta.select();
-    try { document.execCommand("copy"); } catch {}
+    try {
+      document.execCommand("copy");
+    } catch {}
     document.body.removeChild(ta);
   }
   copied.value = type;
-  setTimeout(() => { if (copied.value === type) copied.value = ""; }, 1400);
+  setTimeout(() => {
+    if (copied.value === type) copied.value = "";
+  }, 1400);
 }
 
 onMounted(() => {
@@ -374,7 +447,12 @@ onMounted(() => {
 
 .sp-sep {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.12), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.12),
+    transparent
+  );
   margin: 48px 0;
 }
 
@@ -631,7 +709,9 @@ onMounted(() => {
   border-radius: 6px;
   color: #4ade80;
   cursor: pointer;
-  transition: background 0.13s ease, transform 0.12s ease;
+  transition:
+    background 0.13s ease,
+    transform 0.12s ease;
 }
 
 .sp-copy-btn svg {

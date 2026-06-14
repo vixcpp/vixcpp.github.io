@@ -11,7 +11,11 @@ const props = defineProps({
     <div class="vix-hero-code__top">
       <span class="vix-hero-code__pill">{{ langLabel }}</span>
 
-      <button class="vix-hero-code__copy" type="button" @click="navigator.clipboard?.writeText(code)">
+      <button
+        class="vix-hero-code__copy"
+        type="button"
+        @click="navigator.clipboard?.writeText(code)"
+      >
         Copy
       </button>
     </div>

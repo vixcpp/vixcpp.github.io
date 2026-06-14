@@ -27,7 +27,9 @@ const emit = defineEmits(["refresh", "dismiss"]);
 
             <div class="pwa-toast-sub">
               {{ detail }}
-              <span v-if="version" class="pwa-toast-version">v{{ version }}</span>
+              <span v-if="version" class="pwa-toast-version"
+                >v{{ version }}</span
+              >
             </div>
           </div>
         </div>

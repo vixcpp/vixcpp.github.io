@@ -1,6 +1,5 @@
 <template>
   <div class="rl-page">
-
     <!-- Hero -->
     <div class="rl-hero">
       <div class="rl-hero-inner">
@@ -13,12 +12,27 @@
 
         <div class="rl-current">
           <div class="rl-current-left">
-            <span class="rl-current-version">v{{ d.hero.current.version }}</span>
+            <span class="rl-current-version"
+              >v{{ d.hero.current.version }}</span
+            >
             <span class="rl-current-label">{{ d.hero.current.label }}</span>
           </div>
-          <a :href="d.hero.current.href" target="_blank" rel="noreferrer" class="rl-current-link">
+          <a
+            :href="d.hero.current.href"
+            target="_blank"
+            rel="noreferrer"
+            class="rl-current-link"
+          >
             View on GitHub
-            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8h10M9 4l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </a>
         </div>
       </div>
@@ -26,7 +40,6 @@
 
     <div class="rl-body">
       <div class="rl-body-inner">
-
         <!-- Versioning tiers -->
         <section class="rl-section">
           <div class="rl-section-head">
@@ -46,8 +59,11 @@
                   <span class="rl-tier-type">{{ tier.type }}</span>
                   <span class="rl-tier-example">{{ tier.example }}</span>
                 </div>
-                <span class="rl-tier-safe" :class="tier.safe ? 'rl-safe-yes' : 'rl-safe-no'">
-                  {{ tier.safe ? 'Safe to upgrade' : 'Read migration notes' }}
+                <span
+                  class="rl-tier-safe"
+                  :class="tier.safe ? 'rl-safe-yes' : 'rl-safe-no'"
+                >
+                  {{ tier.safe ? "Safe to upgrade" : "Read migration notes" }}
                 </span>
               </div>
               <p class="rl-tier-desc">{{ tier.desc }}</p>
@@ -70,9 +86,21 @@
           </div>
 
           <div class="rl-rules">
-            <div v-for="rule in d.stability.rules" :key="rule.title" class="rl-rule">
+            <div
+              v-for="rule in d.stability.rules"
+              :key="rule.title"
+              class="rl-rule"
+            >
               <div class="rl-rule-icon">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M13 4L6.5 11 3 7.5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </div>
               <div class="rl-rule-body">
                 <div class="rl-rule-title">{{ rule.title }}</div>
@@ -92,7 +120,11 @@
           </div>
 
           <div class="rl-cadence">
-            <div v-for="item in d.cadence.items" :key="item.label" class="rl-cadence-item">
+            <div
+              v-for="item in d.cadence.items"
+              :key="item.label"
+              class="rl-cadence-item"
+            >
               <div class="rl-cadence-label">{{ item.label }}</div>
               <div class="rl-cadence-value">{{ item.value }}</div>
               <p class="rl-cadence-desc">{{ item.desc }}</p>
@@ -120,19 +152,38 @@
                   <span class="rl-entry-version">v{{ entry.version }}</span>
                   <span class="rl-entry-date">{{ entry.date }}</span>
                 </div>
-                <span class="rl-entry-kind" :class="`rl-kind-${entry.kind}`">{{ entry.kind }}</span>
+                <span class="rl-entry-kind" :class="`rl-kind-${entry.kind}`">{{
+                  entry.kind
+                }}</span>
               </div>
               <ul class="rl-entry-items">
-                <li v-for="h in entry.highlights" :key="h" class="rl-entry-item">
+                <li
+                  v-for="h in entry.highlights"
+                  :key="h"
+                  class="rl-entry-item"
+                >
                   <span class="rl-entry-dot"></span>{{ h }}
                 </li>
               </ul>
             </div>
           </div>
 
-          <a :href="d.changelog.cta.href" target="_blank" rel="noreferrer" class="rl-changelog-cta">
+          <a
+            :href="d.changelog.cta.href"
+            target="_blank"
+            rel="noreferrer"
+            class="rl-changelog-cta"
+          >
             {{ d.changelog.cta.label }}
-            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8h10M9 4l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </a>
         </section>
 
@@ -146,7 +197,11 @@
           </div>
 
           <div class="rl-upgrade-steps">
-            <div v-for="step in d.upgrade.steps" :key="step.label" class="rl-upgrade-step">
+            <div
+              v-for="step in d.upgrade.steps"
+              :key="step.label"
+              class="rl-upgrade-step"
+            >
               <div class="rl-upgrade-label">{{ step.label }}</div>
               <div class="rl-upgrade-code code-card">
                 <div class="code-head">
@@ -160,31 +215,57 @@
                     class="rl-copy"
                     @click="copy(step.label, step.code)"
                   >
-                    <svg v-if="copiedKey !== step.label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      v-if="copiedKey !== step.label"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      <path
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      ></path>
                     </svg>
-                    <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      v-else
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </button>
                 </div>
                 <div class="code-body rl-code-body">
-                  <pre class="code-pre rl-code-pre"><code>{{ step.code }}</code></pre>
+                  <pre
+                    class="code-pre rl-code-pre"
+                  ><code>{{ step.code }}</code></pre>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="rl-upgrade-note">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM8 5v3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg>
+            <svg viewBox="0 0 16 16" fill="none">
+              <path
+                d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM8 5v3.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <circle cx="8" cy="11" r="0.75" fill="currentColor" />
+            </svg>
             {{ d.upgrade.note }}
           </div>
         </section>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -208,7 +289,9 @@ async function copy(key, code) {
 </script>
 
 <style scoped>
-.rl-page { min-height: 100vh; }
+.rl-page {
+  min-height: 100vh;
+}
 
 /* ===================== HERO ===================== */
 .rl-hero {
@@ -321,7 +404,9 @@ async function copy(key, code) {
 }
 
 /* ===================== BODY ===================== */
-.rl-body { padding: 56px 0 80px; }
+.rl-body {
+  padding: 56px 0 80px;
+}
 
 .rl-body-inner {
   max-width: 1120px;
@@ -331,13 +416,26 @@ async function copy(key, code) {
 
 .rl-sep {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.12), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.12),
+    transparent
+  );
   margin: 48px 0;
 }
 
-.rl-section { display: flex; flex-direction: column; gap: 24px; }
+.rl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
-.rl-section-head { display: flex; flex-direction: column; gap: 6px; }
+.rl-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .rl-h2 {
   margin: 0;
@@ -372,9 +470,15 @@ async function copy(key, code) {
   gap: 12px;
 }
 
-.rl-tier-green { border-color: rgba(34, 197, 94, 0.18); }
-.rl-tier-blue  { border-color: rgba(56, 189, 248, 0.16); }
-.rl-tier-amber { border-color: rgba(251, 191, 36, 0.16); }
+.rl-tier-green {
+  border-color: rgba(34, 197, 94, 0.18);
+}
+.rl-tier-blue {
+  border-color: rgba(56, 189, 248, 0.16);
+}
+.rl-tier-amber {
+  border-color: rgba(251, 191, 36, 0.16);
+}
 
 .rl-tier-head {
   display: flex;
@@ -397,9 +501,15 @@ async function copy(key, code) {
   letter-spacing: -0.01em;
 }
 
-.rl-tier-green .rl-tier-type { color: #4ade80; }
-.rl-tier-blue  .rl-tier-type { color: #7dd3fc; }
-.rl-tier-amber .rl-tier-type { color: #fbbf24; }
+.rl-tier-green .rl-tier-type {
+  color: #4ade80;
+}
+.rl-tier-blue .rl-tier-type {
+  color: #7dd3fc;
+}
+.rl-tier-amber .rl-tier-type {
+  color: #fbbf24;
+}
 
 .rl-tier-example {
   font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -499,9 +609,16 @@ async function copy(key, code) {
   margin-top: 1px;
 }
 
-.rl-rule-icon svg { width: 13px; height: 13px; }
+.rl-rule-icon svg {
+  width: 13px;
+  height: 13px;
+}
 
-.rl-rule-body { display: flex; flex-direction: column; gap: 4px; }
+.rl-rule-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .rl-rule-title {
   font-size: 0.9rem;
@@ -575,7 +692,9 @@ async function copy(key, code) {
   gap: 12px;
 }
 
-.rl-entry:last-child { border-bottom: none; }
+.rl-entry:last-child {
+  border-bottom: none;
+}
 
 .rl-entry-head {
   display: flex;
@@ -609,9 +728,21 @@ async function copy(key, code) {
   border-radius: 999px;
 }
 
-.rl-kind-minor { background: rgba(56,189,248,0.1); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.2); }
-.rl-kind-patch { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
-.rl-kind-major { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+.rl-kind-minor {
+  background: rgba(56, 189, 248, 0.1);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.rl-kind-patch {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.rl-kind-major {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
 
 .rl-entry-items {
   list-style: none;
@@ -652,9 +783,17 @@ async function copy(key, code) {
   transition: color 0.13s ease;
 }
 
-.rl-changelog-cta svg { width: 14px; height: 14px; transition: transform 0.13s ease; }
-.rl-changelog-cta:hover { color: #4ade80; }
-.rl-changelog-cta:hover svg { transform: translateX(2px); }
+.rl-changelog-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.13s ease;
+}
+.rl-changelog-cta:hover {
+  color: #4ade80;
+}
+.rl-changelog-cta:hover svg {
+  transform: translateX(2px);
+}
 
 /* ===================== UPGRADE ===================== */
 .rl-upgrade-steps {
@@ -676,7 +815,10 @@ async function copy(key, code) {
   padding-left: 2px;
 }
 
-.rl-code-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.rl-code-body {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 .rl-code-pre {
   margin: 0;
@@ -700,11 +842,19 @@ async function copy(key, code) {
   border-radius: 6px;
   color: #4ade80;
   cursor: pointer;
-  transition: background 0.13s ease, transform 0.12s ease;
+  transition:
+    background 0.13s ease,
+    transform 0.12s ease;
 }
 
-.rl-copy svg { width: 12px; height: 12px; }
-.rl-copy:hover { background: rgba(34, 197, 94, 0.16); transform: translateY(-1px); }
+.rl-copy svg {
+  width: 12px;
+  height: 12px;
+}
+.rl-copy:hover {
+  background: rgba(34, 197, 94, 0.16);
+  transform: translateY(-1px);
+}
 
 .rl-upgrade-note {
   display: flex;
@@ -720,21 +870,51 @@ async function copy(key, code) {
   margin-top: 4px;
 }
 
-.rl-upgrade-note svg { width: 14px; height: 14px; color: #22c55e; flex-shrink: 0; margin-top: 2px; }
+.rl-upgrade-note svg {
+  width: 14px;
+  height: 14px;
+  color: #22c55e;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
 
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 900px) {
-  .rl-tiers { grid-template-columns: 1fr; }
-  .rl-cadence { grid-template-columns: repeat(2, 1fr); }
+  .rl-tiers {
+    grid-template-columns: 1fr;
+  }
+  .rl-cadence {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
-  .rl-hero { padding: 40px 0 36px; }
-  .rl-body { padding: 36px 0 56px; }
-  .rl-sep { margin: 32px 0; }
-  .rl-current { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .rl-current-link { border-left: none; padding-left: 0; border-top: 1px solid rgba(148, 163, 184, 0.14); padding-top: 12px; width: 100%; }
-  .rl-cadence { grid-template-columns: 1fr; }
-  .rl-entry { padding: 16px; }
+  .rl-hero {
+    padding: 40px 0 36px;
+  }
+  .rl-body {
+    padding: 36px 0 56px;
+  }
+  .rl-sep {
+    margin: 32px 0;
+  }
+  .rl-current {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .rl-current-link {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    padding-top: 12px;
+    width: 100%;
+  }
+  .rl-cadence {
+    grid-template-columns: 1fr;
+  }
+  .rl-entry {
+    padding: 16px;
+  }
 }
 </style>

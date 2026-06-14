@@ -26,7 +26,7 @@ function getSub(item) {
 <template>
   <div class="signals">
     <div
-      v-for="(item, idx) in (Array.isArray(items) ? items : [])"
+      v-for="(item, idx) in Array.isArray(items) ? items : []"
       :key="item.field || item.title || idx"
       class="signal"
     >

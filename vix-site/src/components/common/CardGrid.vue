@@ -9,11 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div
-    class="grid"
-    :class="{ dense }"
-    :style="{ '--cols': String(columns) }"
-  >
+  <div class="grid" :class="{ dense }" :style="{ '--cols': String(columns) }">
     <article
       v-for="(item, idx) in items"
       :key="item?.title || idx"
@@ -22,11 +18,7 @@ const props = defineProps({
       <h3 class="card-title">{{ item.title }}</h3>
       <p v-if="item.text" class="card-text">{{ item.text }}</p>
 
-      <slot
-        name="card"
-        :item="item"
-        :index="idx"
-      />
+      <slot name="card" :item="item" :index="idx" />
     </article>
   </div>
 </template>

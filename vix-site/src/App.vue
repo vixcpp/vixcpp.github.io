@@ -27,12 +27,12 @@
 </template>
 
 <script setup>
-import { inject, computed, onMounted, ref } from "vue";
+import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
 
-import SiteHeader from "./components/SiteHeader.vue";
-import SiteFooter from "./components/SiteFooter.vue";
-import PwaUpdateToast from "./components/PwaUpdateToast.vue";
-import PwaInstallToast from "./components/PwaInstallToast.vue";
+import SiteHeader from "./components/layout/SiteHeader.vue";
+import SiteFooter from "./components/layout/SiteFooter.vue";
+import PwaInstallToast from "./components/pwa/PwaInstallToast.vue";
+import PwaUpdateToast from "./components/pwa/PwaUpdateToast.vue";
 
 const store = inject("pwaToast");
 const showPwaToast = computed(() => store?.show?.value === true);
@@ -97,6 +97,7 @@ async function triggerInstall() {
 
 function onBeforeInstallPrompt(e) {
   e.preventDefault();
+
   deferredPrompt = e;
   canInstall.value = true;
 
@@ -119,6 +120,11 @@ function onAppInstalled() {
 onMounted(() => {
   window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
   window.addEventListener("appinstalled", onAppInstalled);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  window.removeEventListener("appinstalled", onAppInstalled);
 });
 </script>
 

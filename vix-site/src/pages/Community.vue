@@ -1,6 +1,5 @@
 <template>
   <div class="cm-page">
-
     <!-- Hero -->
     <div class="cm-hero">
       <div class="cm-hero-inner">
@@ -11,17 +10,17 @@
         <h1 class="cm-h1">{{ d.hero.title }}</h1>
         <p class="cm-sub">{{ d.hero.subtitle }}</p>
         <div class="cm-pills">
-          <span v-for="p in d.hero.pills" :key="p" class="cm-pill">{{ p }}</span>
+          <span v-for="p in d.hero.pills" :key="p" class="cm-pill">{{
+            p
+          }}</span>
         </div>
       </div>
     </div>
 
     <div class="cm-body">
       <div class="cm-body-inner">
-
         <!-- Links + Contribute -->
         <div class="cm-top-grid">
-
           <!-- Links -->
           <section class="cm-card">
             <div class="cm-card-head">
@@ -40,18 +39,73 @@
                 :class="{ 'cm-link-primary': item.primary }"
               >
                 <span class="cm-link-icon" :class="`cm-icon-${item.icon}`">
-                  <svg v-if="item.icon === 'github'" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                  <svg v-else-if="item.icon === 'issue'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  <svg v-else-if="item.icon === 'discussion'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  <svg v-else-if="item.icon === 'release'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                  <svg v-else-if="item.icon === 'docs'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  <svg
+                    v-if="item.icon === 'github'"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    />
+                  </svg>
+                  <svg
+                    v-else-if="item.icon === 'issue'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <svg
+                    v-else-if="item.icon === 'discussion'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                  <svg
+                    v-else-if="item.icon === 'release'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                  <svg
+                    v-else-if="item.icon === 'docs'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                  </svg>
                 </span>
                 <span class="cm-link-text">
                   <span class="cm-link-label">{{ item.label }}</span>
                   <span class="cm-link-desc">{{ item.desc }}</span>
                 </span>
                 <svg class="cm-link-arrow" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </a>
             </div>
@@ -72,7 +126,11 @@
             </div>
 
             <ol class="cm-steps">
-              <li v-for="step in d.contribute.steps" :key="step.n" class="cm-step">
+              <li
+                v-for="step in d.contribute.steps"
+                :key="step.n"
+                class="cm-step"
+              >
                 <span class="cm-step-n">{{ step.n }}</span>
                 <div class="cm-step-body">
                   <div class="cm-step-title">{{ step.title }}</div>
@@ -82,11 +140,18 @@
             </ol>
 
             <div class="cm-contribute-note">
-              <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM8 5v3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg>
+              <svg viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM8 5v3.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="8" cy="11" r="0.75" fill="currentColor" />
+              </svg>
               {{ d.contribute.note }}
             </div>
           </section>
-
         </div>
 
         <div class="cm-sep"></div>
@@ -109,7 +174,9 @@
             >
               <div class="cm-fc-top">
                 <span class="cm-fc-title">{{ item.title }}</span>
-                <span class="cm-fc-tag" :class="`cm-tag-${item.tagKind}`">{{ item.tag }}</span>
+                <span class="cm-fc-tag" :class="`cm-tag-${item.tagKind}`">{{
+                  item.tag
+                }}</span>
               </div>
               <p class="cm-fc-desc">{{ item.desc }}</p>
             </a>
@@ -125,7 +192,11 @@
           </div>
 
           <div class="cm-values-grid">
-            <div v-for="v in d.values.items" :key="v.title" class="cm-value-card">
+            <div
+              v-for="v in d.values.items"
+              :key="v.title"
+              class="cm-value-card"
+            >
               <div class="cm-value-title">{{ v.title }}</div>
               <p class="cm-value-desc">{{ v.desc }}</p>
             </div>
@@ -140,16 +211,18 @@
             <h2 class="cm-h2">{{ d.codeOfConduct.title }}</h2>
           </div>
           <ul class="cm-conduct-list">
-            <li v-for="item in d.codeOfConduct.items" :key="item" class="cm-conduct-item">
+            <li
+              v-for="item in d.codeOfConduct.items"
+              :key="item"
+              class="cm-conduct-item"
+            >
               <span class="cm-conduct-dot"></span>
               {{ item }}
             </li>
           </ul>
         </section>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -244,7 +317,12 @@ import { COMMUNITY_DATA as d } from "../data/community";
 
 .cm-sep {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.12), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.12),
+    transparent
+  );
   margin: 48px 0;
 }
 
@@ -304,7 +382,9 @@ import { COMMUNITY_DATA as d } from "../data/community";
   border-radius: 9px;
   border: 1px solid transparent;
   text-decoration: none;
-  transition: background 0.13s ease, border-color 0.13s ease;
+  transition:
+    background 0.13s ease,
+    border-color 0.13s ease;
   background: transparent;
 }
 
@@ -377,7 +457,9 @@ import { COMMUNITY_DATA as d } from "../data/community";
   height: 16px;
   color: rgba(148, 163, 184, 0.3);
   flex-shrink: 0;
-  transition: color 0.13s ease, transform 0.13s ease;
+  transition:
+    color 0.13s ease,
+    transform 0.13s ease;
 }
 
 .cm-link-item:hover .cm-link-arrow {
@@ -530,7 +612,9 @@ import { COMMUNITY_DATA as d } from "../data/community";
   border-radius: 12px;
   padding: 16px 18px;
   text-decoration: none;
-  transition: border-color 0.14s ease, background 0.14s ease;
+  transition:
+    border-color 0.14s ease,
+    background 0.14s ease;
 }
 
 .cm-fc-card:hover {
@@ -560,11 +644,31 @@ import { COMMUNITY_DATA as d } from "../data/community";
   flex-shrink: 0;
 }
 
-.cm-tag-green  { background: rgba(34,197,94,0.1);   color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
-.cm-tag-blue   { background: rgba(56,189,248,0.1);  color: #7dd3fc; border: 1px solid rgba(56,189,248,0.2); }
-.cm-tag-amber  { background: rgba(251,191,36,0.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-.cm-tag-purple { background: rgba(167,139,250,0.1); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.2); }
-.cm-tag-red    { background: rgba(248,113,113,0.1); color: #fca5a5; border: 1px solid rgba(248,113,113,0.2); }
+.cm-tag-green {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.cm-tag-blue {
+  background: rgba(56, 189, 248, 0.1);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.cm-tag-amber {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+.cm-tag-purple {
+  background: rgba(167, 139, 250, 0.1);
+  color: #c4b5fd;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+.cm-tag-red {
+  background: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
 
 .cm-fc-desc {
   margin: 0;

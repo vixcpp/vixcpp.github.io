@@ -1,6 +1,5 @@
 <template>
   <div class="install-page">
-
     <!-- Hero -->
     <div class="install-hero">
       <div class="install-hero-inner">
@@ -18,7 +17,8 @@
             :href="item.href"
             target="_blank"
             rel="noreferrer"
-          >{{ item.label }}</a>
+            >{{ item.label }}</a
+          >
         </div>
       </div>
     </div>
@@ -26,7 +26,6 @@
     <!-- Body: sidebar + sections -->
     <div class="install-body">
       <div class="install-body-inner">
-
         <!-- Sidebar nav -->
         <aside class="install-sidebar">
           <nav class="install-sidenav">
@@ -37,7 +36,8 @@
               :href="`#${s.id}`"
               class="install-sidenav-link"
               :class="{ active: activeId === s.id }"
-            >{{ s.title }}</a>
+              >{{ s.title }}</a
+            >
           </nav>
         </aside>
 
@@ -72,17 +72,37 @@
                   @click="copyCode(s.id, s.code)"
                   :aria-label="copiedId === s.id ? 'Copied' : 'Copy'"
                 >
-                  <svg v-if="copiedId !== s.id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-if="copiedId !== s.id"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    ></path>
                   </svg>
-                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    v-else
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M20 6L9 17l-5-5"></path>
                   </svg>
                 </button>
               </div>
               <div class="code-body install-code-body">
-                <pre class="code-pre install-code-pre"><code>{{ s.code }}</code></pre>
+                <pre
+                  class="code-pre install-code-pre"
+                ><code>{{ s.code }}</code></pre>
               </div>
             </div>
 
@@ -92,10 +112,8 @@
             </p>
           </section>
         </main>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -109,7 +127,9 @@ async function copyCode(id, code) {
   try {
     await navigator.clipboard.writeText(code);
     copiedId.value = id;
-    setTimeout(() => { copiedId.value = null; }, 1500);
+    setTimeout(() => {
+      copiedId.value = null;
+    }, 1500);
   } catch {}
 }
 
@@ -129,10 +149,10 @@ function codeLabel(s) {
 const externalLinks = computed(() => {
   const e = d.external;
   return [
-    e.docsHref    && { label: e.docsLabel,     href: e.docsHref },
+    e.docsHref && { label: e.docsLabel, href: e.docsHref },
     e.releasesHref && { label: e.releasesLabel, href: e.releasesHref },
-    e.sourceHref  && { label: e.sourceLabel,    href: e.sourceHref },
-    e.issuesHref  && { label: e.issuesLabel,    href: e.issuesHref },
+    e.sourceHref && { label: e.sourceLabel, href: e.sourceHref },
+    e.issuesHref && { label: e.issuesLabel, href: e.issuesHref },
   ].filter(Boolean);
 });
 
@@ -141,8 +161,8 @@ const activeId = ref(d.sections[0]?.id || "");
 
 let observer = null;
 onMounted(() => {
-  const ids = d.sections.map(s => s.id);
-  const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+  const ids = d.sections.map((s) => s.id);
+  const targets = ids.map((id) => document.getElementById(id)).filter(Boolean);
 
   observer = new IntersectionObserver(
     (entries) => {
@@ -153,10 +173,10 @@ onMounted(() => {
         }
       }
     },
-    { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+    { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
   );
 
-  targets.forEach(el => observer.observe(el));
+  targets.forEach((el) => observer.observe(el));
 });
 
 onBeforeUnmount(() => observer?.disconnect());
@@ -164,7 +184,7 @@ onBeforeUnmount(() => observer?.disconnect());
 
 <style scoped>
 .main {
-    padding-top: 56px !important;
+  padding-top: 56px !important;
 }
 /* ===================== PAGE ===================== */
 .install-page {
@@ -238,7 +258,10 @@ onBeforeUnmount(() => observer?.disconnect());
   text-decoration: none;
   border: 1px solid rgba(148, 163, 184, 0.16);
   background: rgba(255, 255, 255, 0.03);
-  transition: color 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background 0.14s ease,
+    border-color 0.14s ease;
 }
 
 .install-hero-link:hover {
@@ -292,7 +315,10 @@ onBeforeUnmount(() => observer?.disconnect());
   color: rgba(203, 213, 225, 0.55);
   text-decoration: none;
   border-left: 2px solid transparent;
-  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  transition:
+    color 0.14s ease,
+    border-color 0.14s ease,
+    background 0.14s ease;
   line-height: 1.4;
 }
 
@@ -398,7 +424,9 @@ onBeforeUnmount(() => observer?.disconnect());
   border-radius: 7px;
   color: #4ade80;
   cursor: pointer;
-  transition: background 0.14s ease, transform 0.12s ease;
+  transition:
+    background 0.14s ease,
+    transform 0.12s ease;
 }
 
 .install-copy svg {
@@ -512,5 +540,4 @@ onBeforeUnmount(() => observer?.disconnect());
     padding: 24px 0 28px;
   }
 }
-
 </style>

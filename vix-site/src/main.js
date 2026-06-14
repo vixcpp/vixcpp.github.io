@@ -6,7 +6,7 @@ import "./assets/styles/codeblock.css";
 import "./style.css";
 import "./main.css";
 
-import PwaUpdateToast from "./components/PwaUpdateToast.vue";
+import PwaUpdateToast from "./components/pwa/PwaUpdateToast.vue";
 
 // GitHub Pages SPA restore
 const redirect = sessionStorage.getItem("redirect");

@@ -10,11 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <section
-    class="section"
-    :class="{ alt, tight }"
-    :id="id || null"
-  >
+  <section class="section" :class="{ alt, tight }" :id="id || null">
     <div class="container">
       <header class="section-head">
         <h2 class="section-title">{{ title }}</h2>

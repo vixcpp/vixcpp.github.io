@@ -1,6 +1,5 @@
 <template>
   <div class="faq-page">
-
     <!-- Hero -->
     <div class="faq-hero">
       <div class="faq-hero-inner">
@@ -15,7 +14,6 @@
 
     <div class="faq-body">
       <div class="faq-body-inner">
-
         <!-- Category nav -->
         <aside class="faq-sidebar">
           <nav class="faq-nav">
@@ -44,7 +42,9 @@
           >
             <div class="faq-category-head">
               <h2 class="faq-h2">{{ cat.label }}</h2>
-              <span class="faq-category-count">{{ cat.questions.length }} questions</span>
+              <span class="faq-category-count"
+                >{{ cat.questions.length }} questions</span
+              >
             </div>
 
             <div class="faq-questions">
@@ -73,19 +73,47 @@
                         type="button"
                         class="faq-copy"
                         @click.stop="copy(cat.id + item.q, item.code)"
-                        :aria-label="copiedKey === cat.id + item.q ? 'Copied' : 'Copy'"
+                        :aria-label="
+                          copiedKey === cat.id + item.q ? 'Copied' : 'Copy'
+                        "
                       >
-                        <svg v-if="copiedKey !== cat.id + item.q" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        <svg
+                          v-if="copiedKey !== cat.id + item.q"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <rect
+                            x="9"
+                            y="9"
+                            width="13"
+                            height="13"
+                            rx="2"
+                          ></rect>
+                          <path
+                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                          ></path>
                         </svg>
-                        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg
+                          v-else
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
                           <path d="M20 6L9 17l-5-5"></path>
                         </svg>
                       </button>
                     </div>
                     <div class="code-body faq-code-body">
-                      <pre class="code-pre faq-code-pre"><code>{{ item.code }}</code></pre>
+                      <pre
+                        class="code-pre faq-code-pre"
+                      ><code>{{ item.code }}</code></pre>
                     </div>
                   </div>
                 </div>
@@ -97,24 +125,42 @@
           <div class="faq-footer-cta">
             <div class="faq-footer-cta-left">
               <div class="faq-footer-cta-title">Still have questions?</div>
-              <p class="faq-footer-cta-desc">Open an issue or start a discussion on GitHub. The community and maintainers are active.</p>
+              <p class="faq-footer-cta-desc">
+                Open an issue or start a discussion on GitHub. The community and
+                maintainers are active.
+              </p>
             </div>
             <div class="faq-footer-cta-actions">
-              <a href="https://github.com/vixcpp/vix/discussions" target="_blank" rel="noreferrer" class="faq-cta-link">
+              <a
+                href="https://github.com/vixcpp/vix/discussions"
+                target="_blank"
+                rel="noreferrer"
+                class="faq-cta-link"
+              >
                 GitHub Discussions
-                <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </a>
-              <a href="https://github.com/vixcpp/vix/issues" target="_blank" rel="noreferrer" class="faq-cta-link faq-cta-secondary">
+              <a
+                href="https://github.com/vixcpp/vix/issues"
+                target="_blank"
+                rel="noreferrer"
+                class="faq-cta-link faq-cta-secondary"
+              >
                 Open an issue
               </a>
             </div>
           </div>
-
         </main>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -126,9 +172,13 @@ const copiedKey = ref(null);
 const activeCategory = ref(d.categories[0]?.id || "");
 
 async function copy(key, code) {
-  try { await navigator.clipboard.writeText(code); } catch {}
+  try {
+    await navigator.clipboard.writeText(code);
+  } catch {}
   copiedKey.value = key;
-  setTimeout(() => { copiedKey.value = null; }, 1400);
+  setTimeout(() => {
+    copiedKey.value = null;
+  }, 1400);
 }
 
 function scrollTo(id) {
@@ -145,7 +195,7 @@ function onToggle(e, key) {
 let observer = null;
 onMounted(() => {
   const targets = d.categories
-    .map(c => document.getElementById(c.id))
+    .map((c) => document.getElementById(c.id))
     .filter(Boolean);
 
   observer = new IntersectionObserver(
@@ -157,17 +207,19 @@ onMounted(() => {
         }
       }
     },
-    { rootMargin: "-20% 0px -65% 0px", threshold: 0 }
+    { rootMargin: "-20% 0px -65% 0px", threshold: 0 },
   );
 
-  targets.forEach(el => observer.observe(el));
+  targets.forEach((el) => observer.observe(el));
 });
 
 onBeforeUnmount(() => observer?.disconnect());
 </script>
 
 <style scoped>
-.faq-page { min-height: 100vh; }
+.faq-page {
+  min-height: 100vh;
+}
 
 /* ===================== HERO ===================== */
 .faq-hero {
@@ -220,7 +272,9 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 
 /* ===================== BODY ===================== */
-.faq-body { padding: 48px 0 80px; }
+.faq-body {
+  padding: 48px 0 80px;
+}
 
 .faq-body-inner {
   max-width: 1120px;
@@ -265,7 +319,10 @@ onBeforeUnmount(() => observer?.disconnect());
   color: rgba(203, 213, 225, 0.55);
   text-decoration: none;
   border-left: 2px solid transparent;
-  transition: color 0.13s ease, background 0.13s ease, border-color 0.13s ease;
+  transition:
+    color 0.13s ease,
+    background 0.13s ease,
+    border-color 0.13s ease;
   cursor: pointer;
 }
 
@@ -303,7 +360,11 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 
 /* ===================== CATEGORY ===================== */
-.faq-category { display: flex; flex-direction: column; gap: 6px; }
+.faq-category {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .faq-category-head {
   display: flex;
@@ -359,7 +420,9 @@ onBeforeUnmount(() => observer?.disconnect());
   transition: background 0.12s ease;
 }
 
-.faq-q::-webkit-details-marker { display: none; }
+.faq-q::-webkit-details-marker {
+  display: none;
+}
 
 .faq-q:hover {
   background: rgba(255, 255, 255, 0.02);
@@ -388,7 +451,9 @@ onBeforeUnmount(() => observer?.disconnect());
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  transition: background 0.13s ease, border-color 0.13s ease;
+  transition:
+    background 0.13s ease,
+    border-color 0.13s ease;
 }
 
 .faq-q-icon::before,
@@ -397,7 +462,10 @@ onBeforeUnmount(() => observer?.disconnect());
   position: absolute;
   background: rgba(148, 163, 184, 0.6);
   border-radius: 999px;
-  transition: transform 0.18s ease, opacity 0.18s ease, background 0.13s ease;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease,
+    background 0.13s ease;
 }
 
 /* horizontal bar */
@@ -476,11 +544,19 @@ onBeforeUnmount(() => observer?.disconnect());
   border-radius: 6px;
   color: #4ade80;
   cursor: pointer;
-  transition: background 0.13s ease, transform 0.12s ease;
+  transition:
+    background 0.13s ease,
+    transform 0.12s ease;
 }
 
-.faq-copy svg { width: 12px; height: 12px; }
-.faq-copy:hover { background: rgba(34, 197, 94, 0.16); transform: translateY(-1px); }
+.faq-copy svg {
+  width: 12px;
+  height: 12px;
+}
+.faq-copy:hover {
+  background: rgba(34, 197, 94, 0.16);
+  transform: translateY(-1px);
+}
 
 /* ===================== FOOTER CTA ===================== */
 .faq-footer-cta {
@@ -531,9 +607,17 @@ onBeforeUnmount(() => observer?.disconnect());
   transition: background 0.13s ease;
 }
 
-.faq-cta-link svg { width: 14px; height: 14px; transition: transform 0.13s ease; }
-.faq-cta-link:hover { background: #4ade80; }
-.faq-cta-link:hover svg { transform: translateX(2px); }
+.faq-cta-link svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.13s ease;
+}
+.faq-cta-link:hover {
+  background: #4ade80;
+}
+.faq-cta-link:hover svg {
+  transform: translateX(2px);
+}
 
 .faq-cta-secondary {
   background: transparent;
@@ -584,8 +668,12 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 
 @media (max-width: 600px) {
-  .faq-hero { padding: 40px 0 36px; }
-  .faq-body { padding: 32px 0 56px; }
+  .faq-hero {
+    padding: 40px 0 36px;
+  }
+  .faq-body {
+    padding: 32px 0 56px;
+  }
 
   .faq-footer-cta {
     flex-direction: column;

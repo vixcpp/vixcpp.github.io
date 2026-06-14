@@ -50,7 +50,7 @@ function previewText(item) {
 
       <div class="grid">
         <article
-          v-for="(item, idx) in (Array.isArray(items) ? items : [])"
+          v-for="(item, idx) in Array.isArray(items) ? items : []"
           :key="item.title || idx"
           class="card"
         >
@@ -97,7 +97,9 @@ function previewText(item) {
             </div>
 
             <div class="preview-body">
-              <pre class="preview-pre"><code class="preview-code">{{ previewText(item) }}</code></pre>
+              <pre
+                class="preview-pre"
+              ><code class="preview-code">{{ previewText(item) }}</code></pre>
             </div>
           </div>
         </article>
@@ -124,7 +126,11 @@ function previewText(item) {
   pointer-events: none;
   background:
     linear-gradient(to bottom, rgba(255, 255, 255, 0.025), transparent 18%),
-    radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.08), transparent 34%);
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(34, 197, 94, 0.08),
+      transparent 34%
+    );
 }
 
 .batteries-shell {
@@ -384,14 +390,8 @@ function previewText(item) {
   min-width: 100%;
   color: #e2e8f0;
   font-family:
-    "JetBrains Mono",
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    "Liberation Mono",
-    monospace;
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
   font-size: 0.88rem;
   line-height: 1.65;
 }
