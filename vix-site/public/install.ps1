@@ -184,6 +184,69 @@ function Download-And-Verify-Asset([string]$baseUrl, [string]$asset, [string]$tm
   return $archivePath
 }
 
+function Install-SqliteDll([string]$installBin, [string]$tmpDir) {
+  $sqliteDll = Join-Path $installBin "sqlite3.dll"
+
+  if (Test-Path -LiteralPath $sqliteDll) {
+    Info "sqlite3.dll already exists"
+    return
+  }
+
+  $archRaw = $env:PROCESSOR_ARCHITECTURE
+
+  switch -Regex ($archRaw) {
+    "AMD64" {
+      $sqliteAsset = "sqlite-dll-win-x64-3530200.zip"
+    }
+    "^ARM" {
+      $sqliteAsset = "sqlite-dll-win-arm64-3530200.zip"
+    }
+    "x86" {
+      $sqliteAsset = "sqlite-dll-win-x86-3530200.zip"
+    }
+    default {
+      Warn "unsupported SQLite architecture: $archRaw"
+      return
+    }
+  }
+
+  $sqliteUrl = "https://www.sqlite.org/2026/$sqliteAsset"
+  $sqliteDir = Join-Path $tmpDir "sqlite"
+  $sqliteZip = Join-Path $sqliteDir $sqliteAsset
+
+  New-Item -ItemType Directory -Force -Path $sqliteDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $installBin | Out-Null
+
+  Info "downloading SQLite runtime $sqliteAsset"
+
+  try {
+    Invoke-WebRequest -Uri $sqliteUrl -OutFile $sqliteZip
+  } catch {
+    Die "could not download SQLite runtime: $sqliteUrl"
+  }
+
+  try {
+    Expand-Archive -LiteralPath $sqliteZip -DestinationPath $sqliteDir -Force
+  } catch {
+    Die "could not extract SQLite runtime"
+  }
+
+  $dllCandidate = Get-ChildItem -LiteralPath $sqliteDir -Recurse -File -Filter "sqlite3.dll" |
+    Select-Object -First 1
+
+  if (-not $dllCandidate) {
+    Die "SQLite archive does not contain sqlite3.dll"
+  }
+
+  Copy-Item -LiteralPath $dllCandidate.FullName -Destination $sqliteDll -Force
+
+  if (-not (Test-Path -LiteralPath $sqliteDll)) {
+    Die "sqlite3.dll was not installed to $sqliteDll"
+  }
+
+  Ok "installed sqlite3.dll"
+}
+
 function Add-To-UserPath([string]$pathToAdd) {
   $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 
@@ -315,11 +378,13 @@ try {
 
   $ArchivePath = Download-And-Verify-Asset $BaseUrl $Asset $TmpDir
 
-  if ($InstallKind.ToLowerInvariant() -eq "cli") {
+   if ($InstallKind.ToLowerInvariant() -eq "cli") {
     $Exe = Install-Cli $ArchivePath $TmpDir
   } else {
     $Exe = Install-Sdk $ArchivePath $TmpDir
   }
+
+  Install-SqliteDll $BinDir $TmpDir
 
   $PathAlreadyReady = Add-To-UserPath $BinDir
 
