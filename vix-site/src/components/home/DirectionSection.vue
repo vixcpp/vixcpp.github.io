@@ -54,77 +54,76 @@ import SectionTitle from "@/components/common/SectionTitle.vue";
 </script>
 
 <style scoped>
-.direction {
-  position: relative;
-}
-
 .direction__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 380px;
-  gap: clamp(30px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 72px);
   align-items: start;
 }
 
 .direction__text {
-  max-width: 760px;
-  margin-top: 24px;
+  margin-top: 28px;
   display: grid;
-  gap: 18px;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  gap: 20px;
 }
 
+.direction__text p {
+  color: var(--text-soft);
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.78;
+}
+
+/* Panel — sticky focus list */
 .direction__panel {
   position: sticky;
-  top: 104px;
-  padding: 28px;
+  top: 84px;
+  padding: 28px 26px;
 }
 
 .direction__label {
-  color: var(--green-soft);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--green-strong);
+  margin-bottom: 18px;
 }
 
-ul {
-  margin: 20px 0 0;
-  padding: 0;
+.direction__panel ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
   gap: 13px;
 }
 
-li {
+.direction__panel li {
   position: relative;
-  padding-left: 22px;
-  color: var(--text-soft);
+  padding-left: 24px;
+  color: var(--text);
   font-size: 0.94rem;
-  line-height: 1.55;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
-li::before {
+.direction__panel li::before {
   content: "";
   position: absolute;
-  top: 0.62em;
   left: 0;
+  top: 0.5em;
   width: 7px;
   height: 7px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: var(--green);
-  box-shadow: 0 0 18px rgba(34, 197, 94, 0.45);
 }
 
-@media (max-width: 920px) {
+@media (max-width: 860px) {
   .direction__inner {
     grid-template-columns: 1fr;
   }
-
   .direction__panel {
-    position: relative;
-    top: auto;
+    position: static;
   }
 }
 </style>

@@ -8,6 +8,7 @@
     <DifferenceSection />
     <WhatItIsNotSection />
     <WhatItIsSection />
+    <ComparisonSection />
     <RoadmapSection />
     <DirectionSection />
     <VixNoteSection />
@@ -34,6 +35,7 @@ import PicoSection from "@/components/home/PicoSection.vue";
 import EcosystemSection from "@/components/home/EcosystemSection.vue";
 import SoftadastraSection from "@/components/home/SoftadastraSection.vue";
 import ResourcesSection from "@/components/home/ResourcesSection.vue";
+import ComparisonSection from "@/components/home/ComparisonSection.vue";
 </script>
 
 <style scoped>

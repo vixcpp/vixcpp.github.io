@@ -49,53 +49,44 @@ import { site } from "@/data/site";
 </script>
 
 <style scoped>
-.install {
-  position: relative;
-}
-
 .install__inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(36px, 5vw, 72px);
   align-items: center;
 }
 
 .install__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 30px;
 }
 
+/* Panel — terminal-flavored install steps */
 .install__panel {
-  padding: 24px;
+  padding: 26px 24px;
   display: grid;
   gap: 22px;
 }
 
 .install__block {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .install__label {
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-@media (max-width: 920px) {
+@media (max-width: 860px) {
   .install__inner {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .install__actions {
-    flex-direction: column;
-    align-items: stretch;
   }
 }
 </style>

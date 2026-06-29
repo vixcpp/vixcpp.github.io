@@ -48,53 +48,71 @@
 <script setup>
 import SectionTitle from "@/components/common/SectionTitle.vue";
 </script>
-
 <style scoped>
-.is {
-  position: relative;
-}
-
 .is__inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
-  gap: clamp(30px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 72px);
   align-items: start;
 }
 
-.is__copy p {
-  max-width: 720px;
-  margin-top: 22px;
+.is__copy > p {
+  margin-top: 24px;
   color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.78;
+  max-width: 56ch;
 }
 
 .is__cards {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .is-card {
+  padding: 22px 24px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
-  padding: 24px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--speed) var(--ease),
+    box-shadow var(--speed) var(--ease);
+}
+
+.is-card:hover {
+  border-color: var(--green-line);
+  box-shadow: var(--shadow-sm);
 }
 
 .is-card h3 {
+  position: relative;
+  padding-left: 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text);
+  margin-bottom: 9px;
+}
+
+.is-card h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 4px;
+  height: 1em;
+  border-radius: 2px;
+  background: var(--green);
 }
 
 .is-card p {
-  margin-top: 10px;
   color: var(--text-soft);
-  font-size: 0.94rem;
-  line-height: 1.7;
+  font-size: 0.93rem;
+  line-height: 1.6;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .is__inner {
     grid-template-columns: 1fr;
   }

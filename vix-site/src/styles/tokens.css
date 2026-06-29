@@ -1,46 +1,59 @@
 :root {
   color-scheme: dark;
 
-  --bg: #050807;
-  --bg-soft: #07110c;
-  --bg-panel: #0a1510;
-  --bg-panel-strong: #0d1f16;
+  /* ── Backgrounds — noir neutre, pas de teinte verte ── */
+  --bg: #0a0a0a;
+  --bg-soft: #0f0f0f;
+  --bg-panel: #141414;
+  --bg-panel-strong: #1a1a1a;
+  --bg-elevated: #1f1f1f;
 
-  --text: #e5f2ea;
-  --text-soft: #b7c7bd;
-  --text-muted: #7f9187;
-  --text-faint: #52645a;
+  /* ── Text ── */
+  --text: #f0f0f0;
+  --text-soft: #a0a0a0;
+  --text-muted: #666666;
+  --text-faint: #3d3d3d;
 
-  --line: rgba(148, 163, 184, 0.12);
-  --line-strong: rgba(34, 197, 94, 0.28);
+  /* ── Borders ── */
+  --line: rgba(255, 255, 255, 0.08);
+  --line-soft: rgba(255, 255, 255, 0.05);
+  --line-strong: rgba(34, 197, 94, 0.3);
 
+  /* ── Brand green — utilisé avec parcimonie ── */
   --green: #22c55e;
   --green-soft: #4ade80;
   --green-dark: #15803d;
-  --green-faint: rgba(34, 197, 94, 0.12);
+  --green-faint: rgba(34, 197, 94, 0.08);
+  --green-glow: rgba(34, 197, 94, 0.12);
 
-  --danger: #ef4444;
-  --warning: #f59e0b;
+  /* ── Status ── */
+  --danger: #f87171;
+  --warning: #fbbf24;
 
-  --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.28);
-  --shadow-panel: 0 20px 60px rgba(0, 0, 0, 0.32);
+  /* ── Shadows ── */
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-panel: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.6);
 
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
 
+  /* ── Layout ── */
   --container: 1120px;
   --container-wide: 1240px;
 
+  /* ── Typography ── */
   --font-sans:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-
   --font-mono:
     "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
     monospace;
 
+  /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --speed: 180ms;
+  --speed: 160ms;
 }

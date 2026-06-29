@@ -35,64 +35,66 @@ import { resources } from "@/data/resources";
 </script>
 
 <style scoped>
-.resources {
-  position: relative;
-}
-
 .resources__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(30px, 5vw, 72px);
-  align-items: start;
+  max-width: 900px;
 }
 
 .resources__list {
+  margin-top: 40px;
   display: grid;
-  gap: 12px;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .resource {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: rgba(7, 17, 12, 0.58);
-  padding: 22px;
-  text-decoration: none;
-  transition:
-    transform var(--speed) var(--ease),
-    border-color var(--speed) var(--ease),
-    background var(--speed) var(--ease);
+  padding: 24px 26px;
+  background: var(--bg-panel);
+  transition: background var(--speed) var(--ease);
 }
 
 .resource:hover {
-  transform: translateY(-2px);
-  border-color: rgba(34, 197, 94, 0.32);
-  background: rgba(7, 17, 12, 0.78);
+  background: var(--bg-soft);
 }
 
 .resource h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text);
-  font-size: 1rem;
+  margin-bottom: 5px;
 }
 
 .resource p {
-  margin-top: 8px;
   color: var(--text-soft);
   font-size: 0.92rem;
-  line-height: 1.65;
+  line-height: 1.55;
 }
 
-.resource span {
-  color: var(--green-soft);
-  font-weight: 900;
+.resource > span {
   flex-shrink: 0;
+  font-size: 1.2rem;
+  color: var(--text-faint);
+  transition:
+    color var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
 }
 
-@media (max-width: 920px) {
-  .resources__inner {
-    grid-template-columns: 1fr;
+.resource:hover > span {
+  color: var(--green-strong);
+  transform: translateX(3px);
+}
+
+@media (max-width: 560px) {
+  .resource {
+    padding: 20px;
+    gap: 16px;
   }
 }
 </style>

@@ -33,35 +33,26 @@ import SectionTitle from "@/components/common/SectionTitle.vue";
 </script>
 
 <style scoped>
-.difference {
-  position: relative;
-}
-
 .difference__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 72px);
-  align-items: start;
+  max-width: 920px;
 }
 
 .difference__content {
-  border-left: 1px solid rgba(34, 197, 94, 0.28);
-  padding-left: clamp(22px, 3vw, 34px);
+  margin-top: 34px;
   display: grid;
-  gap: 18px;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  gap: 22px;
+  max-width: 760px;
 }
 
-@media (max-width: 900px) {
-  .difference__inner {
-    grid-template-columns: 1fr;
-  }
+.difference__content p {
+  color: var(--text-soft);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.8;
+}
 
-  .difference__content {
-    border-left: 0;
-    padding-left: 0;
-  }
+/* Lead-in accent on first paragraph */
+.difference__content p:first-child {
+  padding-left: 20px;
+  border-left: 2px solid var(--green-line);
 }
 </style>

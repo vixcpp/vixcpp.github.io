@@ -113,9 +113,10 @@ const profiles = [
 
 .sdks-hero__commands {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 30px;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+  max-width: 480px;
 }
 
 .profiles__inner {
@@ -127,32 +128,40 @@ const profiles = [
 .profile-card {
   display: flex;
   flex-direction: column;
-  min-height: 260px;
+  min-height: 250px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-xs);
   padding: 22px;
+  transition:
+    border-color var(--speed) var(--ease),
+    box-shadow var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
+}
+.profile-card:hover {
+  border-color: var(--green-line);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
 .profile-card__name {
   width: fit-content;
-  border: 1px solid rgba(34, 197, 94, 0.22);
+  border: 1px solid var(--green-line);
   border-radius: 999px;
-  background: rgba(34, 197, 94, 0.08);
-  padding: 0.35rem 0.65rem;
-  color: var(--green-soft);
+  background: var(--green-tint);
+  padding: 0.3rem 0.7rem;
+  color: var(--green-strong);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.76rem;
+  font-weight: 600;
 }
 
 .profile-card p {
   margin-top: 16px;
   color: var(--text-soft);
   font-size: 0.92rem;
-  line-height: 1.65;
+  line-height: 1.62;
 }
 
 .profile-card :deep(.cmd) {
@@ -176,7 +185,7 @@ const profiles = [
 .sdk-notes__panel p {
   color: var(--text-soft);
   font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 @media (max-width: 1040px) {
@@ -193,9 +202,8 @@ const profiles = [
 
 @media (max-width: 640px) {
   .sdks-hero__commands {
-    flex-direction: column;
+    max-width: 100%;
   }
-
   .profiles__inner {
     grid-template-columns: 1fr;
   }

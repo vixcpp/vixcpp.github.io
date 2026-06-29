@@ -45,66 +45,52 @@ import SectionTitle from "@/components/common/SectionTitle.vue";
 </script>
 
 <style scoped>
-.purpose {
-  position: relative;
-}
-
 .purpose__inner {
-  display: grid;
-  gap: 36px;
+  max-width: 1000px;
 }
 
 .purpose__grid {
+  margin-top: 44px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .purpose-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
-  padding: 24px;
+  padding: 30px 26px;
+  background: var(--bg-panel);
+  transition: background var(--speed) var(--ease);
 }
 
-.purpose-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(34, 197, 94, 0.45),
-    transparent
-  );
+.purpose-card:hover {
+  background: var(--bg-soft);
 }
 
 .purpose-card__index {
-  color: var(--green-soft);
+  display: inline-block;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--green-strong);
+  margin-bottom: 16px;
 }
 
 .purpose-card h3 {
-  margin-top: 18px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 11px;
+  line-height: 1.25;
 }
 
 .purpose-card p {
-  margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.75;
-}
-
-@media (max-width: 900px) {
-  .purpose__grid {
-    grid-template-columns: 1fr;
-  }
+  line-height: 1.65;
 }
 </style>

@@ -145,24 +145,25 @@ import { links } from "@/data/links";
 }
 
 .security-card__label {
-  color: var(--green-soft);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--green-strong);
 }
 
 .security-card h2 {
-  margin-top: 14px;
-  font-size: clamp(1.45rem, 2.6vw, 2.2rem);
-  line-height: 1.08;
+  margin-top: 12px;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.1;
 }
 
 .security-card p:not(.security-card__label) {
-  margin-top: 14px;
+  margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 .security-flow__inner {
@@ -174,7 +175,7 @@ import { links } from "@/data/links";
 
 .security-flow__panel {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   padding: clamp(24px, 4vw, 38px);
 }
 
@@ -182,7 +183,7 @@ import { links } from "@/data/links";
   margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.96rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 .security-notes__panel {
@@ -190,7 +191,7 @@ import { links } from "@/data/links";
 }
 
 .security-notes__panel h2 {
-  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
 }
 
 .security-notes__panel p {
@@ -198,20 +199,20 @@ import { links } from "@/data/links";
   margin-top: 16px;
   color: var(--text-soft);
   font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 .security-notes__panel a {
   display: inline-flex;
-  margin-top: 24px;
-  color: var(--green-soft);
+  margin-top: 22px;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
-  font-weight: 850;
+  font-weight: 600;
+  color: var(--green-strong);
   text-decoration: none;
 }
-
 .security-notes__panel a:hover {
-  color: #bbf7d0;
+  color: var(--green);
 }
 
 @media (max-width: 980px) {

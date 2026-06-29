@@ -40,80 +40,77 @@ import { ecosystem } from "@/data/ecosystem";
 </script>
 
 <style scoped>
-.ecosystem {
-  position: relative;
-}
-
 .ecosystem__inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(30px, 5vw, 72px);
-  align-items: start;
+  gap: 44px;
 }
 
-.ecosystem__copy p {
-  max-width: 680px;
+.ecosystem__copy {
+  max-width: 720px;
+}
+
+.ecosystem__copy > p {
   margin-top: 22px;
   color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.78;
+  max-width: 60ch;
 }
 
 .ecosystem__grid {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .eco-card {
   position: relative;
-  overflow: hidden;
+  display: block;
+  padding: 24px 22px 48px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
-  padding: 22px 48px 22px 22px;
-  text-decoration: none;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-xs);
   transition:
-    transform var(--speed) var(--ease),
     border-color var(--speed) var(--ease),
-    background var(--speed) var(--ease);
+    box-shadow var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
 }
 
 .eco-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(34, 197, 94, 0.32);
-  background:
-    linear-gradient(180deg, rgba(34, 197, 94, 0.06), transparent),
-    rgba(7, 17, 12, 0.78);
+  border-color: var(--green-line);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
 }
 
 .eco-card__name {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text);
-  font-size: 1.02rem;
-  font-weight: 850;
-  letter-spacing: -0.03em;
+  margin-bottom: 9px;
 }
 
 .eco-card p {
-  margin-top: 8px;
   color: var(--text-soft);
   font-size: 0.92rem;
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 .eco-card__arrow {
   position: absolute;
-  top: 22px;
-  right: 22px;
-  color: var(--green-soft);
-  font-weight: 900;
-  opacity: 0.8;
+  left: 22px;
+  bottom: 20px;
+  font-size: 1.05rem;
+  color: var(--text-faint);
+  transition:
+    color var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
 }
 
-@media (max-width: 920px) {
-  .ecosystem__inner {
-    grid-template-columns: 1fr;
-  }
+.eco-card:hover .eco-card__arrow {
+  color: var(--green-strong);
+  transform: translateX(3px);
 }
 </style>

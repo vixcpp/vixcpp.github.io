@@ -106,27 +106,28 @@ import { site } from "@/data/site";
 }
 
 .install-card__label {
-  color: var(--green-soft);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--green-strong);
 }
 
 .install-card h2 {
-  margin-top: 14px;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin-top: 12px;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
 }
 
 .install-card p:not(.install-card__label) {
-  margin-top: 14px;
+  margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.98rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 .install-card :deep(.cmd) {
-  margin-top: 22px;
+  margin-top: 20px;
 }
 
 .sdk-flow__inner {
@@ -138,7 +139,7 @@ import { site } from "@/data/site";
 
 .sdk-flow__panel {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   padding: clamp(24px, 4vw, 36px);
 }
 
@@ -146,7 +147,7 @@ import { site } from "@/data/site";
   margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.96rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 @media (max-width: 900px) {

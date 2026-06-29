@@ -40,30 +40,27 @@ import { images } from "@/data/images";
 </script>
 
 <style scoped>
-.roadmap {
-  position: relative;
-}
-
 .roadmap__image {
-  margin-top: 42px;
+  margin-top: 44px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .roadmap__text {
-  max-width: 900px;
-  margin: 34px auto 0;
+  max-width: 820px;
+  margin: 36px auto 0;
   display: grid;
   gap: 18px;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
   text-align: center;
 }
 
-@media (max-width: 720px) {
-  .roadmap__image {
-    margin-top: 30px;
-  }
+.roadmap__text p {
+  color: var(--text-soft);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.78;
+}
 
+@media (max-width: 720px) {
   .roadmap__text {
     text-align: left;
   }

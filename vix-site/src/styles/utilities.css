@@ -8,6 +8,7 @@
   margin-inline: auto;
 }
 
+/* ── Sections ── */
 .section {
   padding: clamp(72px, 10vw, 128px) 0;
 }
@@ -16,46 +17,46 @@
   padding: clamp(48px, 7vw, 88px) 0;
 }
 
+/* ── Typography helpers ── */
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   color: var(--green-soft);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .lead {
   color: var(--text-soft);
-  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
   line-height: 1.75;
 }
 
 .muted {
   color: var(--text-muted);
 }
-
 .faint {
   color: var(--text-faint);
 }
 
+/* ── Panels ── */
 .panel {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(10, 21, 16, 0.72);
+  background: var(--bg-panel);
   box-shadow: var(--shadow-panel);
 }
 
 .panel-soft {
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-soft);
   border-radius: var(--radius-lg);
-  background: rgba(7, 17, 12, 0.62);
+  background: var(--bg-soft);
 }
 
+/* ── Glow line accent ── */
 .glow-line {
   position: relative;
 }
@@ -68,43 +69,56 @@
   background: linear-gradient(
     180deg,
     transparent,
-    rgba(34, 197, 94, 0.5),
+    rgba(34, 197, 94, 0.45),
     transparent
   );
 }
 
+/* ── Grids ── */
 .grid-2 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 56px);
+  gap: clamp(20px, 3.5vw, 48px);
 }
 
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
+/* ── Image frame ── */
 .image-frame {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   background: var(--bg-panel);
   box-shadow: var(--shadow-soft);
 }
 
+/* ── Command pill ── */
 .command {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(34, 197, 94, 0.22);
+  gap: 0.5rem;
+  border: 1px solid rgba(34, 197, 94, 0.18);
   border-radius: 999px;
-  background: rgba(34, 197, 94, 0.08);
-  padding: 0.45rem 0.75rem;
+  background: rgba(34, 197, 94, 0.06);
+  padding: 0.4rem 0.8rem;
   color: var(--green-soft);
   font-family: var(--font-mono);
-  font-size: 0.86rem;
+  font-size: 0.84rem;
 }
 
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--line);
+  border: none;
+  margin: 0;
+}
+
+/* ── Accessibility ── */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -114,6 +128,7 @@
   white-space: nowrap;
 }
 
+/* ── Responsive grids ── */
 @media (max-width: 860px) {
   .grid-2,
   .grid-3 {

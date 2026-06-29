@@ -22,32 +22,21 @@
 <script setup>
 import SectionTitle from "@/components/common/SectionTitle.vue";
 </script>
-
 <style scoped>
-.not {
-  position: relative;
-}
-
 .not__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 72px);
-  align-items: center;
+  max-width: 900px;
 }
 
 .not__panel {
-  padding: clamp(24px, 4vw, 38px);
+  margin-top: 32px;
+  padding: 28px 30px;
+  border-left: 3px solid var(--green);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
 .not__panel p {
   color: var(--text-soft);
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  line-height: 1.85;
-}
-
-@media (max-width: 900px) {
-  .not__inner {
-    grid-template-columns: 1fr;
-  }
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.78;
 }
 </style>

@@ -147,7 +147,7 @@ import { links } from "@/data/links";
 .mission__panel p {
   color: var(--text-soft);
   font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 .principles__inner {
@@ -158,23 +158,46 @@ import { links } from "@/data/links";
 .principles__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .principle-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
-  padding: 24px;
+  padding: 26px 24px;
+  background: var(--bg-panel);
+  transition: background var(--speed) var(--ease);
+}
+.principle-card:hover {
+  background: var(--bg-soft);
+}
+
+.principle-card h3 {
+  position: relative;
+  padding-left: 16px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.principle-card h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 4px;
+  height: 1em;
+  border-radius: 2px;
+  background: var(--green);
 }
 
 .principle-card p {
   margin-top: 10px;
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.7;
+  line-height: 1.68;
 }
 
 .about-links__panel {
@@ -189,30 +212,32 @@ import { links } from "@/data/links";
   max-width: 560px;
   color: var(--text-soft);
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 .about-links__items {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 9px;
 }
 
 .about-links__items a {
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  border: 1px solid var(--green-line);
   border-radius: 999px;
-  background: rgba(34, 197, 94, 0.07);
-  padding: 0.55rem 0.78rem;
-  color: var(--green-soft);
-  font-size: 0.82rem;
-  font-weight: 800;
+  background: var(--green-tint);
+  padding: 0.5rem 0.85rem;
+  color: var(--green-strong);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
   text-decoration: none;
+  transition:
+    background var(--speed) var(--ease),
+    border-color var(--speed) var(--ease);
 }
-
 .about-links__items a:hover {
-  border-color: rgba(34, 197, 94, 0.42);
-  background: rgba(34, 197, 94, 0.12);
-  color: #bbf7d0;
+  border-color: var(--green);
+  background: var(--green-tint-2);
 }
 
 @media (max-width: 920px) {
@@ -220,7 +245,6 @@ import { links } from "@/data/links";
   .principles__grid {
     grid-template-columns: 1fr;
   }
-
   .about-links__panel {
     align-items: flex-start;
     flex-direction: column;

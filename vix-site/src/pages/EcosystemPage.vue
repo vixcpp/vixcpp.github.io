@@ -110,6 +110,7 @@ import { links } from "@/data/links";
 import { ecosystem } from "@/data/ecosystem";
 </script>
 
+<
 <style scoped>
 .ecosystem-page {
   overflow: hidden;
@@ -134,49 +135,52 @@ import { ecosystem } from "@/data/ecosystem";
 
 .project-card {
   position: relative;
-  min-height: 240px;
+  min-height: 230px;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-xs);
   padding: 24px;
   text-decoration: none;
   transition:
     transform var(--speed) var(--ease),
     border-color var(--speed) var(--ease),
-    background var(--speed) var(--ease);
+    box-shadow var(--speed) var(--ease);
 }
-
 .project-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(34, 197, 94, 0.32);
-  background:
-    linear-gradient(180deg, rgba(34, 197, 94, 0.06), transparent),
-    rgba(7, 17, 12, 0.78);
+  transform: translateY(-3px);
+  border-color: var(--green-line);
+  box-shadow: var(--shadow-md);
 }
 
 .project-card__name {
   color: var(--text);
   font-size: 1.08rem;
-  font-weight: 850;
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .project-card p {
   margin-top: 12px;
   color: var(--text-soft);
   font-size: 0.92rem;
-  line-height: 1.68;
+  line-height: 1.65;
 }
 
 .project-card__arrow {
   margin-top: auto;
-  color: var(--green-soft);
+  padding-top: 16px;
+  color: var(--text-faint);
   font-size: 1.2rem;
-  font-weight: 900;
+  transition:
+    color var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
+}
+.project-card:hover .project-card__arrow {
+  color: var(--green-strong);
+  transform: translateX(3px);
 }
 
 .ecosystem-model__inner {
@@ -197,21 +201,21 @@ import { ecosystem } from "@/data/ecosystem";
   padding: 20px 24px;
   border-bottom: 1px solid var(--line);
 }
-
 .model-row:last-child {
   border-bottom: 0;
 }
 
 .model-row span {
-  color: var(--green-soft);
+  color: var(--green-strong);
+  font-family: var(--font-mono);
   font-size: 0.85rem;
-  font-weight: 850;
+  font-weight: 700;
 }
 
 .model-row p {
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.7;
+  line-height: 1.68;
 }
 
 .ecosystem-rule__panel {
@@ -222,14 +226,13 @@ import { ecosystem } from "@/data/ecosystem";
   max-width: 900px;
   color: var(--text-soft);
   font-size: clamp(1.05rem, 1.45vw, 1.2rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 @media (max-width: 1040px) {
   .ecosystem-grid__inner {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
   .ecosystem-model__inner {
     grid-template-columns: 1fr;
   }
@@ -240,11 +243,9 @@ import { ecosystem } from "@/data/ecosystem";
     flex-direction: column;
     align-items: stretch;
   }
-
   .ecosystem-grid__inner {
     grid-template-columns: 1fr;
   }
-
   .model-row {
     grid-template-columns: 1fr;
     gap: 8px;

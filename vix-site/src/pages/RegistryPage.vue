@@ -124,22 +124,23 @@ import { links } from "@/data/links";
 }
 
 .flow-card__label {
-  color: var(--green-soft);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--green-strong);
 }
 
 .flow-card h2 {
-  font-size: clamp(1.45rem, 2.6vw, 2.2rem);
-  line-height: 1.08;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.1;
 }
 
 .flow-card p:not(.flow-card__label) {
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.75;
+  line-height: 1.72;
 }
 
 .flow-card :deep(.cmd) {
@@ -162,7 +163,7 @@ import { links } from "@/data/links";
 .registry-design__panel p {
   color: var(--text-soft);
   font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 @media (max-width: 980px) {

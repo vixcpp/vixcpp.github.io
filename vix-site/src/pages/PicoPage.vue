@@ -127,44 +127,54 @@ import { links } from "@/data/links";
 .pico-purpose__panel p {
   color: var(--text-soft);
   font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+  line-height: 1.82;
 }
 
 .pico-model__inner {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .model-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(7, 17, 12, 0.62);
-  padding: 24px;
+  padding: 26px 24px;
+  background: var(--bg-panel);
+  transition: background var(--speed) var(--ease);
+}
+.model-card:hover {
+  background: var(--bg-soft);
 }
 
 .model-card span {
-  color: var(--green-soft);
+  color: var(--green-strong);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .model-card h3 {
-  margin-top: 18px;
+  margin-top: 16px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .model-card p {
   margin-top: 10px;
   color: var(--text-soft);
   font-size: 0.94rem;
-  line-height: 1.7;
+  line-height: 1.68;
 }
 
 @media (max-width: 920px) {
-  .pico-purpose__inner,
+  .pico-purpose__inner {
+    grid-template-columns: 1fr;
+  }
   .pico-model__inner {
     grid-template-columns: 1fr;
   }

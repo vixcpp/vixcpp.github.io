@@ -30,5 +30,6 @@ export const links = {
   pico: "https://pico.vixcpp.com",
   cnerium: "https://cnerium.dev",
   kordex: "https://kordex.softadastra.com",
+
   softadastra: "https://softadastra.com",
 };

@@ -41,7 +41,7 @@ import { links } from "@/data/links";
 }
 
 .not-found {
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 60px);
   display: grid;
   place-items: center;
   padding-top: clamp(72px, 10vw, 128px);
@@ -54,14 +54,14 @@ import { links } from "@/data/links";
 }
 
 .not-found__mark {
-  margin-bottom: 22px;
-  color: rgba(34, 197, 94, 0.2);
+  margin-bottom: 18px;
   font-family: var(--font-mono);
-  font-size: clamp(4rem, 14vw, 11rem);
-  font-weight: 900;
+  font-size: clamp(4rem, 14vw, 10rem);
+  font-weight: 800;
   line-height: 0.9;
-  letter-spacing: -0.08em;
-  text-shadow: 0 0 80px rgba(34, 197, 94, 0.12);
+  letter-spacing: -0.06em;
+  color: var(--green);
+  opacity: 0.18;
 }
 
 .not-found__actions {
@@ -69,7 +69,7 @@ import { links } from "@/data/links";
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
 @media (max-width: 640px) {

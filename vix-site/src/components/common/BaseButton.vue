@@ -7,13 +7,12 @@
     target="_blank"
     rel="noreferrer"
   >
-    <span><slot /></span>
-    <span v-if="arrow" class="btn-arrow" aria-hidden="true">→</span>
+    <span class="btn__label"><slot /></span>
+    <span v-if="arrow" class="btn__arrow" aria-hidden="true">→</span>
   </a>
-
   <RouterLink v-else class="btn" :class="[`btn--${variant}`]" :to="href">
-    <span><slot /></span>
-    <span v-if="arrow" class="btn-arrow" aria-hidden="true">→</span>
+    <span class="btn__label"><slot /></span>
+    <span v-if="arrow" class="btn__arrow" aria-hidden="true">→</span>
   </RouterLink>
 </template>
 
@@ -21,92 +20,81 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  href: {
-    type: String,
-    required: true,
-  },
+  href: { type: String, required: true },
   variant: {
     type: String,
     default: "primary",
-    validator: (value) => ["primary", "secondary", "ghost"].includes(value),
+    validator: (v) => ["primary", "secondary", "ghost"].includes(v),
   },
-  external: {
-    type: Boolean,
-    default: false,
-  },
-  arrow: {
-    type: Boolean,
-    default: false,
-  },
+  external: { type: Boolean, default: false },
+  arrow: { type: Boolean, default: false },
 });
 
-const isExternalHref = computed(() => {
-  return props.href.startsWith("http://") || props.href.startsWith("https://");
-});
+const isExternalHref = computed(
+  () => props.href.startsWith("http://") || props.href.startsWith("https://"),
+);
 </script>
 
 <style scoped>
 .btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  min-height: 44px;
-  padding: 0.72rem 1rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 750;
-  line-height: 1;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
+  border: 1px solid transparent;
   transition:
-    transform var(--speed) var(--ease),
-    border-color var(--speed) var(--ease),
     background var(--speed) var(--ease),
-    color var(--speed) var(--ease);
+    border-color var(--speed) var(--ease),
+    color var(--speed) var(--ease),
+    transform var(--speed) var(--ease),
+    box-shadow var(--speed) var(--ease);
 }
 
-.btn:hover {
+/* Primary — solid green */
+.btn--primary {
+  background: var(--green);
+  color: #fff;
+  box-shadow: var(--shadow-green);
+}
+.btn--primary:hover {
+  background: var(--green-strong);
+  color: #fff;
   transform: translateY(-1px);
 }
 
-.btn--primary {
-  border: 1px solid rgba(34, 197, 94, 0.55);
-  background: linear-gradient(180deg, #35d56d, #16a34a);
-  color: #031108;
-  box-shadow: 0 12px 36px rgba(34, 197, 94, 0.18);
-}
-
-.btn--primary:hover {
-  color: #031108;
-  border-color: rgba(167, 243, 208, 0.85);
-}
-
+/* Secondary — outlined */
 .btn--secondary {
-  border: 1px solid rgba(34, 197, 94, 0.22);
-  background: rgba(34, 197, 94, 0.08);
-  color: var(--green-soft);
+  background: var(--bg-panel);
+  border-color: var(--line-strong);
+  color: var(--text);
 }
-
 .btn--secondary:hover {
-  border-color: rgba(34, 197, 94, 0.42);
-  background: rgba(34, 197, 94, 0.12);
-  color: #bbf7d0;
+  border-color: var(--green-line);
+  color: var(--green-strong);
+  transform: translateY(-1px);
 }
 
+/* Ghost — bare */
 .btn--ghost {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.025);
+  background: transparent;
+  border-color: transparent;
   color: var(--text-soft);
 }
-
 .btn--ghost:hover {
-  border-color: rgba(148, 163, 184, 0.22);
-  background: rgba(255, 255, 255, 0.045);
+  background: var(--bg-sunken);
   color: var(--text);
 }
 
-.btn-arrow {
-  transform: translateY(-0.5px);
-  opacity: 0.85;
+.btn__arrow {
+  opacity: 0.75;
+  transition: transform var(--speed) var(--ease);
+}
+.btn:hover .btn__arrow {
+  transform: translateX(2px);
 }
 </style>

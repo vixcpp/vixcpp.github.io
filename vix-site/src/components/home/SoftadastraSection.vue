@@ -30,68 +30,69 @@ import { links } from "@/data/links";
 </script>
 
 <style scoped>
-.softadastra {
-  position: relative;
+.softadastra__inner {
+  max-width: 900px;
 }
 
+/* Override panel → ink inversion for emphasis */
 .softadastra__panel {
   position: relative;
   overflow: hidden;
-  padding: clamp(30px, 5vw, 56px);
+  padding: clamp(40px, 5vw, 60px);
+  background: var(--bg-ink);
+  border: 1px solid var(--line-ink);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
 }
 
+/* Subtle green corner glow */
 .softadastra__panel::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: -40%;
+  right: -10%;
+  width: 60%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.16), transparent 70%);
   pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(34, 197, 94, 0.14),
-      transparent 24rem
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-}
-
-.softadastra__eyebrow,
-.softadastra__panel h2,
-.softadastra__panel p,
-.softadastra__link {
-  position: relative;
 }
 
 .softadastra__eyebrow {
-  color: var(--green-soft);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--green-bright);
+  margin-bottom: 16px;
 }
 
 .softadastra__panel h2 {
-  max-width: 760px;
-  margin-top: 14px;
+  position: relative;
+  color: var(--text-invert);
+  margin-bottom: 18px;
 }
 
-.softadastra__panel p {
-  max-width: 780px;
-  margin-top: 20px;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
+.softadastra__panel > p {
+  position: relative;
+  max-width: 58ch;
+  color: var(--text-invert-soft);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.75;
 }
 
 .softadastra__link {
+  position: relative;
   display: inline-flex;
-  margin-top: 26px;
-  color: var(--green-soft);
+  margin-top: 24px;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
-  font-weight: 850;
-  text-decoration: none;
+  font-weight: 600;
+  color: var(--green-bright);
 }
 
 .softadastra__link:hover {
-  color: #bbf7d0;
+  color: #86efac;
 }
 </style>

@@ -36,42 +36,36 @@ import { links } from "@/data/links";
 </script>
 
 <style scoped>
-.note {
-  position: relative;
-}
-
 .note__image {
-  margin-top: 42px;
+  margin-top: 44px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .note__footer {
-  margin-top: 28px;
+  margin-top: 30px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  gap: 18px;
 }
 
 .note__link {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color var(--speed) var(--ease);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--green-strong);
 }
 
 .note__link:hover {
-  color: var(--green-soft);
+  color: var(--green);
 }
 
-@media (max-width: 720px) {
-  .note__image {
-    margin-top: 30px;
-  }
-
+@media (max-width: 560px) {
   .note__footer {
-    justify-content: flex-start;
+    flex-direction: column;
+    gap: 14px;
   }
 }
 </style>

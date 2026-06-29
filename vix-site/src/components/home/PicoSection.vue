@@ -51,49 +51,46 @@ import { links } from "@/data/links";
 </script>
 
 <style scoped>
-.pico {
-  position: relative;
-}
-
 .pico__image {
-  margin-top: 42px;
+  margin-top: 44px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .pico__text {
-  max-width: 880px;
-  margin: 34px auto 0;
+  max-width: 760px;
+  margin: 36px auto 0;
   display: grid;
   gap: 18px;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.35vw, 1.12rem);
-  line-height: 1.85;
   text-align: center;
 }
 
+.pico__text p {
+  color: var(--text-soft);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.78;
+}
+
 .pico__link {
-  width: fit-content;
-  margin: 4px auto 0;
-  color: var(--green-soft);
+  justify-self: center;
+  margin-top: 6px;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
-  font-weight: 800;
-  text-decoration: none;
+  font-weight: 600;
+  color: var(--green-strong);
+  transition: gap var(--speed) var(--ease);
 }
 
 .pico__link:hover {
-  color: #bbf7d0;
+  color: var(--green);
 }
 
 @media (max-width: 720px) {
-  .pico__image {
-    margin-top: 30px;
-  }
-
   .pico__text {
     text-align: left;
   }
-
   .pico__link {
-    margin-left: 0;
+    justify-self: start;
   }
 }
 </style>
