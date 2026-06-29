@@ -107,20 +107,6 @@
           to show the shape of the project and the direction behind it.
         </p>
       </div>
-
-      <div class="architecture__divider" aria-hidden="true">
-        <span class="architecture__divider-line" />
-        <svg
-          class="architecture__divider-mark"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon points="5,3 9,3 12,21 10,21" fill="#4ade80" />
-          <polygon points="19,3 15,3 12,21 14,21" fill="#16a34a" />
-        </svg>
-        <span class="architecture__divider-line" />
-      </div>
     </div>
   </section>
 </template>
@@ -134,7 +120,7 @@ import { images } from "@/data/images";
 <style scoped>
 .architecture {
   position: relative;
-  background: var(--bg-soft);
+  background: var(--bg);
   border-block: 1px solid var(--line-soft);
 }
 

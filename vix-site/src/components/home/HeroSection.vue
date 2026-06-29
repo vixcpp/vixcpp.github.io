@@ -46,7 +46,6 @@
             command="curl -fsSL https://vixcpp.com/install.sh | bash"
           />
           <CommandLine command="vix upgrade --sdk info web" />
-          <CommandLine command="vix new app && cd app && vix dev" />
         </div>
       </div>
 
@@ -73,6 +72,7 @@
                 class="tabs"
                 role="tablist"
                 aria-label="Hero examples"
+                @wheel.prevent="onTabsWheel"
               >
                 <button
                   v-for="t in tabs"
@@ -194,6 +194,19 @@ const activeTab = computed(
 /* ── copy ── */
 const cardHover = ref(false);
 const copied = ref(false);
+
+function onTabsWheel(event) {
+  const el = event.currentTarget;
+  if (!el) return;
+
+  const delta =
+    Math.abs(event.deltaX) > Math.abs(event.deltaY)
+      ? event.deltaX
+      : event.deltaY;
+
+  el.scrollLeft += delta;
+}
+
 async function copy(text) {
   try {
     await navigator.clipboard.writeText(text);
@@ -502,24 +515,14 @@ const activeHtml = computed(() =>
 .hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(72px, 11vw, 132px) 0 clamp(56px, 8vw, 96px);
+  padding-top: 10px;
+  padding-bottom: 96px;
 }
 
 /* Faint dotted grid — technical texture, off-white */
 .hero__grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(
-    ellipse 80% 60% at 70% 20%,
-    #000 0%,
-    transparent 70%
-  );
-  opacity: 0.5;
+  display: none;
 }
-
 .hero__inner {
   position: relative;
   display: grid;
@@ -637,7 +640,7 @@ const activeHtml = computed(() =>
 /* CommandLines */
 .hero__commands {
   display: grid;
-  gap: 8px;
+  gap: 4px;
   max-width: 480px;
 }
 
@@ -660,11 +663,10 @@ const activeHtml = computed(() =>
 
 /* Header */
 .code-head {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 11px 13px;
+  padding: 11px 54px 11px 13px;
   border-bottom: 1px solid var(--line-ink);
   background: var(--bg-ink-soft);
 }
@@ -673,22 +675,17 @@ const activeHtml = computed(() =>
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
+  overflow: hidden;
   white-space: nowrap;
-}
-.head-scroll::-webkit-scrollbar {
-  display: none;
 }
 
 .head-left {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .dot {
@@ -696,12 +693,15 @@ const activeHtml = computed(() =>
   height: 10px;
   border-radius: 999px;
 }
+
 .dot-red {
   background: #ff5f57;
 }
+
 .dot-yellow {
   background: #febc2e;
 }
+
 .dot-green {
   background: #28c840;
 }
@@ -714,7 +714,7 @@ const activeHtml = computed(() =>
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  max-width: 96px;
 }
 
 /* Tabs */
@@ -722,14 +722,46 @@ const activeHtml = computed(() =>
   display: flex;
   align-items: center;
   gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 3px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  overscroll-behavior-inline: contain;
+}
+
+.tabs:hover {
+  scrollbar-color: rgba(134, 239, 172, 0.55) transparent;
+}
+
+.tabs::-webkit-scrollbar {
+  height: 2px;
+}
+
+.tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.tabs:hover::-webkit-scrollbar-thumb {
+  background: rgba(134, 239, 172, 0.55);
+}
+
+.tabs:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(134, 239, 172, 0.8);
 }
 
 .tab {
+  flex: 0 0 auto;
   border: 0;
   background: transparent;
   color: var(--text-invert-soft);
@@ -747,6 +779,7 @@ const activeHtml = computed(() =>
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-invert);
 }
+
 .tab.active {
   background: rgba(34, 197, 94, 0.18);
   color: #86efac;
@@ -754,46 +787,53 @@ const activeHtml = computed(() =>
 
 /* Copy */
 .copy-btn {
-  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  z-index: 5;
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(15, 18, 21, 0.92);
   border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--text-invert-soft);
   opacity: 0;
   pointer-events: none;
+  transform: translateY(-50%);
   transition:
     opacity var(--speed),
-    transform var(--speed),
     background var(--speed),
     border-color var(--speed),
     color var(--speed);
 }
+
 .copy-btn .ico {
   display: block;
   width: 16px;
   height: 16px;
   margin: 0 auto;
 }
+
 .copy-btn .ico path {
   stroke: currentColor;
   fill: none;
 }
+
 .code-card:hover .copy-btn {
   opacity: 1;
   pointer-events: auto;
 }
+
 .copy-btn:hover {
-  transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(34, 197, 94, 0.4);
   color: #86efac;
 }
+
 @media (hover: none), (pointer: coarse) {
   .copy-btn {
     opacity: 1;
@@ -803,7 +843,8 @@ const activeHtml = computed(() =>
 
 /* Body */
 .code-body {
-  height: 340px;
+  height: auto;
+  max-height: 420px;
   overflow: auto;
 }
 .code-body::-webkit-scrollbar {
@@ -827,6 +868,7 @@ const activeHtml = computed(() =>
   font-size: 0.86rem;
   color: var(--text-invert);
   background: transparent;
+  border-radius: 0px !important;
 }
 .code-code {
   display: inline-block;
@@ -858,47 +900,56 @@ const activeHtml = computed(() =>
 /* ── Custom C++ syntax palette — unique, harmonised with brand green ──
    Background is ink; keys: green for keywords, mint for types, soft
    warm for strings, muted for ops. Not the VSCode default. */
-.t-dir {
+.code-code :deep(.t-dir) {
   color: #d8b4fe;
-} /* preprocessor — soft violet */
-.t-inc {
+}
+
+.code-code :deep(.t-inc) {
   color: #fca5a5;
-} /* include path — soft coral */
-.t-kw {
+}
+
+.code-code :deep(.t-kw) {
   color: #4ade80;
   font-weight: 600;
-} /* keywords — Vix green */
-.t-type {
+}
+
+.code-code :deep(.t-type) {
   color: #7dd3a8;
-} /* types — desaturated mint */
-.t-ns {
+}
+
+.code-code :deep(.t-ns) {
   color: #5eead4;
-} /* namespaces — teal */
-.t-fn {
+}
+
+.code-code :deep(.t-fn) {
   color: #fde68a;
-} /* functions — warm amber */
-.t-mem {
+}
+
+.code-code :deep(.t-mem) {
   color: #bfdbfe;
-} /* members — pale blue */
-.t-id {
+}
+
+.code-code :deep(.t-id) {
   color: #e2e8f0;
-} /* identifiers — near white */
-.t-str {
-  color: #fcd9a8;
-} /* strings — soft sand */
-.t-char {
+}
+
+.code-code :deep(.t-str),
+.code-code :deep(.t-char) {
   color: #fcd9a8;
 }
-.t-num {
+
+.code-code :deep(.t-num) {
   color: #c4b5fd;
-} /* numbers — lavender */
-.t-cmt {
+}
+
+.code-code :deep(.t-cmt) {
   color: #6b7280;
   font-style: italic;
-} /* comments — neutral gray */
-.t-op {
+}
+
+.code-code :deep(.t-op) {
   color: #94a3b8;
-} /* operators — slate */
+}
 
 /* ── Responsive ── */
 @media (max-width: 1080px) {
@@ -911,35 +962,172 @@ const activeHtml = computed(() =>
   }
 }
 
+/* ── Mobile only ── */
 @media (max-width: 640px) {
   .hero {
-    padding-top: 56px;
+    padding-top: 0;
+    overflow-x: hidden;
   }
+
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    width: 100%;
+    padding-inline: 20px;
+    box-sizing: border-box;
+  }
+
+  .hero__content,
+  .hero__side,
+  .code-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hero__content {
+    padding-top: 34px;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.66rem;
+    margin-bottom: 16px;
+  }
+
+  .hero__title {
+    display: block;
+    font-size: clamp(2.25rem, 13vw, 3.1rem);
+    line-height: 0.98;
+    max-width: 12ch;
+    margin-bottom: 22px;
+  }
+
+  .hero__lead {
+    max-width: 100%;
+    font-size: 1rem;
+    line-height: 1.65;
+    margin-bottom: 26px;
+  }
+
   .hero__actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    margin-bottom: 28px;
   }
+
   .hero__btn {
+    width: 100%;
     justify-content: center;
+    padding: 0.95rem 1.2rem;
+    font-size: 1rem;
   }
+
   .hero__commands {
     max-width: 100%;
+    gap: 6px;
+    overflow: hidden;
   }
-  .code-pre {
-    font-size: 0.8rem;
+
+  .hero__side {
+    justify-content: flex-start;
+    overflow: hidden;
   }
+
+  .code-card {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .code-head {
+    padding: 9px 50px 9px 10px;
+  }
+
+  .head-scroll {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .head-left {
+    flex: 0 0 auto;
+  }
+
+  .head-title {
+    display: none;
+  }
+
+  .tab {
+    font-size: 0.68rem;
+    padding: 4px 8px;
+  }
+
+  .copy-btn {
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .code-body {
-    height: 280px;
+    height: 350px;
+    overflow: auto;
+  }
+
+  .code-pre {
+    padding: 16px 14px;
+    font-size: 0.74rem;
+    line-height: 1.7;
+  }
+
+  .code-foot {
+    padding: 10px 14px;
+    font-size: 0.72rem;
+  }
+
+  .code-foot span:last-child {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
 @media (max-width: 420px) {
+  .hero__inner {
+    padding-inline: 16px;
+  }
+
+  .hero__content {
+    padding-top: 28px;
+  }
+
+  .hero__title {
+    font-size: clamp(2.05rem, 14vw, 2.65rem);
+    max-width: 11ch;
+  }
+
+  .hero__lead {
+    font-size: 0.96rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
   .tab {
-    font-size: 0.67rem;
+    font-size: 0.64rem;
     padding: 4px 7px;
   }
-  .head-title {
-    max-width: 34vw;
+
+  .code-body {
+    height: 270px;
+  }
+
+  .code-pre {
+    font-size: 0.7rem;
+    padding: 14px 12px;
   }
 }
 </style>

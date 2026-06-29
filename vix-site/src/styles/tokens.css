@@ -1,39 +1,56 @@
 :root {
   color-scheme: dark;
 
-  /* ── Backgrounds — noir neutre, pas de teinte verte ── */
-  --bg: #0a0a0a;
-  --bg-soft: #0f0f0f;
-  --bg-panel: #141414;
-  --bg-panel-strong: #1a1a1a;
-  --bg-elevated: #1f1f1f;
+  /* ── Backgrounds — dark soft Vix theme ── */
+  --bg: #131619;
+  --bg-soft: #1a1e22;
+  --bg-panel: #1a1e22;
+  --bg-panel-strong: #20252a;
+  --bg-elevated: #20252a;
+
+  /* ── Ink / code surfaces ── */
+  --bg-ink: #0f1215;
+  --bg-ink-soft: #15191d;
 
   /* ── Text ── */
-  --text: #f0f0f0;
-  --text-soft: #a0a0a0;
-  --text-muted: #666666;
-  --text-faint: #3d3d3d;
+  --text: rgba(255, 255, 255, 0.92);
+  --text-soft: rgba(255, 255, 255, 0.62);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-faint: rgba(255, 255, 255, 0.28);
+
+  --text-invert: rgba(255, 255, 255, 0.92);
+  --text-invert-soft: rgba(255, 255, 255, 0.62);
 
   /* ── Borders ── */
-  --line: rgba(255, 255, 255, 0.08);
-  --line-soft: rgba(255, 255, 255, 0.05);
-  --line-strong: rgba(34, 197, 94, 0.3);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-soft: rgba(255, 255, 255, 0.045);
+  --line-strong: rgba(255, 255, 255, 0.1);
+  --line-ink: rgba(255, 255, 255, 0.08);
 
-  /* ── Brand green — utilisé avec parcimonie ── */
+  /* ── Brand green ── */
   --green: #22c55e;
   --green-soft: #4ade80;
+  --green-bright: #86efac;
+  --green-strong: #16a34a;
   --green-dark: #15803d;
-  --green-faint: rgba(34, 197, 94, 0.08);
-  --green-glow: rgba(34, 197, 94, 0.12);
+  --green-faint: rgba(34, 197, 94, 0.1);
+  --green-glow: rgba(34, 197, 94, 0.14);
+  --green-line: rgba(34, 197, 94, 0.35);
+
+  /* ── Links ── */
+  --link: #6bb8ff;
+  --link-hover: #98ceff;
 
   /* ── Status ── */
   --danger: #f87171;
   --warning: #fbbf24;
 
   /* ── Shadows ── */
-  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-panel: 0 8px 40px rgba(0, 0, 0, 0.5);
-  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-panel: 0 8px 40px rgba(0, 0, 0, 0.42);
+  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.45);
+  --shadow-green: 0 12px 32px rgba(34, 197, 94, 0.18);
 
   /* ── Radii ── */
   --radius-sm: 6px;

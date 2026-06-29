@@ -129,7 +129,7 @@ async function copy() {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.65rem 0.85rem;
+  padding: 0.5rem 0.85rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--line-ink);
   background: var(--bg-ink);
@@ -224,6 +224,40 @@ async function copy() {
   .cmd__copy {
     opacity: 1;
     pointer-events: auto;
+  }
+}
+@media (max-width: 640px) {
+  .cmd {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 0.7rem 3.1rem 0.7rem 0.9rem;
+  }
+
+  .cmd__code {
+    display: block;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .cmd__code::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cmd__copy {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%);
+  }
+
+  .cmd__copy:hover {
+    transform: translateY(-50%);
   }
 }
 </style>

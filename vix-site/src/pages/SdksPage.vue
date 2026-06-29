@@ -1,18 +1,35 @@
 <template>
   <main class="sdks-page">
     <section class="sdks-hero section">
-      <div class="container">
-        <SectionTitle
-          eyebrow="SDK profiles"
-          title="Install only the Vix.cpp layer your project needs."
-          description="SDK profiles keep the Vix.cpp installation practical. A project can start with the default foundation and move to web, data, desktop, p2p, game, agent, or full profiles when the application requires them."
-        />
+      <div class="sdks-hero__layout container-wide">
+        <div class="sdks-hero__copy">
+          <SectionTitle
+            eyebrow="SDK profiles"
+            title="Install only the Vix.cpp layer your project needs."
+            description="SDK profiles keep the Vix.cpp installation practical. A project can start with the default foundation and move to web, data, desktop, p2p, game, agent, or full profiles when the application requires them."
+          />
 
-        <div class="sdks-hero__commands">
-          <CommandLine command="vix upgrade --sdk list" />
-          <CommandLine command="vix upgrade --sdk info web" />
-          <CommandLine command="vix upgrade --sdk web" />
+          <div class="sdks-hero__commands">
+            <CommandLine command="vix upgrade --sdk list" />
+            <CommandLine command="vix upgrade --sdk info web" />
+            <CommandLine command="vix upgrade --sdk web" />
+          </div>
         </div>
+
+        <aside class="sdks-hero__preview" aria-label="Vix SDK upgrade preview">
+          <div class="sdks-hero__preview-head">
+            <span class="sdks-hero__dot sdks-hero__dot--red" />
+            <span class="sdks-hero__dot sdks-hero__dot--yellow" />
+            <span class="sdks-hero__dot sdks-hero__dot--green" />
+            <span>vix upgrade</span>
+          </div>
+
+          <img
+            class="sdks-hero__image"
+            src="https://res.cloudinary.com/dwjbed2xb/image/upload/v1782753267/vix-upgrade_w2eqem.png"
+            alt="Vix upgrade SDK profile commands showing check, list, and web SDK information"
+          />
+        </aside>
       </div>
     </section>
 
@@ -111,12 +128,74 @@ const profiles = [
   padding-top: clamp(72px, 10vw, 128px);
 }
 
+.sdks-hero__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(680px, 1.25fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: center;
+}
+
+.sdks-hero__copy {
+  min-width: 0;
+}
+
 .sdks-hero__commands {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 28px;
   max-width: 480px;
+}
+
+.sdks-hero__preview {
+  width: 100%;
+  min-width: 0;
+  justify-self: end;
+  overflow: hidden;
+  border: 1px solid var(--line-ink);
+  border-radius: var(--radius-lg);
+  background: var(--bg-ink);
+  box-shadow: var(--shadow-lg);
+}
+
+.sdks-hero__preview-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line-ink);
+  background: var(--bg-ink-soft);
+  color: var(--text-invert-soft);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.sdks-hero__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.sdks-hero__dot--red {
+  background: #ff5f57;
+}
+
+.sdks-hero__dot--yellow {
+  background: #febc2e;
+}
+
+.sdks-hero__dot--green {
+  background: #28c840;
+}
+
+.sdks-hero__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg-ink);
 }
 
 .profiles__inner {
@@ -194,9 +273,15 @@ const profiles = [
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .sdks-hero__layout,
   .sdk-notes__inner {
     grid-template-columns: 1fr;
+  }
+
+  .sdks-hero__preview {
+    max-width: 860px;
+    justify-self: start;
   }
 }
 
@@ -204,8 +289,21 @@ const profiles = [
   .sdks-hero__commands {
     max-width: 100%;
   }
+
   .profiles__inner {
     grid-template-columns: 1fr;
+  }
+
+  .sdks-hero__preview-head {
+    height: 38px;
+  }
+
+  .sdks-hero__image {
+    min-width: 620px;
+  }
+
+  .sdks-hero__preview {
+    overflow-x: auto;
   }
 }
 </style>
