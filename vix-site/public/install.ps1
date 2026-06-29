@@ -3,29 +3,30 @@
 #   irm https://vixcpp.com/install.ps1 | iex
 #
 # Optional:
-#   $env:VIX_VERSION="v2.5.5"
+#   $env:VIX_VERSION="v2.7.0"
 #   $env:VIX_REPO="vixcpp/vix"
-#   $env:VIX_INSTALL_KIND="sdk"   # sdk or cli
-#   $env:VIX_INSTALL_PREFIX="$env:LOCALAPPDATA\Vix"
 #   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-function Info($msg) {
-  Write-Host "› vix: $msg"
+$MinisignPubkey = "RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
+
+function Step($msg) {
+  Write-Host "  →  $msg"
 }
 
 function Ok($msg) {
-  Write-Host "✔ vix: $msg" -ForegroundColor Green
+  Write-Host "  ✓  $msg" -ForegroundColor Green
 }
 
-function Warn($msg) {
-  Write-Host "! vix: $msg" -ForegroundColor Yellow
+function Hint($msg) {
+  Write-Host "  ·  $msg" -ForegroundColor DarkGray
 }
 
 function Die($msg) {
-  throw "✖ vix: $msg"
+  Write-Host "  ✗  $msg" -ForegroundColor Red
+  exit 1
 }
 
 function Show-Help {
@@ -33,27 +34,22 @@ function Show-Help {
 Vix.cpp installer
 
 Usage:
-  install.ps1              Install Vix SDK
-  install.ps1 --cli-only   Install CLI only
-  install.ps1 --sdk        Install SDK
+  install.ps1
 
 Environment:
-  VIX_VERSION              Release version. Example: v2.5.5. Default: latest
-  VIX_REPO                 GitHub repo. Default: vixcpp/vix
-  VIX_INSTALL_KIND         sdk or cli. Default: sdk
-  VIX_INSTALL_PREFIX       SDK install prefix. Default: %LOCALAPPDATA%\Vix
-  VIX_INSTALL_DIR          CLI bin dir. Default: %LOCALAPPDATA%\Vix\bin
+  VIX_VERSION          Release version. Example: v2.7.0. Default: latest
+  VIX_REPO             GitHub repo. Default: vixcpp/vix
+  VIX_INSTALL_DIR      CLI bin dir. Default: %LOCALAPPDATA%\Vix\bin
+
+After install:
+  vix upgrade
+  vix upgrade --sdk list
+  vix upgrade --sdk web
 "@
 }
 
 foreach ($arg in $args) {
   switch ($arg) {
-    "--cli-only" {
-      $env:VIX_INSTALL_KIND = "cli"
-    }
-    "--sdk" {
-      $env:VIX_INSTALL_KIND = "sdk"
-    }
     "--help" {
       Show-Help
       exit 0
@@ -61,6 +57,15 @@ foreach ($arg in $args) {
     "-h" {
       Show-Help
       exit 0
+    }
+    "--cli-only" {
+      # Kept for compatibility. The installer is CLI-only now.
+    }
+    "--cli" {
+      # Kept for compatibility. The installer is CLI-only now.
+    }
+    "--sdk" {
+      Die "SDK install moved to: vix upgrade --sdk"
     }
     default {
       Die "unknown option: $arg"
@@ -80,22 +85,10 @@ $Version = if ($env:VIX_VERSION) {
   "latest"
 }
 
-$InstallKind = if ($env:VIX_INSTALL_KIND) {
-  $env:VIX_INSTALL_KIND
-} else {
-  "sdk"
-}
-
-$PrefixDir = if ($env:VIX_INSTALL_PREFIX) {
-  $env:VIX_INSTALL_PREFIX
-} else {
-  Join-Path $env:LOCALAPPDATA "Vix"
-}
-
 $BinDir = if ($env:VIX_INSTALL_DIR) {
   $env:VIX_INSTALL_DIR
 } else {
-  Join-Path $PrefixDir "bin"
+  Join-Path $env:LOCALAPPDATA "Vix\bin"
 }
 
 $BinName = "vix.exe"
@@ -158,28 +151,54 @@ function Verify-Checksum([string]$archivePath, [string]$shaPath) {
   }
 }
 
+function Verify-Signature([string]$archivePath, [string]$sigPath) {
+  $minisign = Get-Command minisign -ErrorAction SilentlyContinue
+
+  if (-not $minisign) {
+    return
+  }
+
+  & minisign -Vm $archivePath -x $sigPath -P $MinisignPubkey *> $null
+
+  if ($LASTEXITCODE -ne 0) {
+    Die "signature verification failed"
+  }
+
+  Ok "minisign verified"
+}
+
 function Download-And-Verify-Asset([string]$baseUrl, [string]$asset, [string]$tmpDir) {
   $archivePath = Join-Path $tmpDir $asset
   $shaPath = Join-Path $tmpDir ($asset + ".sha256")
+  $sigPath = Join-Path $tmpDir ($asset + ".minisig")
 
   $assetUrl = "$baseUrl/$asset"
   $shaUrl = "$baseUrl/$asset.sha256"
+  $sigUrl = "$baseUrl/$asset.minisig"
 
-  Info "downloading $asset"
+  Step "Downloading $asset"
 
   try {
     Invoke-WebRequest -Uri $assetUrl -OutFile $archivePath
   } catch {
-    Die "release asset not found: $asset. Check that the GitHub release contains this file: $assetUrl"
+    Die "release asset not found: $asset"
   }
 
   try {
     Invoke-WebRequest -Uri $shaUrl -OutFile $shaPath
   } catch {
-    Die "checksum file not found: $asset.sha256. Check that the GitHub release contains this file: $shaUrl"
+    Die "checksum file not found: $asset.sha256"
   }
 
   Verify-Checksum $archivePath $shaPath
+  Ok "sha256 verified"
+
+  try {
+    Invoke-WebRequest -Uri $sigUrl -OutFile $sigPath
+    Verify-Signature $archivePath $sigPath
+  } catch {
+    # minisign is optional for bootstrap install.
+  }
 
   return $archivePath
 }
@@ -188,7 +207,6 @@ function Install-SqliteDll([string]$installBin, [string]$tmpDir) {
   $sqliteDll = Join-Path $installBin "sqlite3.dll"
 
   if (Test-Path -LiteralPath $sqliteDll) {
-    Info "sqlite3.dll already exists"
     return
   }
 
@@ -205,7 +223,7 @@ function Install-SqliteDll([string]$installBin, [string]$tmpDir) {
       $sqliteAsset = "sqlite-dll-win-x86-3530200.zip"
     }
     default {
-      Warn "unsupported SQLite architecture: $archRaw"
+      Hint "sqlite runtime skipped: unsupported architecture $archRaw"
       return
     }
   }
@@ -217,34 +235,35 @@ function Install-SqliteDll([string]$installBin, [string]$tmpDir) {
   New-Item -ItemType Directory -Force -Path $sqliteDir | Out-Null
   New-Item -ItemType Directory -Force -Path $installBin | Out-Null
 
-  Info "downloading SQLite runtime $sqliteAsset"
+  Step "Installing SQLite runtime"
 
   try {
     Invoke-WebRequest -Uri $sqliteUrl -OutFile $sqliteZip
   } catch {
-    Die "could not download SQLite runtime: $sqliteUrl"
+    Hint "sqlite runtime skipped"
+    return
   }
 
   try {
     Expand-Archive -LiteralPath $sqliteZip -DestinationPath $sqliteDir -Force
   } catch {
-    Die "could not extract SQLite runtime"
+    Hint "sqlite runtime skipped"
+    return
   }
 
   $dllCandidate = Get-ChildItem -LiteralPath $sqliteDir -Recurse -File -Filter "sqlite3.dll" |
     Select-Object -First 1
 
   if (-not $dllCandidate) {
-    Die "SQLite archive does not contain sqlite3.dll"
+    Hint "sqlite runtime skipped"
+    return
   }
 
   Copy-Item -LiteralPath $dllCandidate.FullName -Destination $sqliteDll -Force
 
-  if (-not (Test-Path -LiteralPath $sqliteDll)) {
-    Die "sqlite3.dll was not installed to $sqliteDll"
+  if (Test-Path -LiteralPath $sqliteDll) {
+    Ok "sqlite3.dll installed"
   }
-
-  Ok "installed sqlite3.dll"
 }
 
 function Add-To-UserPath([string]$pathToAdd) {
@@ -286,52 +305,15 @@ function Install-Cli([string]$archivePath, [string]$tmpDir) {
   New-Item -ItemType Directory -Force -Path $extractDir | Out-Null
   New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 
+  Step "Installing to $BinDir\$BinName"
+
   Expand-Archive -LiteralPath $archivePath -DestinationPath $extractDir -Force
 
   $exeCandidate = Get-ChildItem -LiteralPath $extractDir -Recurse -File -Filter $BinName |
     Select-Object -First 1
 
   if (-not $exeCandidate) {
-  Die "CLI archive does not contain $BinName"
-}
-
-  $exe = Join-Path $BinDir $BinName
-
-  if (-not [string]::Equals(
-    $exeCandidate.FullName,
-    $exe,
-    [System.StringComparison]::OrdinalIgnoreCase
-  )) {
-    Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
-  }
-
-  return $exe
-}
-
-function Install-Sdk([string]$archivePath, [string]$tmpDir) {
-  $extractDir = Join-Path $tmpDir "sdk"
-
-  New-Item -ItemType Directory -Force -Path $extractDir | Out-Null
-  New-Item -ItemType Directory -Force -Path $PrefixDir | Out-Null
-  New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
-
-  Expand-Archive -LiteralPath $archivePath -DestinationPath $extractDir -Force
-
-  Get-ChildItem -Path $extractDir -Force | ForEach-Object {
-    Copy-Item -Path $_.FullName -Destination $PrefixDir -Recurse -Force
-  }
-
-  $exeCandidate = Get-ChildItem -Path $PrefixDir -Recurse -File -Filter $BinName |
-    Where-Object { $_.FullName -match '[\\/](bin)[\\/].*vix\.exe$' } |
-    Select-Object -First 1
-
-  if (-not $exeCandidate) {
-    $exeCandidate = Get-ChildItem -Path $PrefixDir -Recurse -File -Filter $BinName |
-      Select-Object -First 1
-  }
-
-  if (-not $exeCandidate) {
-    Die "SDK archive does not contain $BinName"
+    Die "CLI archive does not contain $BinName"
   }
 
   $exe = Join-Path $BinDir $BinName
@@ -348,41 +330,30 @@ function Install-Sdk([string]$archivePath, [string]$tmpDir) {
 }
 
 $Arch = Detect-Architecture
+
 $Tag = if ($Version -eq "latest") {
   Resolve-LatestTag $Repo
 } else {
   $Version
 }
 
-switch ($InstallKind.ToLowerInvariant()) {
-  "sdk" {
-    $Asset = "vix-sdk-windows-$Arch.zip"
-  }
-  "cli" {
-    $Asset = "vix-windows-$Arch.zip"
-  }
-  default {
-    Die "unsupported VIX_INSTALL_KIND: $InstallKind"
-  }
-}
-
+$Asset = "vix-windows-$Arch.zip"
 $BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
 
 $TmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vix-" + [System.Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 
 try {
+  Write-Host "  ▲  " -NoNewline
+  Write-Host "Vix.cpp" -NoNewline -ForegroundColor Green
+  Write-Host "  installer"
+  Write-Host "  ------------------------------------"
+  Write-Host "  version   $Tag"
+  Write-Host "  platform  windows/$Arch"
   Write-Host ""
-  Write-Host "Vix.cpp" -ForegroundColor Green
-  Info "installing $Tag ($InstallKind, windows-$Arch)"
 
   $ArchivePath = Download-And-Verify-Asset $BaseUrl $Asset $TmpDir
-
-   if ($InstallKind.ToLowerInvariant() -eq "cli") {
-    $Exe = Install-Cli $ArchivePath $TmpDir
-  } else {
-    $Exe = Install-Sdk $ArchivePath $TmpDir
-  }
+  $Exe = Install-Cli $ArchivePath $TmpDir
 
   Install-SqliteDll $BinDir $TmpDir
 
@@ -390,15 +361,17 @@ try {
 
   try {
     & $Exe --version *> $null
-    Ok "installed $Tag"
+    Ok "Done — vix $Tag installed"
   } catch {
-    Warn "installed, but 'vix --version' failed"
+    Die "installed, but 'vix --version' failed"
   }
 
   if ($PathAlreadyReady) {
-    Ok "ready"
+    Hint "run: vix upgrade --check"
+    Hint "sdk: vix upgrade --sdk list"
   } else {
-    Warn "installed, restart your terminal if 'vix' is not found"
+    Hint "restart your terminal if 'vix' is not found"
+    Hint "then run: vix upgrade --sdk list"
   }
 }
 finally {

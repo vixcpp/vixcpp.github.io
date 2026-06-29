@@ -5,11 +5,6 @@ MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
 VIX_REPO="${VIX_REPO:-vixcpp/vix}"
 VIX_VERSION="${VIX_VERSION:-latest}"
-
-# sdk or cli
-VIX_INSTALL_KIND="${VIX_INSTALL_KIND:-sdk}"
-
-VIX_INSTALL_PREFIX="${VIX_INSTALL_PREFIX:-$HOME/.local}"
 VIX_INSTALL_BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
 
 BIN_NAME="vix"
@@ -20,29 +15,31 @@ if [ -t 2 ] && [ "${NO_COLOR:-}" = "" ]; then
   C_RED="$(printf '\033[31m')"
   C_GREEN="$(printf '\033[32m')"
   C_YELLOW="$(printf '\033[33m')"
+  C_DIM="$(printf '\033[2m')"
 else
   C_RESET=""
   C_BOLD=""
   C_RED=""
   C_GREEN=""
   C_YELLOW=""
+  C_DIM=""
 fi
 
 die() {
-  printf "%s✖%s vix: %s\n" "$C_RED" "$C_RESET" "$*" >&2
+  printf "  %s✗%s  %s\n" "$C_RED" "$C_RESET" "$*" >&2
   exit 1
 }
 
-info() {
-  printf "› vix: %s\n" "$*" >&2
+step() {
+  printf "  →  %s\n" "$*" >&2
 }
 
 ok() {
-  printf "%s✔%s vix: %s\n" "$C_GREEN" "$C_RESET" "$*" >&2
+  printf "  %s✓%s  %s\n" "$C_GREEN" "$C_RESET" "$*" >&2
 }
 
-warn() {
-  printf "%s!%s vix: %s\n" "$C_YELLOW" "$C_RESET" "$*" >&2
+hint() {
+  printf "  ·  %s%s%s\n" "$C_DIM" "$*" "$C_RESET" >&2
 }
 
 have() {
@@ -75,44 +72,37 @@ show_help() {
 Vix.cpp installer
 
 Usage:
-  install.sh             Install Vix SDK
-  install.sh --cli-only  Install CLI only
-  install.sh --sdk       Install SDK
+  install.sh
 
 Environment:
-  VIX_VERSION            Release version. Example: v2.5.5. Default: latest
+  VIX_VERSION            Release version. Example: v2.7.0. Default: latest
   VIX_REPO               GitHub repo. Default: vixcpp/vix
-  VIX_INSTALL_KIND       sdk or cli. Default: sdk
-  VIX_INSTALL_PREFIX     SDK install prefix. Default: \$HOME/.local
-  VIX_INSTALL_BIN_DIR    CLI bin dir. Default: \$HOME/.local/bin
+  VIX_INSTALL_BIN_DIR    CLI install dir. Default: \$HOME/.local/bin
+
+After install:
+  vix upgrade
+  vix upgrade --sdk list
+  vix upgrade --sdk web
 EOF
 }
 
 for arg in "$@"; do
   case "$arg" in
-    --cli-only)
-      VIX_INSTALL_KIND="cli"
-      ;;
-    --sdk)
-      VIX_INSTALL_KIND="sdk"
-      ;;
     --help|-h)
       show_help
       exit 0
+      ;;
+    --cli-only|--cli)
+      # Kept for compatibility. The installer is CLI-only now.
+      ;;
+    --sdk)
+      die "SDK install moved to: vix upgrade --sdk"
       ;;
     *)
       die "unknown option: $arg"
       ;;
   esac
 done
-
-case "$VIX_INSTALL_KIND" in
-  sdk|cli)
-    ;;
-  *)
-    die "unsupported VIX_INSTALL_KIND='$VIX_INSTALL_KIND'"
-    ;;
-esac
 
 need_cmd uname
 need_cmd mktemp
@@ -171,10 +161,7 @@ verify_checksum() {
   fi
 
   expected="$(
-    awk '
-      /^[0-9a-fA-F]{64}/ { print $1; exit }
-      /^SHA256 \(/ { print $NF; exit }
-    ' "$sha_file"
+    sed -n 's/^\([0-9a-fA-F][0-9a-fA-F]*\).*/\1/p' "$sha_file" | head -n 1
   )"
 
   [ -n "$expected" ] || die "invalid sha256 file"
@@ -196,7 +183,8 @@ verify_signature() {
     return
   fi
 
-  minisign -Vm "$archive" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1 || die "signature verification failed"
+  minisign -Vm "$archive" -x "$sig_file" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1 \
+    || die "signature verification failed"
 }
 
 download_and_verify_asset() {
@@ -207,15 +195,19 @@ download_and_verify_asset() {
   sha_file="$TMP_DIR/$asset.sha256"
   sig_file="$TMP_DIR/$asset.minisig"
 
-  info "downloading $asset"
+  step "Downloading $asset"
 
   fetch "$base_url/$asset" "$archive" || die "download failed"
   fetch "$base_url/$asset.sha256" "$sha_file" || die "checksum not found"
 
   verify_checksum "$archive" "$sha_file"
+  ok "sha256 verified"
 
   if fetch "$base_url/$asset.minisig" "$sig_file"; then
     verify_signature "$archive" "$sig_file"
+    if have minisign; then
+      ok "minisign verified"
+    fi
   fi
 
   printf "%s" "$archive"
@@ -228,6 +220,8 @@ install_cli() {
   rm -rf "$extract_dir"
   mkdir -p "$extract_dir" "$VIX_INSTALL_BIN_DIR"
 
+  step "Installing to $VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
   tar -xzf "$archive" -C "$extract_dir"
 
   if [ -f "$extract_dir/$BIN_NAME" ]; then
@@ -235,44 +229,16 @@ install_cli() {
   elif [ -f "$extract_dir/bin/$BIN_NAME" ]; then
     src="$extract_dir/bin/$BIN_NAME"
   else
-    die "$BIN_NAME not found in archive"
+    src="$(find "$extract_dir" -type f -name "$BIN_NAME" 2>/dev/null | head -n 1 || true)"
   fi
+
+  [ -n "$src" ] || die "$BIN_NAME not found in archive"
 
   chmod +x "$src"
   cp "$src" "$VIX_INSTALL_BIN_DIR/$BIN_NAME"
   chmod +x "$VIX_INSTALL_BIN_DIR/$BIN_NAME"
 
   DEST="$VIX_INSTALL_BIN_DIR/$BIN_NAME"
-}
-
-install_sdk() {
-  archive="$(download_and_verify_asset "$BASE_URL" "$ASSET")"
-  extract_dir="$TMP_DIR/sdk"
-
-  rm -rf "$extract_dir"
-  mkdir -p "$extract_dir" "$VIX_INSTALL_PREFIX" "$VIX_INSTALL_BIN_DIR"
-
-  tar -xzf "$archive" -C "$extract_dir"
-
-  cp -R "$extract_dir/." "$VIX_INSTALL_PREFIX/"
-
-  if [ -f "$VIX_INSTALL_PREFIX/bin/$BIN_NAME" ]; then
-    target="$VIX_INSTALL_PREFIX/bin/$BIN_NAME"
-  elif [ -f "$VIX_INSTALL_PREFIX/install/bin/$BIN_NAME" ]; then
-    target="$VIX_INSTALL_PREFIX/install/bin/$BIN_NAME"
-  else
-    target="$(find "$VIX_INSTALL_PREFIX" -type f -path "*/bin/$BIN_NAME" 2>/dev/null | head -n 1 || true)"
-  fi
-
-  [ -n "$target" ] || die "could not find installed '$BIN_NAME'"
-
-  chmod +x "$target"
-
-  DEST="$VIX_INSTALL_BIN_DIR/$BIN_NAME"
-
-  if [ "$target" != "$DEST" ]; then
-    ln -sf "$target" "$DEST"
-  fi
 }
 
 detect_platform
@@ -285,39 +251,29 @@ trap cleanup EXIT INT TERM
 
 TAG="$(resolve_version)"
 BASE_URL="https://github.com/${VIX_REPO}/releases/download/${TAG}"
+ASSET="vix-${OS}-${ARCH}.tar.gz"
 
-case "$VIX_INSTALL_KIND" in
-  sdk)
-    ASSET="vix-sdk-${OS}-${ARCH}.tar.gz"
-    ;;
-  cli)
-    ASSET="vix-${OS}-${ARCH}.tar.gz"
-    ;;
-esac
+printf "  ▲  %sVix.cpp%s  %sinstaller%s\n" "$C_BOLD" "$C_RESET" "$C_DIM" "$C_RESET" >&2
+printf "  ------------------------------------\n" >&2
+printf "  version   %s\n" "$TAG" >&2
+printf "  platform  %s/%s\n" "$OS" "$ARCH" >&2
+printf "\n" >&2
 
-printf "%s%sVix.cpp%s\n" "$C_BOLD" "$C_GREEN" "$C_RESET" >&2
-info "installing $TAG ($VIX_INSTALL_KIND, ${OS}-${ARCH})"
-
-case "$VIX_INSTALL_KIND" in
-  sdk)
-    install_sdk
-    ;;
-  cli)
-    install_cli
-    ;;
-esac
+install_cli
 
 if "$DEST" --version >/dev/null 2>&1; then
-  ok "installed $TAG"
+  ok "Done — vix $TAG installed"
 else
-  warn "installed, but '$BIN_NAME --version' failed"
+  die "installed, but '$BIN_NAME --version' failed"
 fi
 
 case ":$PATH:" in
   *":$VIX_INSTALL_BIN_DIR:"*)
-    ok "ready"
+    hint "run: vix upgrade --check"
+    hint "sdk: vix upgrade --sdk list"
     ;;
   *)
-    warn "installed, open a new terminal if '$BIN_NAME' is not found"
+    hint "add $VIX_INSTALL_BIN_DIR to PATH"
+    hint "then run: vix upgrade --sdk list"
     ;;
 esac
