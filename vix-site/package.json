@@ -4,9 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/fetch_github_stats.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/fetch_github_stats.mjs",
     "build": "vite build",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

@@ -23,9 +23,9 @@
         <div class="footer__group">
           <span class="footer__label">Project</span>
           <a :href="links.github" target="_blank" rel="noreferrer">GitHub</a>
-          <a :href="links.releases" target="_blank" rel="noreferrer"
-            >Releases</a
-          >
+          <a :href="links.releasesGithub" target="_blank" rel="noreferrer">
+            Releases
+          </a>
           <a :href="links.issues" target="_blank" rel="noreferrer">Issues</a>
           <a :href="links.discussions" target="_blank" rel="noreferrer">
             Discussions
@@ -33,21 +33,32 @@
         </div>
 
         <div class="footer__group">
+          <span class="footer__label">Site</span>
+          <RouterLink to="/install">Install</RouterLink>
+          <RouterLink to="/sdks">SDKs</RouterLink>
+          <RouterLink to="/registry">Registry</RouterLink>
+          <RouterLink to="/ecosystem">Ecosystem</RouterLink>
+          <RouterLink to="/pico">Pico</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+        </div>
+
+        <div class="footer__group">
           <span class="footer__label">Resources</span>
           <a :href="links.docs" target="_blank" rel="noreferrer">Docs</a>
-          <a :href="links.registry" target="_blank" rel="noreferrer"
-            >Registry</a
-          >
+          <a :href="links.registryExternal" target="_blank" rel="noreferrer">
+            Registry Index
+          </a>
           <a :href="links.blog" target="_blank" rel="noreferrer">
             Engineering Notes
           </a>
-          <RouterLink to="/install">Install</RouterLink>
+          <RouterLink to="/security">Security</RouterLink>
+          <RouterLink to="/releases">Release Notes</RouterLink>
         </div>
 
         <div class="footer__group">
           <span class="footer__label">Ecosystem</span>
           <a :href="links.rix" target="_blank" rel="noreferrer">Rix</a>
-          <a :href="links.pico" target="_blank" rel="noreferrer">Pico</a>
+          <a :href="links.pico" target="_blank" rel="noreferrer">Pico app</a>
           <a :href="links.cnerium" target="_blank" rel="noreferrer">Cnerium</a>
           <a :href="links.kordex" target="_blank" rel="noreferrer">Kordex</a>
         </div>

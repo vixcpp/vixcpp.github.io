@@ -27,28 +27,33 @@ export const site = {
 
   nav: [
     {
-      label: "Docs",
-      href: links.docs,
-      external: true,
-    },
-    {
-      label: "Registry",
-      href: links.registry,
-      external: true,
-    },
-    {
-      label: "Blog",
-      href: links.blog,
-      external: true,
-    },
-    {
       label: "Install",
       href: links.install,
       external: false,
     },
     {
-      label: "GitHub",
-      href: links.github,
+      label: "SDKs",
+      href: links.sdks,
+      external: false,
+    },
+    {
+      label: "Registry",
+      href: links.registry,
+      external: false,
+    },
+    {
+      label: "Ecosystem",
+      href: links.ecosystem,
+      external: false,
+    },
+    {
+      label: "Pico",
+      href: links.picoPage,
+      external: false,
+    },
+    {
+      label: "Docs",
+      href: links.docs,
       external: true,
     },
   ],

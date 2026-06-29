@@ -7,16 +7,21 @@
       </RouterLink>
 
       <nav class="nav" aria-label="Main navigation">
-        <a
-          v-for="item in site.nav"
-          :key="item.label"
-          class="nav__link"
-          :href="item.href"
-          :target="item.external ? '_blank' : undefined"
-          :rel="item.external ? 'noreferrer' : undefined"
-        >
-          {{ item.label }}
-        </a>
+        <template v-for="item in site.nav" :key="item.label">
+          <a
+            v-if="item.external"
+            class="nav__link"
+            :href="item.href"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {{ item.label }}
+          </a>
+
+          <RouterLink v-else class="nav__link" :to="item.href">
+            {{ item.label }}
+          </RouterLink>
+        </template>
       </nav>
 
       <a
