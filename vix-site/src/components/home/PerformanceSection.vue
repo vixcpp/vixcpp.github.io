@@ -3,16 +3,35 @@
     <div class="performance__inner container">
       <SectionTitle
         eyebrow="Performance"
-        title="Fast feedback is part of the Vix.cpp workflow."
-        description="Vix.cpp performance is measured across the real developer loop: run a single C++ file, build native targets, benchmark HTTP endpoints, and protect internal runtime paths with Release baselines."
+        title="Vix.cpp performance is measured across the real runtime."
+        description="The numbers below come from local release benchmarks: HTTP throughput, router matching, runtime queues, executor paths, HTTP objects, sessions, and app registration."
         center
       />
+
+      <div class="performance__meta">
+        <div>
+          <span>Build</span>
+          <strong>Release</strong>
+        </div>
+        <div>
+          <span>Compiler</span>
+          <strong>GCC 13.3.0</strong>
+        </div>
+        <div>
+          <span>Machine</span>
+          <strong>HP EliteBook, x86_64</strong>
+        </div>
+        <div>
+          <span>CPU</span>
+          <strong>8 threads</strong>
+        </div>
+      </div>
 
       <div class="performance__shell">
         <div
           class="performance__tabs"
           role="tablist"
-          aria-label="Performance benchmarks"
+          aria-label="Performance benchmark groups"
         >
           <button
             v-for="tab in tabs"
@@ -28,10 +47,10 @@
           </button>
         </div>
 
-        <div class="performance__chart-card">
-          <div class="performance__chart-head">
+        <article class="performance__panel">
+          <div class="performance__panel-head">
             <div>
-              <p class="performance__chart-kicker">{{ activeTab.kicker }}</p>
+              <p class="performance__kicker">{{ activeTab.kicker }}</p>
               <h3>{{ activeTab.title }}</h3>
               <span>{{ activeTab.subtitle }}</span>
             </div>
@@ -42,104 +61,67 @@
             </div>
           </div>
 
-          <div class="performance__bars" aria-label="Benchmark chart">
+          <div class="performance__metrics">
             <div
-              v-for="bar in activeTab.bars"
-              :key="bar.name"
-              class="performance__bar-item"
+              v-for="metric in activeTab.metrics"
+              :key="metric.label"
+              class="performance-metric"
+              :class="{ 'performance-metric--featured': metric.featured }"
             >
-              <div class="performance__bar-value">{{ bar.display }}</div>
+              <span>{{ metric.label }}</span>
+              <strong>{{ metric.value }}</strong>
+              <small>{{ metric.note }}</small>
 
-              <div class="performance__bar-track">
+              <div class="performance-metric__track" aria-hidden="true">
                 <div
-                  class="performance__bar-fill"
-                  :style="{ height: bar.height + '%' }"
-                >
-                  <span
-                    v-if="bar.logo"
-                    class="performance__bar-logo"
-                    aria-hidden="true"
-                  >
-                    <svg
-                      viewBox="0 0 120 120"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="60" cy="60" r="56" fill="#0f1215" />
-                      <circle
-                        cx="60"
-                        cy="60"
-                        r="54"
-                        stroke="#22c55e"
-                        stroke-opacity="0.35"
-                        stroke-width="3"
-                      />
-                      <polygon
-                        points="28,24 45,24 60,96 50,96"
-                        fill="#86efac"
-                      />
-                      <polygon
-                        points="92,24 75,24 60,96 70,96"
-                        fill="#22c55e"
-                      />
-                    </svg>
-                  </span>
-                </div>
+                  class="performance-metric__fill"
+                  :style="{ width: metric.width + '%' }"
+                />
               </div>
-
-              <strong>{{ bar.name }}</strong>
-              <span>{{ bar.note }}</span>
             </div>
           </div>
 
-          <div class="performance__facts">
-            <div v-for="fact in activeTab.facts" :key="fact.label">
-              <strong>{{ fact.value }}</strong>
-              <span>{{ fact.label }}</span>
+          <div class="performance__table">
+            <div class="performance__table-head">
+              <div>Benchmark</div>
+              <div>Median</div>
+              <div>Notes</div>
+            </div>
+
+            <div
+              v-for="row in activeTab.rows"
+              :key="row.name"
+              class="performance__table-row"
+            >
+              <div>
+                <strong>{{ row.name }}</strong>
+                <span>{{ row.group }}</span>
+              </div>
+              <div>{{ row.value }}</div>
+              <div>{{ row.note }}</div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="performance__trust">
-        <article>
-          <strong>Run fast</strong>
-          <span
-            >Small C++ files can be edited and executed directly with vix
-            run.</span
-          >
-        </article>
-
-        <article>
-          <strong>Build smarter</strong>
-          <span
-            >Clean target builds can return through the build-state fast
-            path.</span
-          >
-        </article>
-
-        <article>
-          <strong>Protect baselines</strong>
-          <span
-            >Runtime, executor, router, HTTP, session, and app paths are
-            benchmarked.</span
-          >
         </article>
       </div>
 
       <div class="performance__commands">
-        <CommandLine command="time vix run main.cpp" />
-        <CommandLine command="vix build --fast --build-target vix" />
         <CommandLine
-          command="wrk -t8 -c800 -d30s --latency http://127.0.0.1:8080/bench"
+          command="vix build --clean --preset release --build-target all -v -- -DVIX_CORE_BUILD_BENCHMARKS=ON -DVIX_CORE_BUILD_TESTS=ON"
+        />
+
+        <CommandLine command="ls -lah build-release/benchmarks/core" />
+
+        <CommandLine
+          command="./scripts/run_core_benchmarks.sh --bin-dir build-release/benchmarks/core --out-dir benchmarks/results/current --version current --runner local --machine softadastra-HP-EliteBook-x360-1030-G3"
         />
       </div>
 
       <p class="performance__note">
-        The vix run numbers show a local single-file edit/run feedback loop. The
-        build numbers describe a clean no-op target build where the fast path
-        can skip the full pipeline. The HTTP result comes from a local v2.7
-        release benchmark on an HP EliteBook, not a dedicated benchmark server.
+        These are local benchmark numbers, not universal production claims. Very
+        small microbenchmarks can produce extremely high ops/sec values, so they
+        are used mainly as regression guardrails. The broader router, runtime,
+        HTTP, executor, session, and app groups are the most useful signals for
+        release tracking.
       </p>
     </div>
   </section>
@@ -150,202 +132,403 @@ import { computed, ref } from "vue";
 import CommandLine from "@/components/common/CommandLine.vue";
 import SectionTitle from "@/components/common/SectionTitle.vue";
 
-const activeKey = ref("run");
+const activeKey = ref("http");
 
 const tabs = [
   {
-    key: "run",
-    label: "vix run",
-    kicker: "Single-file feedback loop",
-    title: "Edit a C++ file and run it in about half a second.",
-    subtitle:
-      "A tiny C++ file was edited and executed twice locally with vix run. The full command completed around 0.57s.",
-    version: "local",
-    mode: "dev loop",
-    bars: [
-      {
-        name: "First run",
-        display: "0.579s",
-        height: 100,
-        note: "Hello, world",
-        logo: true,
-      },
-      {
-        name: "After edit",
-        display: "0.569s",
-        height: 96,
-        note: "Hellodd, world",
-        logo: false,
-      },
-      {
-        name: "Feedback loop",
-        display: "~0.57s",
-        height: 82,
-        note: "edit → run → output",
-        logo: false,
-      },
-    ],
-    facts: [
-      { value: "0.579s", label: "first local run" },
-      { value: "0.569s", label: "after source edit" },
-      { value: "1 file", label: "main.cpp" },
-      { value: "direct", label: "vix run workflow" },
-    ],
-  },
-  {
-    key: "build",
-    label: "vix build",
-    kicker: "Build-state fast path",
-    title: "No-op target builds can return in hundreds of milliseconds.",
-    subtitle:
-      "When the project state proves nothing changed, vix build --fast can skip the full build pipeline and return early.",
-    version: "build graph",
-    mode: "fast path",
-    bars: [
-      {
-        name: "vix build --fast",
-        display: "303ms",
-        height: 100,
-        note: "clean no-op target",
-        logo: true,
-      },
-      {
-        name: "normal build",
-        display: "6.10s",
-        height: 42,
-        note: "full no-op path",
-        logo: false,
-      },
-      {
-        name: "graph disabled",
-        display: "6.16s",
-        height: 40,
-        note: "compat path",
-        logo: false,
-      },
-    ],
-    facts: [
-      { value: "303ms", label: "fast no-op build" },
-      { value: "6.10s", label: "normal no-op build" },
-      { value: "6.16s", label: "graph disabled" },
-      { value: "~20x", label: "faster no-op path" },
-    ],
-  },
-  {
     key: "http",
     label: "HTTP",
-    kicker: "Local v2.7 benchmark",
-    title: "HTTP endpoint reached 112k requests per second locally.",
+    kicker: "Local HTTP benchmark",
+    title: "Vix.cpp reached 112k requests per second locally.",
     subtitle:
-      "Measured with wrk, 8 threads, 800 connections, and a 30 second run against a local release build.",
-    version: "v2.7",
+      "A simple /bench endpoint was measured with wrk using 8 threads, 800 connections, and a 30 second run.",
+    version: "v2.7.0",
     mode: "Release",
-    bars: [
+    metrics: [
       {
-        name: "Vix HTTP",
-        display: "112,539",
-        height: 100,
-        note: "requests/sec",
-        logo: true,
+        label: "Requests/sec",
+        value: "112,539",
+        note: "local /bench endpoint",
+        width: 100,
+        featured: true,
       },
       {
-        name: "Requests",
-        display: "3,386,276",
-        height: 74,
+        label: "Total requests",
+        value: "3,386,276",
         note: "completed in 30.09s",
-        logo: false,
+        width: 86,
+        featured: false,
       },
       {
-        name: "p99 latency",
-        display: "12.19ms",
-        height: 38,
-        note: "at 800 connections",
-        logo: false,
+        label: "Average latency",
+        value: "7.31ms",
+        note: "800 connections",
+        width: 62,
+        featured: false,
+      },
+      {
+        label: "P99 latency",
+        value: "12.19ms",
+        note: "tail latency",
+        width: 72,
+        featured: true,
       },
     ],
-    facts: [
-      { value: "112,539", label: "requests/sec" },
-      { value: "7.31ms", label: "average latency" },
-      { value: "12.19ms", label: "p99 latency" },
-      { value: "800", label: "connections" },
+    rows: [
+      {
+        name: "wrk throughput",
+        group: "http.bench",
+        value: "112,539 req/s",
+        note: "Simple local endpoint under 800 concurrent connections.",
+      },
+      {
+        name: "Average latency",
+        group: "http.bench",
+        value: "7.31ms",
+        note: "Measured during the same 30 second run.",
+      },
+      {
+        name: "P90 latency",
+        group: "http.bench",
+        value: "8.73ms",
+        note: "Good mid-tail signal for the current HTTP runtime.",
+      },
+      {
+        name: "P99 latency",
+        group: "http.bench",
+        value: "12.19ms",
+        note: "The most important latency number from this run.",
+      },
     ],
   },
   {
     key: "router",
     label: "Router",
-    kicker: "Core benchmark baseline",
-    title: "Route matching costs are visible and tracked.",
+    kicker: "Core router benchmark",
+    title: "Route matching paths are tracked separately.",
     subtitle:
-      "Static, parameterized, nested, and query-string route paths are measured separately.",
-    version: "v2.6.3",
+      "Static routes, parameterized routes, query strings, wrong methods, and mixed route tables are measured as separate benchmark cases.",
+    version: "current",
     mode: "Release",
-    bars: [
+    metrics: [
       {
-        name: "Strip query",
-        display: "41.6M",
-        height: 100,
+        label: "Strip query",
+        value: "40.64M",
         note: "ops/sec",
-        logo: true,
+        width: 100,
+        featured: true,
       },
       {
-        name: "Static route",
-        display: "9.37M",
-        height: 66,
+        label: "Static route",
+        value: "9.43M",
         note: "ops/sec",
-        logo: false,
+        width: 68,
+        featured: true,
       },
       {
-        name: "Param route",
-        display: "5.67M",
-        height: 48,
+        label: "Param route",
+        value: "5.62M",
         note: "ops/sec",
-        logo: false,
+        width: 52,
+        featured: false,
+      },
+      {
+        label: "Many static",
+        value: "5.96M",
+        note: "ops/sec",
+        width: 55,
+        featured: false,
       },
     ],
-    facts: [
-      { value: "41.6M", label: "strip query ops/sec" },
-      { value: "9.37M", label: "static route ops/sec" },
-      { value: "5.67M", label: "param route ops/sec" },
-      { value: "3.91M", label: "nested param ops/sec" },
+    rows: [
+      {
+        name: "router.match/strip_query",
+        group: "router.match",
+        value: "40.64M ops/sec",
+        note: "Fast query stripping path before route matching.",
+      },
+      {
+        name: "router.match/static_route",
+        group: "router.match",
+        value: "9.43M ops/sec",
+        note: "Simple static route lookup path.",
+      },
+      {
+        name: "router.match/param_route",
+        group: "router.match",
+        value: "5.62M ops/sec",
+        note: "Parameterized route matching path.",
+      },
+      {
+        name: "router.match/many_static_routes",
+        group: "router.match",
+        value: "5.96M ops/sec",
+        note: "Route table with many static entries.",
+      },
     ],
   },
   {
     key: "runtime",
     label: "Runtime",
-    kicker: "Core benchmark baseline",
-    title: "Runtime queues and scheduler paths are benchmarked.",
+    kicker: "Core runtime benchmark",
+    title: "Runtime queues and worker paths are part of the baseline.",
     subtitle:
-      "Low-level runtime pieces are measured because higher-level HTTP, sessions, and app APIs depend on them.",
-    version: "v2.6.3",
+      "The low-level queue, scheduler, and worker paths are benchmarked because the higher-level HTTP and app layers depend on them.",
+    version: "current",
     mode: "Release",
-    bars: [
+    metrics: [
       {
-        name: "Queue push/pop",
-        display: "49.6M",
-        height: 100,
+        label: "Queue push/pop",
+        value: "55.52M",
         note: "ops/sec",
-        logo: true,
+        width: 100,
+        featured: true,
       },
       {
-        name: "Queue push/clear",
-        display: "33.3M",
-        height: 78,
+        label: "Queue push/clear",
+        value: "33.86M",
         note: "ops/sec",
-        logo: false,
+        width: 76,
+        featured: false,
       },
       {
-        name: "Worker tasks",
-        display: "747K",
-        height: 42,
+        label: "Worker tasks",
+        value: "1.29M",
         note: "ops/sec",
-        logo: false,
+        width: 48,
+        featured: true,
+      },
+      {
+        label: "Scheduler tasks",
+        value: "692K",
+        note: "ops/sec",
+        width: 38,
+        featured: false,
       },
     ],
-    facts: [
-      { value: "49.6M", label: "queue push/pop" },
-      { value: "33.3M", label: "queue push/clear" },
-      { value: "747K", label: "worker tasks" },
-      { value: "677K", label: "scheduler tasks" },
+    rows: [
+      {
+        name: "runtime.queue/push_pop",
+        group: "runtime.queue",
+        value: "55.52M ops/sec",
+        note: "Queue push and pop path.",
+      },
+      {
+        name: "runtime.queue/push_clear",
+        group: "runtime.queue",
+        value: "33.86M ops/sec",
+        note: "Queue push and clear path.",
+      },
+      {
+        name: "runtime.worker/submit_complete_tasks",
+        group: "runtime.worker",
+        value: "1.29M ops/sec",
+        note: "Worker submit and completion path.",
+      },
+      {
+        name: "runtime.scheduler/submit_complete_tasks",
+        group: "runtime.scheduler",
+        value: "692K ops/sec",
+        note: "Scheduler submit and completion path.",
+      },
+    ],
+  },
+  {
+    key: "objects",
+    label: "HTTP objects",
+    kicker: "HTTP object benchmark",
+    title: "Request and response object paths are measured directly.",
+    subtitle:
+      "These benchmarks track object construction and response helper paths before full network and application costs are added.",
+    version: "current",
+    mode: "Release",
+    metrics: [
+      {
+        label: "Response body",
+        value: "65.92M",
+        note: "ops/sec",
+        width: 100,
+        featured: true,
+      },
+      {
+        label: "Request default",
+        value: "10.85M",
+        note: "ops/sec",
+        width: 72,
+        featured: true,
+      },
+      {
+        label: "Static target",
+        value: "1.06M",
+        note: "ops/sec",
+        width: 46,
+        featured: false,
+      },
+      {
+        label: "Query target",
+        value: "656K",
+        note: "ops/sec",
+        width: 36,
+        featured: false,
+      },
+    ],
+    rows: [
+      {
+        name: "http.response/construct_status_body",
+        group: "http.response",
+        value: "65.92M ops/sec",
+        note: "Status + body response construction path.",
+      },
+      {
+        name: "http.request/default_construct",
+        group: "http.request",
+        value: "10.85M ops/sec",
+        note: "Default request object construction.",
+      },
+      {
+        name: "http.request/construct_static_target",
+        group: "http.request",
+        value: "1.06M ops/sec",
+        note: "Request object with static target.",
+      },
+      {
+        name: "http.request/construct_query_target",
+        group: "http.request",
+        value: "656K ops/sec",
+        note: "Request object with query target parsing.",
+      },
+    ],
+  },
+  {
+    key: "executor",
+    label: "Executor",
+    kicker: "Executor benchmark",
+    title: "Executor submit, post, and metrics paths are tracked.",
+    subtitle:
+      "Executor numbers are useful for detecting regressions in task scheduling, completion, and runtime metric reads.",
+    version: "current",
+    mode: "Release",
+    metrics: [
+      {
+        label: "Idle reads",
+        value: "107.44M",
+        note: "ops/sec guardrail",
+        width: 100,
+        featured: false,
+      },
+      {
+        label: "Running reads",
+        value: "2.72M",
+        note: "ops/sec",
+        width: 64,
+        featured: false,
+      },
+      {
+        label: "Submit task",
+        value: "494K",
+        note: "ops/sec",
+        width: 44,
+        featured: true,
+      },
+      {
+        label: "Post void",
+        value: "402K",
+        note: "ops/sec",
+        width: 40,
+        featured: true,
+      },
+    ],
+    rows: [
+      {
+        name: "executor.metrics/idle_reads",
+        group: "executor.metrics",
+        value: "107.44M ops/sec",
+        note: "Very small guardrail benchmark, not a marketing number.",
+      },
+      {
+        name: "executor.metrics/running_idle_reads",
+        group: "executor.metrics",
+        value: "2.72M ops/sec",
+        note: "Metric reads while the executor is active.",
+      },
+      {
+        name: "executor.submit/task_complete",
+        group: "executor.submit",
+        value: "494K ops/sec",
+        note: "Submit and complete task path.",
+      },
+      {
+        name: "executor.post/void_tasks",
+        group: "executor.post",
+        value: "402K ops/sec",
+        note: "Post void task path.",
+      },
+    ],
+  },
+  {
+    key: "app",
+    label: "App/session",
+    kicker: "Application benchmark",
+    title: "App registration and fake session transport are benchmarked.",
+    subtitle:
+      "These numbers are closer to framework-level behavior because they touch app route registration and fake request transport paths.",
+    version: "current",
+    mode: "Release",
+    metrics: [
+      {
+        label: "Session root",
+        value: "181K",
+        note: "ops/sec",
+        width: 100,
+        featured: true,
+      },
+      {
+        label: "Session health",
+        value: "168K",
+        note: "ops/sec",
+        width: 92,
+        featured: false,
+      },
+      {
+        label: "Route get",
+        value: "132K",
+        note: "ops/sec",
+        width: 72,
+        featured: true,
+      },
+      {
+        label: "Group objects",
+        value: "73K",
+        note: "ops/sec",
+        width: 48,
+        featured: false,
+      },
+    ],
+    rows: [
+      {
+        name: "session.fake_transport/single_get_root",
+        group: "session.fake_transport",
+        value: "181K ops/sec",
+        note: "Fake transport GET / path.",
+      },
+      {
+        name: "session.fake_transport/single_get_health",
+        group: "session.fake_transport",
+        value: "168K ops/sec",
+        note: "Fake transport health endpoint.",
+      },
+      {
+        name: "app.route_registration/get_routes",
+        group: "app.route_registration",
+        value: "132K ops/sec",
+        note: "Route registration lookup path.",
+      },
+      {
+        name: "app.group_registration/create_group_objects",
+        group: "app.group_registration",
+        value: "73K ops/sec",
+        note: "Group object creation path.",
+      },
     ],
   },
 ];
@@ -369,14 +552,14 @@ const activeTab = computed(
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(34, 197, 94, 0.1),
-      transparent 24rem
+      rgba(34, 197, 94, 0.12),
+      transparent 25rem
     ),
     radial-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px);
   background-size:
     auto,
     22px 22px;
-  opacity: 0.5;
+  opacity: 0.55;
   mask-image: linear-gradient(#000, transparent 88%);
 }
 
@@ -384,15 +567,47 @@ const activeTab = computed(
   position: relative;
 }
 
+.performance__meta {
+  max-width: 980px;
+  margin: 40px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.performance__meta > div {
+  padding: 17px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.performance__meta span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.performance__meta strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
 .performance__shell {
-  max-width: 900px;
-  margin: 42px auto 0;
+  max-width: 980px;
+  margin: 26px auto 0;
 }
 
 .performance__tabs {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   border-bottom: 1px solid var(--line);
   overflow-x: auto;
   scrollbar-width: none;
@@ -408,9 +623,9 @@ const activeTab = computed(
   border: 0;
   background: transparent;
   color: var(--text-soft);
-  padding: 0.95rem 1.2rem;
-  font-size: 0.92rem;
-  font-weight: 750;
+  padding: 0.95rem 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 800;
   cursor: pointer;
 }
 
@@ -437,49 +652,51 @@ const activeTab = computed(
   background: var(--green);
 }
 
-.performance__chart-card {
-  position: relative;
+.performance__panel {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
     var(--bg-ink);
   box-shadow: var(--shadow-lg);
 }
 
-.performance__chart-head {
+.performance__panel-head {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  padding: 26px 28px;
+  padding: 28px;
   border-bottom: 1px solid var(--line-soft);
 }
 
-.performance__chart-kicker {
+.performance__kicker {
   margin: 0 0 8px;
   color: var(--green-bright);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.performance__chart-head h3 {
+.performance__panel-head h3 {
+  max-width: 680px;
   margin: 0;
   color: var(--text);
   font-size: clamp(1.35rem, 2.2vw, 2rem);
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.04em;
 }
 
-.performance__chart-head span {
+.performance__panel-head span {
   display: block;
-  margin-top: 8px;
+  max-width: 720px;
+  margin-top: 9px;
   color: var(--text-soft);
   font-size: 0.92rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .performance__badge {
@@ -487,8 +704,8 @@ const activeTab = computed(
   display: grid;
   place-items: center;
   align-content: center;
-  min-width: 92px;
-  height: 66px;
+  min-width: 98px;
+  height: 68px;
   padding: 0 14px;
   border: 1px solid rgba(34, 197, 94, 0.25);
   border-radius: var(--radius-md);
@@ -504,230 +721,197 @@ const activeTab = computed(
 
 .performance__badge span {
   margin: 2px 0 0;
-  color: rgba(187, 247, 208, 0.7);
+  color: rgba(187, 247, 208, 0.72);
   font-size: 0.72rem;
-  font-weight: 750;
+  font-weight: 800;
 }
 
-.performance__bars {
+.performance__metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: end;
-  gap: 28px;
-  min-height: 290px;
-  padding: 34px 42px 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 24px;
 }
 
-.performance__bar-item {
-  display: grid;
-  justify-items: center;
-  align-items: end;
+.performance-metric {
+  position: relative;
+  overflow: hidden;
   min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.performance__bar-value {
-  margin-bottom: 8px;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.98rem;
-  font-weight: 850;
-  letter-spacing: -0.03em;
-}
-
-.performance__bar-track {
-  position: relative;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  width: min(100%, 104px);
-  height: 170px;
-}
-
-.performance__bar-fill {
-  position: relative;
-  width: 100%;
-  min-height: 38px;
-  border-radius: 12px 12px 0 0;
+.performance-metric--featured {
+  border-color: rgba(34, 197, 94, 0.32);
   background:
-    linear-gradient(180deg, rgba(134, 239, 172, 0.95), rgba(34, 197, 94, 0.74)),
-    var(--green);
-  box-shadow: 0 16px 38px rgba(34, 197, 94, 0.18);
+    radial-gradient(
+      circle at top right,
+      rgba(34, 197, 94, 0.14),
+      transparent 42%
+    ),
+    rgba(255, 255, 255, 0.035);
 }
 
-.performance__bar-item:nth-child(2) .performance__bar-fill {
-  background: linear-gradient(180deg, #7dd3fc, #64748b);
-  box-shadow: 0 16px 38px rgba(125, 211, 252, 0.12);
-}
-
-.performance__bar-item:nth-child(3) .performance__bar-fill {
-  background: linear-gradient(180deg, #c4b5fd, #64748b);
-  box-shadow: 0 16px 38px rgba(196, 181, 253, 0.12);
-}
-
-.performance__bar-logo {
-  position: absolute;
-  left: 50%;
-  bottom: 16px;
-  width: 44px;
-  height: 44px;
-  transform: translateX(-50%);
-}
-
-.performance__bar-logo svg {
-  width: 100%;
-  height: 100%;
-}
-
-.performance__bar-item strong {
-  margin-top: 14px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 850;
-  text-align: center;
-}
-
-.performance__bar-item span {
-  margin-top: 4px;
-  color: var(--text-muted);
-  font-size: 0.76rem;
-  font-weight: 650;
-  text-align: center;
-}
-
-.performance__facts {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--line-soft);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.performance__facts div {
-  padding: 18px 16px;
-  border-right: 1px solid var(--line-soft);
-  text-align: center;
-}
-
-.performance__facts div:last-child {
-  border-right: 0;
-}
-
-.performance__facts strong {
+.performance-metric span {
   display: block;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 850;
-}
-
-.performance__facts span {
-  display: block;
-  margin-top: 6px;
   color: var(--text-muted);
   font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.performance__trust {
-  max-width: 900px;
-  margin: 24px auto 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.performance__trust article {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.performance__trust strong {
-  display: block;
-  color: var(--text);
-  font-size: 0.9rem;
   font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.performance__trust span {
+.performance-metric strong {
   display: block;
-  margin-top: 6px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
+  margin-top: 10px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.performance-metric small {
+  display: block;
+  margin-top: 5px;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.performance-metric__track {
+  margin-top: 16px;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.performance-metric__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #86efac);
+}
+
+.performance__table {
+  border-top: 1px solid var(--line-soft);
+}
+
+.performance__table-head,
+.performance__table-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.25fr) minmax(150px, 0.65fr) minmax(
+      260px,
+      1.1fr
+    );
+}
+
+.performance__table-head {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.performance__table-head > div {
+  padding: 14px 20px;
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.performance__table-row {
+  border-top: 1px solid var(--line-soft);
+}
+
+.performance__table-row > div {
+  min-width: 0;
+  padding: 17px 20px;
+  color: var(--text-soft);
+  font-size: 0.88rem;
   line-height: 1.55;
 }
 
+.performance__table-row strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.performance__table-row span {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.performance__table-row > div:nth-child(2) {
+  color: #86efac;
+  font-family: var(--font-mono);
+  font-weight: 850;
+}
+
 .performance__commands {
-  max-width: 900px;
+  max-width: 980px;
   margin: 26px auto 0;
   display: grid;
   gap: 8px;
 }
 
 .performance__note {
-  max-width: 860px;
+  max-width: 900px;
   margin: 20px auto 0;
   color: var(--text-muted);
   font-size: 0.88rem;
-  line-height: 1.7;
+  line-height: 1.75;
   text-align: center;
 }
 
-@media (max-width: 760px) {
-  .performance__chart-head {
+@media (max-width: 980px) {
+  .performance__meta,
+  .performance__metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .performance__table {
+    overflow-x: auto;
+  }
+
+  .performance__table-head,
+  .performance__table-row {
+    min-width: 780px;
+  }
+}
+
+@media (max-width: 720px) {
+  .performance__panel-head {
     flex-direction: column;
   }
 
   .performance__badge {
     place-items: start;
-    align-content: center;
     text-align: left;
   }
 
-  .performance__bars {
-    gap: 18px;
-    padding: 28px 20px;
-  }
-
-  .performance__facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .performance__facts div:nth-child(2) {
-    border-right: 0;
-  }
-
-  .performance__facts div:nth-child(-n + 2) {
-    border-bottom: 1px solid var(--line-soft);
-  }
-
-  .performance__trust {
+  .performance__meta {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 520px) {
-  .performance__bars {
+@media (max-width: 560px) {
+  .performance__metrics {
     grid-template-columns: 1fr;
-    min-height: auto;
+    padding: 18px;
   }
 
-  .performance__bar-track {
-    width: 100%;
-    height: 78px;
-    align-items: center;
-    justify-content: flex-start;
+  .performance__panel-head {
+    padding: 22px;
   }
 
-  .performance__bar-fill {
-    height: 34px !important;
-    border-radius: 999px;
-  }
-
-  .performance__bar-logo {
-    display: none;
+  .performance__tab {
+    padding-inline: 0.9rem;
   }
 }
 </style>
