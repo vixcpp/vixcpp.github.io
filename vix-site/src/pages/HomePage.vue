@@ -9,7 +9,11 @@
     <!-- 2. Show how the user starts and works with it -->
     <InstallSection />
     <CliSection />
+    <ReplySection />
+    <DiagnosticsSection />
+    <ReplaySection />
     <TemplatesSection />
+    <RendererSection />
     <VixAppSection />
     <AppModulesSection />
     <ProductionSection />
@@ -64,6 +68,10 @@ import AppModulesSection from "@/components/home/AppModulesSection.vue";
 import ProductionSection from "@/components/home/ProductionSection.vue";
 import VixAppSection from "@/components/home/VixAppSection.vue";
 import TemplatesSection from "@/components/home/TemplatesSection.vue";
+import ReplySection from "@/components/home/ReplySection.vue";
+import DiagnosticsSection from "@/components/home/DiagnosticsSection.vue";
+import ReplaySection from "@/components/home/ReplaySection.vue";
+import RendererSection from "@/components/home/RendererSection.vue";
 </script>
 
 <style scoped>
