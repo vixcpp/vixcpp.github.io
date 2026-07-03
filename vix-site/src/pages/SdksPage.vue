@@ -41,8 +41,22 @@
           class="profile-card"
         >
           <span class="profile-card__name">{{ profile.name }}</span>
+
           <p>{{ profile.description }}</p>
-          <CommandLine :command="`vix upgrade --sdk ${profile.name}`" />
+
+          <div class="profile-card__footer">
+            <CommandLine :command="`vix upgrade --sdk ${profile.name}`" />
+
+            <a
+              class="profile-card__docs"
+              :href="profile.link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read docs
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
         </article>
       </div>
     </section>
@@ -80,39 +94,47 @@ import SectionTitle from "@/components/common/SectionTitle.vue";
 const profiles = [
   {
     name: "default",
+    link: "https://docs.vixcpp.com/sdks/default",
     description:
       "Core Vix workflow and common runtime foundations for normal C++ application development.",
   },
   {
     name: "web",
+    link: "https://docs.vixcpp.com/sdks/web",
     description:
       "HTTP, middleware, WebSocket, validation, crypto, WebRPC, requests, and backend service workflows.",
   },
   {
     name: "data",
+    link: "https://docs.vixcpp.com/sdks/data",
     description:
       "Database, ORM, key-value storage, cache, and persistence-oriented workflows.",
   },
   {
     name: "desktop",
+    link: "https://docs.vixcpp.com/sdks/desktop",
     description: "Desktop shell workflows for Vix web UI applications.",
   },
   {
     name: "p2p",
+    link: "https://docs.vixcpp.com/sdks/p2p",
     description: "Peer-to-peer and distributed application foundations.",
   },
   {
     name: "game",
+    link: "https://docs.vixcpp.com/sdks/game",
     description:
       "Game-oriented runtime workflows and native application experiments.",
   },
   {
     name: "agent",
+    link: "https://docs.vixcpp.com/sdks/agent",
     description:
       "Local agent workflows and higher-level automation built around Vix.",
   },
   {
     name: "all",
+    link: "https://docs.vixcpp.com/sdks/all",
     description:
       "The full SDK profile for development, validation, release checks, and advanced usage.",
   },
@@ -218,6 +240,7 @@ const profiles = [
     box-shadow var(--speed) var(--ease),
     transform var(--speed) var(--ease);
 }
+
 .profile-card:hover {
   border-color: var(--green-line);
   box-shadow: var(--shadow-sm);
@@ -243,9 +266,30 @@ const profiles = [
   line-height: 1.62;
 }
 
+.profile-card__footer {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
 .profile-card :deep(.cmd) {
   width: 100%;
-  margin-top: auto;
+}
+
+.profile-card__docs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: color var(--speed) var(--ease);
+}
+
+.profile-card__docs:hover {
+  color: var(--green-soft);
 }
 
 .sdk-notes__inner {

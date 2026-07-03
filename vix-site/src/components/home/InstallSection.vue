@@ -11,7 +11,12 @@
         <div class="install__actions">
           <BaseButton :href="links.install" arrow> Install guide </BaseButton>
 
-          <BaseButton :href="links.docs" variant="secondary" external arrow>
+          <BaseButton
+            href="https://docs.vixcpp.com/getting-started/installation"
+            variant="secondary"
+            external
+            arrow
+          >
             Read the docs
           </BaseButton>
         </div>

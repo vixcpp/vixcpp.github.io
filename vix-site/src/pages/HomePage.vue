@@ -9,6 +9,10 @@
     <!-- 2. Show how the user starts and works with it -->
     <InstallSection />
     <CliSection />
+    <TemplatesSection />
+    <VixAppSection />
+    <AppModulesSection />
+    <ProductionSection />
     <DifferenceSection />
 
     <!-- 3. Build trust with numbers and positioning -->
@@ -56,6 +60,10 @@ import DirectionSection from "@/components/home/DirectionSection.vue";
 
 import SoftadastraSection from "@/components/home/SoftadastraSection.vue";
 import ResourcesSection from "@/components/home/ResourcesSection.vue";
+import AppModulesSection from "@/components/home/AppModulesSection.vue";
+import ProductionSection from "@/components/home/ProductionSection.vue";
+import VixAppSection from "@/components/home/VixAppSection.vue";
+import TemplatesSection from "@/components/home/TemplatesSection.vue";
 </script>
 
 <style scoped>

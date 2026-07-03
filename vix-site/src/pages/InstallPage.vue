@@ -9,11 +9,11 @@
         />
 
         <div class="install-hero__actions">
-          <BaseButton :href="links.docs" external arrow>
+          <BaseButton :href="installDocsUrl" external arrow>
             Read installation docs
           </BaseButton>
 
-          <BaseButton :href="links.github" variant="secondary" external arrow>
+          <BaseButton :href="releasesUrl" variant="secondary" external arrow>
             View releases
           </BaseButton>
         </div>
@@ -64,6 +64,16 @@
             need, then install it. This keeps the CLI bootstrap simple while
             letting the project grow into the SDK it actually uses.
           </p>
+
+          <a
+            class="sdk-flow__link"
+            :href="sdkProfilesUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read SDK profiles docs
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
     </section>
@@ -75,8 +85,11 @@ import BaseButton from "@/components/common/BaseButton.vue";
 import CommandLine from "@/components/common/CommandLine.vue";
 import SectionTitle from "@/components/common/SectionTitle.vue";
 
-import { links } from "@/data/links";
 import { site } from "@/data/site";
+
+const installDocsUrl = "https://docs.vixcpp.com/getting-started/installation";
+const sdkProfilesUrl = "https://docs.vixcpp.com/sdks/";
+const releasesUrl = "https://github.com/vixcpp/vix/releases";
 </script>
 
 <style scoped>
@@ -148,6 +161,23 @@ import { site } from "@/data/site";
   color: var(--text-soft);
   font-size: 0.96rem;
   line-height: 1.72;
+}
+
+.sdk-flow__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: color var(--speed) var(--ease);
+}
+
+.sdk-flow__link:hover {
+  color: var(--green-soft);
 }
 
 @media (max-width: 900px) {
