@@ -37,9 +37,10 @@ Usage:
   install.ps1
 
 Environment:
-  VIX_VERSION          Release version. Example: v2.7.0. Default: latest
-  VIX_REPO             GitHub repo. Default: vixcpp/vix
-  VIX_INSTALL_DIR      CLI bin dir. Default: %LOCALAPPDATA%\Vix\bin
+  VIX_VERSION             Release version. Example: v2.7.0. Default: latest
+  VIX_REPO                GitHub repo. Default: vixcpp/vix
+  VIX_INSTALL_DIR         CLI bin dir. Default: %LOCALAPPDATA%\Vix\bin
+  VIX_INSTALL_SHARE_DIR   Runtime assets dir. Default: %LOCALAPPDATA%\Vix\share
 
 After install:
   vix upgrade
@@ -89,6 +90,13 @@ $BinDir = if ($env:VIX_INSTALL_DIR) {
   $env:VIX_INSTALL_DIR
 } else {
   Join-Path $env:LOCALAPPDATA "Vix\bin"
+}
+
+$ShareDir = if ($env:VIX_INSTALL_SHARE_DIR) {
+  $env:VIX_INSTALL_SHARE_DIR
+} else {
+  $installRoot = Split-Path -Parent $BinDir
+  Join-Path $installRoot "share"
 }
 
 $BinName = "vix.exe"
@@ -304,12 +312,20 @@ function Install-Cli([string]$archivePath, [string]$tmpDir) {
 
   New-Item -ItemType Directory -Force -Path $extractDir | Out-Null
   New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $ShareDir | Out-Null
 
   Step "Installing to $BinDir\$BinName"
 
-  Expand-Archive -LiteralPath $archivePath -DestinationPath $extractDir -Force
+  Expand-Archive `
+    -LiteralPath $archivePath `
+    -DestinationPath $extractDir `
+    -Force
 
-  $exeCandidate = Get-ChildItem -LiteralPath $extractDir -Recurse -File -Filter $BinName |
+  $exeCandidate = Get-ChildItem `
+    -LiteralPath $extractDir `
+    -Recurse `
+    -File `
+    -Filter $BinName |
     Select-Object -First 1
 
   if (-not $exeCandidate) {
@@ -323,8 +339,70 @@ function Install-Cli([string]$archivePath, [string]$tmpDir) {
     $exe,
     [System.StringComparison]::OrdinalIgnoreCase
   )) {
-    Copy-Item -LiteralPath $exeCandidate.FullName -Destination $exe -Force
+    Copy-Item `
+      -LiteralPath $exeCandidate.FullName `
+      -Destination $exe `
+      -Force
   }
+
+  $noteSource = Join-Path $extractDir "share\vix\note"
+  $noteDestination = Join-Path $ShareDir "vix\note"
+  $noteParent = Split-Path -Parent $noteDestination
+
+  $noteIndex = Join-Path $noteSource "index.html"
+  $noteCss = Join-Path $noteSource "assets\note.css"
+  $noteJs = Join-Path $noteSource "assets\note.js"
+
+  if (-not (Test-Path -LiteralPath $noteIndex -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note index.html"
+  }
+
+  if (-not (Test-Path -LiteralPath $noteCss -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note note.css"
+  }
+
+  if (-not (Test-Path -LiteralPath $noteJs -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note note.js"
+  }
+
+  Step "Installing Vix Note assets to $noteDestination"
+
+  New-Item `
+    -ItemType Directory `
+    -Force `
+    -Path $noteParent |
+    Out-Null
+
+  if (Test-Path -LiteralPath $noteDestination) {
+    Remove-Item `
+      -LiteralPath $noteDestination `
+      -Recurse `
+      -Force
+  }
+
+  Copy-Item `
+    -LiteralPath $noteSource `
+    -Destination $noteDestination `
+    -Recurse `
+    -Force
+
+  $installedIndex = Join-Path $noteDestination "index.html"
+  $installedCss = Join-Path $noteDestination "assets\note.css"
+  $installedJs = Join-Path $noteDestination "assets\note.js"
+
+  if (-not (Test-Path -LiteralPath $installedIndex -PathType Leaf)) {
+    Die "failed to install Vix Note index.html"
+  }
+
+  if (-not (Test-Path -LiteralPath $installedCss -PathType Leaf)) {
+    Die "failed to install Vix Note note.css"
+  }
+
+  if (-not (Test-Path -LiteralPath $installedJs -PathType Leaf)) {
+    Die "failed to install Vix Note note.js"
+  }
+
+  Ok "Vix Note assets installed"
 
   return $exe
 }

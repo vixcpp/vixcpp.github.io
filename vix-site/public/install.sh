@@ -6,6 +6,7 @@ MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 VIX_REPO="${VIX_REPO:-vixcpp/vix}"
 VIX_VERSION="${VIX_VERSION:-latest}"
 VIX_INSTALL_BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
+VIX_INSTALL_SHARE_DIR="${VIX_INSTALL_SHARE_DIR:-$HOME/.local/share}"
 
 BIN_NAME="vix"
 
@@ -75,9 +76,10 @@ Usage:
   install.sh
 
 Environment:
-  VIX_VERSION            Release version. Example: v2.7.0. Default: latest
-  VIX_REPO               GitHub repo. Default: vixcpp/vix
-  VIX_INSTALL_BIN_DIR    CLI install dir. Default: \$HOME/.local/bin
+  VIX_VERSION             Release version. Example: v2.7.0. Default: latest
+  VIX_REPO                GitHub repo. Default: vixcpp/vix
+  VIX_INSTALL_BIN_DIR     CLI install dir. Default: \$HOME/.local/bin
+  VIX_INSTALL_SHARE_DIR   Runtime assets dir. Default: \$HOME/.local/share
 
 After install:
   vix upgrade
@@ -237,6 +239,35 @@ install_cli() {
   chmod +x "$src"
   cp "$src" "$VIX_INSTALL_BIN_DIR/$BIN_NAME"
   chmod +x "$VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
+  note_src="$extract_dir/share/vix/note"
+  note_dest="$VIX_INSTALL_SHARE_DIR/vix/note"
+
+  [ -f "$note_src/index.html" ] \
+    || die "missing Vix Note asset: index.html"
+
+  [ -f "$note_src/assets/note.css" ] \
+    || die "missing Vix Note asset: note.css"
+
+  [ -f "$note_src/assets/note.js" ] \
+    || die "missing Vix Note asset: note.js"
+
+  step "Installing Vix Note assets to $note_dest"
+
+  mkdir -p "$VIX_INSTALL_SHARE_DIR/vix"
+  rm -rf "$note_dest"
+  cp -R "$note_src" "$note_dest"
+
+  [ -f "$note_dest/index.html" ] \
+    || die "failed to install Vix Note index.html"
+
+  [ -f "$note_dest/assets/note.css" ] \
+    || die "failed to install Vix Note note.css"
+
+  [ -f "$note_dest/assets/note.js" ] \
+    || die "failed to install Vix Note note.js"
+
+  ok "Vix Note assets installed"
 
   DEST="$VIX_INSTALL_BIN_DIR/$BIN_NAME"
 }
