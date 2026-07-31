@@ -36,6 +36,7 @@ if [ -t 2 ] && [ "${NO_COLOR:-}" = "" ]; then
   C_RED="$(printf '\033[31m')"
   C_GREEN="$(printf '\033[32m')"
   C_YELLOW="$(printf '\033[33m')"
+  C_CYAN="$(printf '\033[36m')"
   C_DIM="$(printf '\033[2m')"
 else
   C_RESET=""
@@ -43,6 +44,7 @@ else
   C_RED=""
   C_GREEN=""
   C_YELLOW=""
+  C_CYAN=""
   C_DIM=""
 fi
 
@@ -397,34 +399,30 @@ verify_checksum() {
   fi
 
   expected="$(
-    awk '
-      {
-        for (i = 1; i <= NF; i++) {
-          if (
-            length($i) == 64 &&
-            $i !~ /[^0-9a-fA-F]/
-          ) {
-            print tolower($i)
-            exit
-          }
-        }
-      }
-    ' "$sha_file"
+    sed -n 's/^\([0-9a-fA-F]\{64\}\).*/\1/p' "$sha_file" |
+      head -n 1 |
+      tr 'A-F' 'a-f'
   )"
 
   [ -n "$expected" ] || die "invalid sha256 file"
 
   if have sha256sum; then
-    actual="$(sha256sum "$archive" | awk '{print tolower($1)}')"
+    actual="$(
+      sha256sum "$archive" |
+        awk '{print $1}' |
+        tr 'A-F' 'a-f'
+    )"
   else
-    actual="$(shasum -a 256 "$archive" | awk '{print tolower($1)}')"
+    actual="$(
+      shasum -a 256 "$archive" |
+        awk '{print $1}' |
+        tr 'A-F' 'a-f'
+    )"
   fi
 
   [ -n "$actual" ] || die "could not calculate archive sha256"
-
   [ "$expected" = "$actual" ] || die "sha256 mismatch"
 }
-
 verify_signature() {
   archive="$1"
   sig_file="$2"
@@ -574,14 +572,18 @@ TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t vix)"
 
 trap cleanup EXIT HUP INT TERM
 
-printf "  ▲  %sVix.cpp%s  %sinstaller%s\n" \
-  "$C_BOLD" \
+printf "  %s▲%s  %s%sVix.cpp%s  installer\n" \
+  "$C_CYAN" \
   "$C_RESET" \
-  "$C_DIM" \
+  "$C_BOLD" \
+  "$C_GREEN" \
   "$C_RESET" \
   >&2
 
-printf "  ------------------------------------\n" >&2
+printf "  %s------------------------------------%s\n" \
+  "$C_DIM" \
+  "$C_RESET" \
+  >&2
 
 TAG="$(resolve_version)"
 BASE_URL="https://github.com/${VIX_REPO}/releases/download/${TAG}"
