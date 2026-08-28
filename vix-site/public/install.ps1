@@ -3,10 +3,9 @@
 #   irm https://vixcpp.com/install.ps1 | iex
 #
 # Optional:
-#   $env:VIX_VERSION="v2.7.8"
+#   $env:VIX_VERSION="vX.Y.Z"
 #   $env:VIX_REPO="vixcpp/vix"
 #   $env:VIX_STABLE_URL="https://vixcpp.com/releases/stable.txt"
-#   $env:VIX_FALLBACK_VERSION="v2.7.8"
 #   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"
 #   $env:VIX_INSTALL_SHARE_DIR="$env:LOCALAPPDATA\Vix\share"
 
@@ -59,8 +58,7 @@ Environment:
 
       Examples:
         latest
-        v2.7.8
-        v2.8.3
+        vX.Y.Z
 
       Default: latest
 
@@ -72,13 +70,6 @@ Environment:
 
       Default:
         https://vixcpp.com/releases/stable.txt
-
-  VIX_FALLBACK_VERSION
-      Emergency fallback used when the stable release pointer is
-      unavailable, invalid, or incomplete.
-
-      Default:
-        v2.7.8
 
   VIX_REPO
       GitHub repository containing release assets.
@@ -154,12 +145,6 @@ $StableUrl = if ($env:VIX_STABLE_URL) {
   "https://vixcpp.com/releases/stable.txt"
 }
 
-$FallbackVersion = if ($env:VIX_FALLBACK_VERSION) {
-  $env:VIX_FALLBACK_VERSION
-} else {
-  "v2.7.8"
-}
-
 $BinDir = if ($env:VIX_INSTALL_DIR) {
   $env:VIX_INSTALL_DIR
 } else {
@@ -200,7 +185,7 @@ function Detect-Architecture {
     }
 
     "^ARM64$" {
-      return "aarch64"
+      Die "Windows ARM64 is not supported by this Vix release channel."
     }
 
     default {
@@ -290,26 +275,15 @@ function Resolve-Version(
 
   $stable = Resolve-StableTag
 
-  if ($stable) {
-    if (Test-ReleaseInstallable $stable $Repository $AssetName) {
-      return $stable
-    }
-
-    Warn "validated stable release $stable is incomplete for windows/$Arch"
-  } else {
-    Warn "could not resolve the validated stable release"
+  if (-not $stable) {
+    Die "Could not resolve the latest validated Vix release. Please try again later."
   }
 
-  if (
-    (Test-ReleaseTag $FallbackVersion) -and
-    ($FallbackVersion -ne $stable) -and
-    (Test-ReleaseInstallable $FallbackVersion $Repository $AssetName)
-  ) {
-    Step "Falling back to stable release $FallbackVersion"
-    return $FallbackVersion
+  if (-not (Test-ReleaseInstallable $stable $Repository $AssetName)) {
+    Die "Could not resolve the latest validated Vix release. Please try again later."
   }
 
-  Die "no installable Vix release found for windows/$Arch"
+  return $stable
 }
 
 function Verify-Checksum([string]$ArchivePath, [string]$ShaPath) {

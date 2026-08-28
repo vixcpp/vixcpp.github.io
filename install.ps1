@@ -1,241 +1,667 @@
-# Vix.cpp installer (Windows PowerShell)
+# Vix.cpp installer for Windows PowerShell
 # Usage:
 #   irm https://vixcpp.com/install.ps1 | iex
 #
 # Optional:
-#   $env:VIX_VERSION="v2.1.10"
+#   $env:VIX_VERSION="vX.Y.Z"
 #   $env:VIX_REPO="vixcpp/vix"
-#   $env:VIX_INSTALL_KIND="sdk"   # sdk or cli
-#   $env:VIX_INSTALL_PREFIX="$env:LOCALAPPDATA\Vix"
-#   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"   # for cli installs or PATH link
+#   $env:VIX_STABLE_URL="https://vixcpp.com/releases/stable.txt"
+#   $env:VIX_INSTALL_DIR="$env:LOCALAPPDATA\Vix\bin"
+#   $env:VIX_INSTALL_SHARE_DIR="$env:LOCALAPPDATA\Vix\share"
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-function Write-Title($msg) {
-  Write-Host ""
-  Write-Host $msg -ForegroundColor Cyan
+# Ensure GitHub and vixcpp.com work on Windows PowerShell 5.1.
+try {
+  [Net.ServicePointManager]::SecurityProtocol =
+    [Net.ServicePointManager]::SecurityProtocol -bor
+    [Net.SecurityProtocolType]::Tls12
+} catch {
+  # PowerShell editions using HttpClient do not require this setting.
 }
 
-function Write-Step($msg) {
-  Write-Host ""
-  Write-Host "==> $msg" -ForegroundColor Blue
+$MinisignPubkey = "RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
+$RequestHeaders = @{ "User-Agent" = "vix-installer" }
+
+function Step([string]$Message) {
+  Write-Host "  →  $Message"
 }
 
-function Info($msg) {
-  Write-Host "› vix install: $msg" -ForegroundColor Cyan
+function Ok([string]$Message) {
+  Write-Host "  ✓  $Message" -ForegroundColor Green
 }
 
-function Ok($msg) {
-  Write-Host "✔ vix install: $msg" -ForegroundColor Green
+function Warn([string]$Message) {
+  Write-Host "  !  $Message" -ForegroundColor Yellow
 }
 
-function Warn($msg) {
-  Write-Host "! vix install: $msg" -ForegroundColor Yellow
+function Hint([string]$Message) {
+  Write-Host "  ·  $Message" -ForegroundColor DarkGray
 }
 
-function Die($msg) {
-  throw "✖ vix install: $msg"
+function Die([string]$Message) {
+  Write-Host "  ✗  $Message" -ForegroundColor Red
+  exit 1
 }
 
-Write-Title "Vix.cpp installer"
-Write-Host "Native runtime and SDK installer" -ForegroundColor DarkGray
+function Show-Help {
+  Write-Host @"
+Vix.cpp installer
 
-$Repo        = if ($env:VIX_REPO)         { $env:VIX_REPO }         else { "vixcpp/vix" }
-$Version     = if ($env:VIX_VERSION)      { $env:VIX_VERSION }      else { "latest" }
-$InstallKind = if ($env:VIX_INSTALL_KIND) { $env:VIX_INSTALL_KIND } else { "sdk" }
+Usage:
+  install.ps1
 
-$PrefixDir = if ($env:VIX_INSTALL_PREFIX) {
-  $env:VIX_INSTALL_PREFIX
+Environment:
+  VIX_VERSION
+      Release version to install.
+
+      Examples:
+        latest
+        vX.Y.Z
+
+      Default: latest
+
+      "latest" means the latest release validated by the complete
+      Vix release CI, not necessarily the newest GitHub tag.
+
+  VIX_STABLE_URL
+      URL containing the latest validated release tag.
+
+      Default:
+        https://vixcpp.com/releases/stable.txt
+
+  VIX_REPO
+      GitHub repository containing release assets.
+
+      Default:
+        vixcpp/vix
+
+  VIX_INSTALL_DIR
+      CLI installation directory.
+
+      Default:
+        %LOCALAPPDATA%\Vix\bin
+
+  VIX_INSTALL_SHARE_DIR
+      Runtime assets installation directory.
+
+      Default:
+        %LOCALAPPDATA%\Vix\share
+
+After installation:
+  vix upgrade
+  vix upgrade --check
+  vix upgrade --sdk list
+  vix upgrade --sdk web
+"@
+}
+
+foreach ($arg in $args) {
+  switch ($arg) {
+    "--help" {
+      Show-Help
+      exit 0
+    }
+
+    "-h" {
+      Show-Help
+      exit 0
+    }
+
+    "--cli-only" {
+      # Kept for backward compatibility.
+    }
+
+    "--cli" {
+      # Kept for backward compatibility.
+    }
+
+    "--sdk" {
+      Die "SDK installation moved to: vix upgrade --sdk"
+    }
+
+    default {
+      Die "unknown option: $arg"
+    }
+  }
+}
+
+$Repo = if ($env:VIX_REPO) {
+  $env:VIX_REPO
 } else {
-  Join-Path $env:LOCALAPPDATA "Vix"
+  "vixcpp/vix"
+}
+
+$Version = if ($env:VIX_VERSION) {
+  $env:VIX_VERSION
+} else {
+  "latest"
+}
+
+$StableUrl = if ($env:VIX_STABLE_URL) {
+  $env:VIX_STABLE_URL
+} else {
+  "https://vixcpp.com/releases/stable.txt"
 }
 
 $BinDir = if ($env:VIX_INSTALL_DIR) {
   $env:VIX_INSTALL_DIR
 } else {
-  Join-Path $PrefixDir "bin"
+  Join-Path $env:LOCALAPPDATA "Vix\bin"
+}
+
+$ShareDir = if ($env:VIX_INSTALL_SHARE_DIR) {
+  $env:VIX_INSTALL_SHARE_DIR
+} else {
+  $installRoot = Split-Path -Parent $BinDir
+  Join-Path $installRoot "share"
 }
 
 $BinName = "vix.exe"
 
-function Resolve-LatestTag([string]$repo) {
-  $api = "https://api.github.com/repos/$repo/releases/latest"
+function Test-ReleaseTag([string]$Tag) {
+  if ([string]::IsNullOrWhiteSpace($Tag)) {
+    return $false
+  }
+
+  return $Tag -match '^v[0-9]+\.[0-9]+\.[0-9]+$'
+}
+
+function Get-NativeArchitectureName {
+  if ($env:PROCESSOR_ARCHITEW6432) {
+    return $env:PROCESSOR_ARCHITEW6432
+  }
+
+  return $env:PROCESSOR_ARCHITECTURE
+}
+
+function Detect-Architecture {
+  $archRaw = Get-NativeArchitectureName
+
+  switch -Regex ($archRaw) {
+    "^AMD64$" {
+      return "x86_64"
+    }
+
+    "^ARM64$" {
+      Die "Windows ARM64 is not supported by this Vix release channel."
+    }
+
+    default {
+      Die "unsupported architecture: $archRaw"
+    }
+  }
+}
+
+function Resolve-StableTag {
   try {
-    $resp = Invoke-RestMethod -Uri $api -Headers @{ "User-Agent" = "vix-installer" }
-    if (-not $resp.tag_name) {
-      Die "could not resolve latest tag. Set VIX_VERSION=vX.Y.Z"
-    }
-    return $resp.tag_name
-  } catch {
-    Die "could not resolve latest tag (GitHub API). Set VIX_VERSION=vX.Y.Z"
-  }
-}
+    $response = Invoke-WebRequest `
+      -Uri $StableUrl `
+      -Headers $RequestHeaders `
+      -UseBasicParsing
 
-Write-Step "Detecting platform"
+    $lines = ([string]$response.Content) -split '\r?\n'
 
-$archRaw = $env:PROCESSOR_ARCHITECTURE
-$Arch = switch -Regex ($archRaw) {
-  "AMD64" { "x86_64"; break }
-  "^ARM"  { "aarch64"; break }
-  default { Die "unsupported arch: $archRaw" }
-}
-
-$Tag = if ($Version -eq "latest") { Resolve-LatestTag $Repo } else { $Version }
-
-$Asset = switch ($InstallKind.ToLowerInvariant()) {
-  "sdk" { "vix-sdk-windows-$Arch.zip"; break }
-  "cli" { "vix-windows-$Arch.zip"; break }
-  default { Die "unsupported VIX_INSTALL_KIND: $InstallKind (expected sdk or cli)" }
-}
-
-$BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
-$UrlBin  = "$BaseUrl/$Asset"
-$UrlSha  = "$UrlBin.sha256"
-
-Ok "repo=$Repo version=$Tag arch=$Arch kind=$InstallKind"
-Info "prefix=$PrefixDir"
-Info "bin_dir=$BinDir"
-
-$TmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vix-" + [System.Guid]::NewGuid().ToString("N"))
-New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
-
-try {
-  $ArchivePath = Join-Path $TmpDir $Asset
-  $ShaPath     = Join-Path $TmpDir ($Asset + ".sha256")
-  $ExtractDir  = Join-Path $TmpDir "extract"
-
-  Write-Step "Downloading archive"
-  Info "asset: $Asset"
-  Info "url: $UrlBin"
-  Invoke-WebRequest -Uri $UrlBin -OutFile $ArchivePath
-  Ok "archive downloaded"
-
-  Write-Step "Verifying checksum"
-  try {
-    Invoke-WebRequest -Uri $UrlSha -OutFile $ShaPath
-
-    $first = (Get-Content -LiteralPath $ShaPath -TotalCount 1).Trim()
-    if (-not $first) {
-      Die "invalid sha256 file"
-    }
-
-    $expected = $null
-    if ($first -match "^[0-9a-fA-F]{64}") {
-      $expected = ($first -split "\s+")[0]
-    } elseif ($first -match "=\s*([0-9a-fA-F]{64})\s*$") {
-      $expected = $Matches[1]
-    }
-
-    if (-not $expected) {
-      Die "invalid sha256 format"
-    }
-
-    $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash
-    if ($expected.ToLowerInvariant() -ne $actual.ToLowerInvariant()) {
-      Die "sha256 mismatch"
-    }
-
-    Ok "sha256 ok"
-  } catch {
-    Warn "sha256 file not found or verification skipped"
-  }
-
-  Write-Step "Extracting archive"
-  New-Item -ItemType Directory -Force -Path $ExtractDir | Out-Null
-  Expand-Archive -LiteralPath $ArchivePath -DestinationPath $ExtractDir -Force
-  Ok "archive extracted"
-
-  Write-Step "Installing"
-
-  if ($InstallKind.ToLowerInvariant() -eq "cli") {
-    $ExeCandidate = Get-ChildItem -LiteralPath $ExtractDir -Recurse -File -Filter $BinName | Select-Object -First 1
-    if (-not $ExeCandidate) {
-      Die "archive does not contain $BinName"
-    }
-
-    New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
-    $Exe = Join-Path $BinDir $BinName
-
-    Copy-Item -LiteralPath $ExeCandidate.FullName -Destination $Exe -Force
-    Ok "CLI installed to $Exe"
-  }
-  else {
-    New-Item -ItemType Directory -Force -Path $PrefixDir | Out-Null
-    New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
-
-    Get-ChildItem -Path $ExtractDir -Force | ForEach-Object {
-      Copy-Item -Path $_.FullName -Destination $PrefixDir -Recurse -Force
-    }
-
-    $ExeCandidate = Get-ChildItem -Path $PrefixDir -Recurse -File -Filter $BinName |
-      Where-Object { $_.FullName -match '[\\/](bin)[\\/].*vix\.exe$' } |
+    $tag = $lines |
+      ForEach-Object { $_.Trim() } |
+      Where-Object { $_ -ne "" } |
       Select-Object -First 1
 
-    if (-not $ExeCandidate) {
-      $ExeCandidate = Get-ChildItem -Path $PrefixDir -Recurse -File -Filter $BinName | Select-Object -First 1
+    if (-not (Test-ReleaseTag $tag)) {
+      return $null
     }
 
-    if (-not $ExeCandidate) {
-      Die "SDK archive does not contain $BinName"
-    }
+    return $tag
+  } catch {
+    return $null
+  }
+}
 
-    $Exe = Join-Path $BinDir $BinName
+function Test-UrlExists([string]$Url) {
+  try {
+    Invoke-WebRequest `
+      -Uri $Url `
+      -Method Head `
+      -MaximumRedirection 10 `
+      -Headers $RequestHeaders `
+      -UseBasicParsing |
+      Out-Null
 
-    if ([string]::Equals($ExeCandidate.FullName, $Exe, [System.StringComparison]::OrdinalIgnoreCase)) {
-      Info "CLI already installed at $Exe"
-    } else {
-      Copy-Item -LiteralPath $ExeCandidate.FullName -Destination $Exe -Force
-      Info "CLI available at $Exe"
-    }
+    return $true
+  } catch {
+    return $false
+  }
+}
 
-    Ok "SDK installed to $PrefixDir"
+function Test-ReleaseInstallable(
+  [string]$Tag,
+  [string]$Repository,
+  [string]$AssetName
+) {
+  if (-not (Test-ReleaseTag $Tag)) {
+    return $false
   }
 
-  Write-Step "Updating PATH"
+  $baseUrl = "https://github.com/$Repository/releases/download/$Tag"
 
+  if (-not (Test-UrlExists "$baseUrl/$AssetName")) {
+    return $false
+  }
+
+  if (-not (Test-UrlExists "$baseUrl/$AssetName.sha256")) {
+    return $false
+  }
+
+  return $true
+}
+
+function Resolve-Version(
+  [string]$RequestedVersion,
+  [string]$Repository,
+  [string]$AssetName
+) {
+  if ($RequestedVersion -ne "latest") {
+    if (-not (Test-ReleaseTag $RequestedVersion)) {
+      Die "invalid release version: $RequestedVersion"
+    }
+
+    if (-not (Test-ReleaseInstallable $RequestedVersion $Repository $AssetName)) {
+      Die "release $RequestedVersion is incomplete for windows/$Arch"
+    }
+
+    return $RequestedVersion
+  }
+
+  $stable = Resolve-StableTag
+
+  if (-not $stable) {
+    Die "Could not resolve the latest validated Vix release. Please try again later."
+  }
+
+  if (-not (Test-ReleaseInstallable $stable $Repository $AssetName)) {
+    Die "Could not resolve the latest validated Vix release. Please try again later."
+  }
+
+  return $stable
+}
+
+function Verify-Checksum([string]$ArchivePath, [string]$ShaPath) {
+  $first = (Get-Content -LiteralPath $ShaPath -TotalCount 1).Trim()
+
+  if (-not $first) {
+    Die "invalid sha256 file"
+  }
+
+  $expected = $null
+
+  if ($first -match "^([0-9a-fA-F]{64})(?:\s+.*)?$") {
+    $expected = $Matches[1]
+  } elseif ($first -match "=\s*([0-9a-fA-F]{64})\s*$") {
+    $expected = $Matches[1]
+  }
+
+  if (-not $expected) {
+    Die "invalid sha256 format"
+  }
+
+  $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash
+
+  if ($expected.ToLowerInvariant() -ne $actual.ToLowerInvariant()) {
+    Die "sha256 mismatch"
+  }
+}
+
+function Verify-Signature([string]$ArchivePath, [string]$SigPath) {
+  $minisign = Get-Command minisign -ErrorAction SilentlyContinue
+
+  if (-not $minisign) {
+    Hint "minisign is not installed; signature verification skipped"
+    return
+  }
+
+  & $minisign.Path `
+    -Vm $ArchivePath `
+    -x $SigPath `
+    -P $MinisignPubkey `
+    *> $null
+
+  if ($LASTEXITCODE -ne 0) {
+    Die "signature verification failed"
+  }
+
+  Ok "minisign verified"
+}
+
+function Download-And-Verify-Asset(
+  [string]$BaseUrl,
+  [string]$AssetName,
+  [string]$TmpDir
+) {
+  $archivePath = Join-Path $TmpDir $AssetName
+  $shaPath = Join-Path $TmpDir ($AssetName + ".sha256")
+  $sigPath = Join-Path $TmpDir ($AssetName + ".minisig")
+
+  $assetUrl = "$BaseUrl/$AssetName"
+  $shaUrl = "$BaseUrl/$AssetName.sha256"
+  $sigUrl = "$BaseUrl/$AssetName.minisig"
+
+  Step "Downloading $AssetName"
+
+  try {
+    Invoke-WebRequest `
+      -Uri $assetUrl `
+      -OutFile $archivePath `
+      -Headers $RequestHeaders `
+      -UseBasicParsing |
+      Out-Null
+  } catch {
+    Die "release asset not found: $AssetName"
+  }
+
+  try {
+    Invoke-WebRequest `
+      -Uri $shaUrl `
+      -OutFile $shaPath `
+      -Headers $RequestHeaders `
+      -UseBasicParsing |
+      Out-Null
+  } catch {
+    Die "checksum file not found: $AssetName.sha256"
+  }
+
+  Verify-Checksum $archivePath $shaPath
+  Ok "sha256 verified"
+
+  $signatureDownloaded = $false
+
+  try {
+    Invoke-WebRequest `
+      -Uri $sigUrl `
+      -OutFile $sigPath `
+      -Headers $RequestHeaders `
+      -UseBasicParsing |
+      Out-Null
+
+    $signatureDownloaded = $true
+  } catch {
+    $signatureDownloaded = $false
+  }
+
+  if ($signatureDownloaded) {
+    Verify-Signature $archivePath $sigPath
+  }
+
+  return $archivePath
+}
+
+function Install-SqliteDll([string]$InstallBin, [string]$TmpDir) {
+  $sqliteDll = Join-Path $InstallBin "sqlite3.dll"
+
+  if (Test-Path -LiteralPath $sqliteDll -PathType Leaf) {
+    return
+  }
+
+  $archRaw = Get-NativeArchitectureName
+
+  switch -Regex ($archRaw) {
+    "^AMD64$" {
+      $sqliteAsset = "sqlite-dll-win-x64-3530200.zip"
+    }
+
+    "^ARM64$" {
+      $sqliteAsset = "sqlite-dll-win-arm64-3530200.zip"
+    }
+
+    "^x86$" {
+      $sqliteAsset = "sqlite-dll-win-x86-3530200.zip"
+    }
+
+    default {
+      Hint "sqlite runtime skipped: unsupported architecture $archRaw"
+      return
+    }
+  }
+
+  $sqliteUrl = "https://www.sqlite.org/2026/$sqliteAsset"
+  $sqliteDir = Join-Path $TmpDir "sqlite"
+  $sqliteZip = Join-Path $sqliteDir $sqliteAsset
+
+  New-Item -ItemType Directory -Force -Path $sqliteDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $InstallBin | Out-Null
+
+  Step "Installing SQLite runtime"
+
+  try {
+    Invoke-WebRequest `
+      -Uri $sqliteUrl `
+      -OutFile $sqliteZip `
+      -Headers $RequestHeaders `
+      -UseBasicParsing |
+      Out-Null
+  } catch {
+    Hint "sqlite runtime skipped"
+    return
+  }
+
+  try {
+    Expand-Archive `
+      -LiteralPath $sqliteZip `
+      -DestinationPath $sqliteDir `
+      -Force
+  } catch {
+    Hint "sqlite runtime skipped"
+    return
+  }
+
+  $dllCandidate = Get-ChildItem `
+    -LiteralPath $sqliteDir `
+    -Recurse `
+    -File `
+    -Filter "sqlite3.dll" |
+    Select-Object -First 1
+
+  if (-not $dllCandidate) {
+    Hint "sqlite runtime skipped"
+    return
+  }
+
+  Copy-Item `
+    -LiteralPath $dllCandidate.FullName `
+    -Destination $sqliteDll `
+    -Force
+
+  if (Test-Path -LiteralPath $sqliteDll -PathType Leaf) {
+    Ok "sqlite3.dll installed"
+  }
+}
+
+function Add-To-UserPath([string]$PathToAdd) {
   $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+
   if (-not $userPath) {
     $userPath = ""
   }
 
-  $segments = $userPath -split ";" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
-  $already = $false
+  $segments = @(
+    $userPath -split ";" |
+    ForEach-Object { $_.Trim() } |
+    Where-Object { $_ -ne "" }
+  )
 
-  foreach ($s in $segments) {
-    if ([string]::Equals($s.TrimEnd("\"), $BinDir.TrimEnd("\"), [System.StringComparison]::OrdinalIgnoreCase)) {
-      $already = $true
-      break
+  foreach ($segment in $segments) {
+    if ([string]::Equals(
+      $segment.TrimEnd("\"),
+      $PathToAdd.TrimEnd("\"),
+      [System.StringComparison]::OrdinalIgnoreCase
+    )) {
+      return $true
     }
   }
 
-  if (-not $already) {
-    $newPath = ($segments + $BinDir) -join ";"
-    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-    Ok "added to PATH"
-    Warn "restart your terminal to use 'vix'"
-  } else {
-    Ok "PATH already contains bin_dir"
-  }
+  $newPath = (@($segments) + $PathToAdd) -join ";"
+  [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
 
-  Write-Step "Validating installation"
+  return $false
+}
+
+function Install-Cli(
+  [string]$ArchivePath,
+  [string]$TmpDir
+) {
+  $extractDir = Join-Path $TmpDir "cli"
+
+  New-Item -ItemType Directory -Force -Path $extractDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $ShareDir | Out-Null
+
+  Step "Extracting $Asset"
+
   try {
-    $ver = & $Exe --version 2>$null
-    if ($ver) {
-      Ok "installed: $ver"
-    } else {
-      Warn "installed, but 'vix --version' returned no output"
-    }
+    Expand-Archive `
+      -LiteralPath $ArchivePath `
+      -DestinationPath $extractDir `
+      -Force
   } catch {
-    Warn "installed, but running 'vix --version' failed"
+    Die "failed to extract $Asset"
   }
 
+  $exeCandidate = Get-ChildItem `
+    -LiteralPath $extractDir `
+    -Recurse `
+    -File `
+    -Filter $BinName |
+    Select-Object -First 1
+
+  if (-not $exeCandidate) {
+    Die "CLI archive does not contain $BinName"
+  }
+
+  $noteSource = Join-Path $extractDir "share\vix\note"
+  $noteDestination = Join-Path $ShareDir "vix\note"
+  $noteParent = Split-Path -Parent $noteDestination
+
+  $noteIndex = Join-Path $noteSource "index.html"
+  $noteCss = Join-Path $noteSource "assets\note.css"
+  $noteJs = Join-Path $noteSource "assets\note.js"
+
+  if (-not (Test-Path -LiteralPath $noteIndex -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note index.html"
+  }
+
+  if (-not (Test-Path -LiteralPath $noteCss -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note note.css"
+  }
+
+  if (-not (Test-Path -LiteralPath $noteJs -PathType Leaf)) {
+    Die "CLI archive does not contain Vix Note note.js"
+  }
+
+  $exe = Join-Path $BinDir $BinName
+
+  Step "Installing to $exe"
+
+  Copy-Item `
+    -LiteralPath $exeCandidate.FullName `
+    -Destination $exe `
+    -Force
+
+  Step "Installing Vix Note assets to $noteDestination"
+
+  New-Item `
+    -ItemType Directory `
+    -Force `
+    -Path $noteParent |
+    Out-Null
+
+  if (Test-Path -LiteralPath $noteDestination) {
+    Remove-Item `
+      -LiteralPath $noteDestination `
+      -Recurse `
+      -Force
+  }
+
+  Copy-Item `
+    -LiteralPath $noteSource `
+    -Destination $noteDestination `
+    -Recurse `
+    -Force
+
+  $installedIndex = Join-Path $noteDestination "index.html"
+  $installedCss = Join-Path $noteDestination "assets\note.css"
+  $installedJs = Join-Path $noteDestination "assets\note.js"
+
+  if (-not (Test-Path -LiteralPath $installedIndex -PathType Leaf)) {
+    Die "failed to install Vix Note index.html"
+  }
+
+  if (-not (Test-Path -LiteralPath $installedCss -PathType Leaf)) {
+    Die "failed to install Vix Note note.css"
+  }
+
+  if (-not (Test-Path -LiteralPath $installedJs -PathType Leaf)) {
+    Die "failed to install Vix Note note.js"
+  }
+
+  Ok "Vix Note assets installed"
+
+  return $exe
+}
+
+$Arch = Detect-Architecture
+$Asset = "vix-windows-$Arch.zip"
+
+$TmpDir = Join-Path `
+  ([System.IO.Path]::GetTempPath()) `
+  ("vix-" + [System.Guid]::NewGuid().ToString("N"))
+
+New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
+
+try {
+  Write-Host "  ▲  " -NoNewline
+  Write-Host "Vix.cpp" -NoNewline -ForegroundColor Green
+  Write-Host "  installer"
+  Write-Host "  ------------------------------------"
+
+  $Tag = Resolve-Version $Version $Repo $Asset
+  $BaseUrl = "https://github.com/$Repo/releases/download/$Tag"
+
+  Write-Host "  version   $Tag"
+  Write-Host "  platform  windows/$Arch"
   Write-Host ""
-  Write-Host "Done." -ForegroundColor Green
-  Write-Host ("Location: " + $Exe)
-  Write-Host ("Version:  " + $Tag)
-  Write-Host ("Kind:     " + $InstallKind)
+
+  $ArchivePath = Download-And-Verify-Asset $BaseUrl $Asset $TmpDir
+  $Exe = Install-Cli $ArchivePath $TmpDir
+
+  Install-SqliteDll $BinDir $TmpDir
+
+  $PathAlreadyReady = Add-To-UserPath $BinDir
+
+  try {
+    & $Exe --version *> $null
+
+    if ($LASTEXITCODE -ne 0) {
+      throw "vix --version returned exit code $LASTEXITCODE"
+    }
+
+    Ok "Done — vix $Tag installed"
+  } catch {
+    Die "installed, but 'vix --version' failed"
+  }
+
+  if ($PathAlreadyReady) {
+    Hint "run: vix upgrade --check"
+    Hint "sdk: vix upgrade --sdk list"
+  } else {
+    Hint "restart your terminal if 'vix' is not found"
+    Hint "then run: vix upgrade --sdk list"
+  }
 }
 finally {
-  Remove-Item -LiteralPath $TmpDir -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+  Remove-Item `
+    -LiteralPath $TmpDir `
+    -Recurse `
+    -Force `
+    -ErrorAction SilentlyContinue |
+    Out-Null
 }
