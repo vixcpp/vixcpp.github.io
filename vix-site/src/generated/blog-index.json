@@ -1,0 +1,583 @@
+[
+  {
+    "path": "changelog/v2.8.5",
+    "title": "Vix.cpp v2.8.5",
+    "description": "Vix.cpp v2.8.5 stabilizes Vix Realtime and strengthens modular application architecture with module-scoped Git dependencies, deterministic module graphs, transactional project mutations, and stricter installation contracts.",
+    "date": "2026-08-20",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.8.4",
+    "title": "Vix.cpp v2.8.4",
+    "description": "Vix.cpp v2.8.4 improves the everyday C++ development loop with lighter public headers, faster compilation and rebuilds, dependency-aware caching, clearer diagnostics, safer build parallelism, and more consistent build, run, and dev behavior.",
+    "date": "2026-08-14",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.8.3",
+    "title": "vix.cpp v2.8.3",
+    "description": "vix.cpp v2.8.3 is the first stable release of the v2.8 line, introducing the new vix::realtime runtime for authoritative stateful applications with rooms, deterministic events, snapshots, replay, reconnection, presence, and optional websocket and postgresql integration.",
+    "date": "2026-08-07",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.8",
+    "title": "Vix.cpp v2.7.8",
+    "description": "Vix.cpp v2.7.8 introduces package moves and namespace migrations across the Vix Registry, automatic registry pull request creation, workspace packages, and broader compatibility with system, local, and legacy Vix SDK installations.",
+    "date": "2026-07-26",
+    "author": ""
+  },
+  {
+    "path": "changelog",
+    "title": "Vix.cpp Changelog",
+    "description": "Version-by-version release notes for Vix.cpp, covering the runtime, CLI, SDK profiles, application modules, package workflows, diagnostics, development tools, and ecosystem changes.",
+    "date": "2026-07-19",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.7",
+    "title": "Vix.cpp v2.7.7",
+    "description": "Vix.cpp v2.7.7 introduces package-based extensions for Vix Note, extension management through the registry and Note interface, a modernized Vix Reply editor, and more reliable global installation of CLI packages.",
+    "date": "2026-07-19",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.6",
+    "title": "Vix.cpp v2.7.6",
+    "description": "Vix.cpp v2.7.6 introduces secure browser-based authentication for Softadastra Cloud, fixes Cloud API connectivity and HTTPS transport lifetime issues, and preserves terminal login for scripts and fallback use.",
+    "date": "2026-07-15",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.5",
+    "title": "Vix.cpp v2.7.5",
+    "description": "Vix.cpp v2.7.5 fixes composed SDK generation for multi-profile installations and allows vix install to migrate obsolete package integrity metadata safely and automatically.",
+    "date": "2026-07-14",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.4",
+    "title": "Vix.cpp v2.7.4",
+    "description": "Vix.cpp v2.7.4 makes installed SDK profiles composable, allows projects to combine web and data modules without the full SDK, and adds automatic profile selection with clearer missing-module diagnostics.",
+    "date": "2026-07-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.3",
+    "title": "Vix.cpp v2.7.3",
+    "description": "Vix.cpp v2.7.3 adds generated WebSocket application modules, API-only backend projects, the first Softadastra Cloud CLI workflow, global package installation, Git dependencies, faster single-file execution, and safer public registry publishing.",
+    "date": "2026-07-10",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.2",
+    "title": "Vix.cpp v2.7.2",
+    "description": "Vix.cpp v2.7.2 adds module-level registry dependencies, keeps dependency resolution in one root lockfile, links packages to the modules that use them, and adds execution guards for C++ cells in Vix Note.",
+    "date": "2026-07-05",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.1",
+    "title": "Vix.cpp v2.7.1",
+    "description": "Vix.cpp v2.7.1 introduces Vix App Modules for structuring C++ applications and backends, adds generated module registration and tests, improves manifest-aware dev mode, and expands SDK and package uninstall workflows.",
+    "date": "2026-07-04",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.7.0",
+    "title": "Vix.cpp v2.7.0",
+    "description": "Vix.cpp v2.7.0 introduces Vix Note, Vix UI, and Vix Requests, together with specialized SDK profiles, a CLI-first SDK installation workflow, and the first desktop and mobile application shell commands.",
+    "date": "2026-06-29",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.6.3",
+    "title": "Vix.cpp v2.6.3",
+    "description": "A stability-focused Vix.cpp release with stronger Core lifecycle guarantees, official Core benchmark baselines, improved vix run and vix tests behavior, broader sanitizer coverage, stricter CI, JSON fixes, and more reliable module tests.",
+    "date": "2026-06-18",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.6.2",
+    "title": "Vix.cpp v2.6.2",
+    "description": "A Vix.cpp release focused on dependency workflow reliability, registry fixes, cleaner vix run behavior, better diagnostics, Windows SDK packaging, crypto helpers, and stronger install/update/list/outdated behavior.",
+    "date": "2026-06-17",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.6.1",
+    "title": "Vix.cpp v2.6.1",
+    "description": "A Vix.cpp patch release focused on clearer runtime diagnostics, better build and test error reporting, stronger SDK release validation, and fixes discovered after v2.6.0.",
+    "date": "2026-06-16",
+    "author": ""
+  },
+  {
+    "path": "vix-core/vix-core-benchmark-baseline-v263",
+    "title": "Vix Core v2.6.3 benchmark baseline",
+    "description": "How Vix.cpp Core started using an official Release benchmark baseline to track runtime, executor, router, HTTP, session, and app performance.",
+    "date": "2026-06-16",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-internal-modules",
+    "title": "vix.app Internal Modules",
+    "description": "How vix.app works with internal application modules created by vix modules, why modules are declared in the manifest, and how Vix keeps application architecture modular without manual CMake wiring.",
+    "date": "2026-05-25",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-registry-dependencies",
+    "title": "vix.app Registry Dependencies",
+    "description": "How vix.app declares Vix Registry dependencies, how vix install generates CMake integration, and how Vix keeps dependency wiring out of user projects.",
+    "date": "2026-05-25",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.6",
+    "title": "Vix.cpp v2.1.6",
+    "description": "Linux release stability, aarch64 cross-compilation fixes, and CI dependency alignment.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.4.0",
+    "title": "Vix.cpp v2.4.0",
+    "description": "A major Vix.cpp release introducing native static file serving, new standalone modules, umbrella headers, a native testing module, expanded environment handling, and real-world examples.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.0",
+    "title": "Vix.cpp v2.5.0",
+    "description": "A Vix.cpp reliability release focused on runtime shutdown stability, HTTP and WebSocket lifecycle fixes, async cleanup, benchmark paths, and module build consistency.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.1",
+    "title": "Vix.cpp v2.5.1",
+    "description": "A Vix.cpp stability release fixing HTTP session lifecycle behavior, cleaning runtime examples, standardizing .env configuration, and adding production-oriented WebSocket examples.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.2",
+    "title": "Vix.cpp v2.5.2",
+    "description": "A Vix.cpp release improving print and input APIs, runtime and template diagnostics, single-file binary export, runtime target execution, and optional HTTPS support in the core HTTP server.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.3",
+    "title": "Vix.cpp v2.5.3",
+    "description": "A major Vix.cpp release introducing execution replay, stronger runtime diagnostics, incremental build graph foundations, improved test and check workflows, and a cleaner dev session engine.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.5",
+    "title": "Vix.cpp v2.5.5",
+    "description": "A Vix.cpp reliability release improving vix run dependency linking, installed registry modules, package exports, and introducing the first experimental vix.app workflow.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.5.6",
+    "title": "Vix.cpp v2.5.6",
+    "description": "A Vix.cpp maintenance release improving generated library workflows, header-only build guidance, Ninja target diagnostics, and CLI output consistency.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.6.0",
+    "title": "Vix.cpp v2.6.0",
+    "description": "A major Vix.cpp release introducing the AI agent module, official vix.app support, Vue + Vix workflows, target-aware builds, async-powered development sessions, and the new game runtime foundation.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "roadmap",
+    "title": "Roadmap",
+    "description": "Technical roadmap for Vix.cpp, covering production backend tooling, deployment workflows, diagnostics, service management, health checks, logs, and operational reliability.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "vix-error-diagnostics",
+    "title": "How Vix Turns C++ Errors Into Actionable Diagnostics",
+    "description": "A deep dive into Vix.cpp error diagnostics: compiler errors, template failures, runtime crashes, sanitizers, ownership bugs, concurrency failures, and modern C++ mistakes.",
+    "date": "2026-05-23",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-game-runtime-export-workflow",
+    "title": "From Runtime to Export: vix/game V4 and V5",
+    "description": "How vix/game evolved from a runtime foundation into SDL rendering, game templates, and an export workflow.",
+    "date": "2026-05-22",
+    "author": ""
+  },
+  {
+    "path": "vix-dev",
+    "title": "vix dev",
+    "description": "Technical articles about the Vix development workflow, watch mode, reloads, and full-stack development.",
+    "date": "2026-05-21",
+    "author": ""
+  },
+  {
+    "path": "vix-dev/vue-fullstack-dev-workflow",
+    "title": "Vue frontend with a Vix C++ backend",
+    "description": "How Vix.cpp v2.6.0 introduces a full-stack development workflow with Vue, Vite, and a Vix-powered C++ backend.",
+    "date": "2026-05-21",
+    "author": ""
+  },
+  {
+    "path": "vix-app",
+    "title": "vix.app",
+    "description": "Technical articles about vix.app, the simple application manifest for Vix.cpp.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-build-planning",
+    "title": "vix.app Build Planning",
+    "description": "How vix.app changes the way Vix plans builds by separating the user project directory, generated CMake source directory, target name, and future native build path.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-generated-cmake",
+    "title": "vix.app Generated CMake",
+    "description": "How vix.app is translated into an internal CMake project, why generated CMake exists, and how Vix keeps the user-facing manifest simple.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-manifest-design",
+    "title": "vix.app Manifest Design",
+    "description": "A technical look at the vix.app manifest format, why it stays small, and how it maps common C++ project needs to a predictable build description.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-project-resolution",
+    "title": "vix.app Project Resolution",
+    "description": "How Vix resolves CMakeLists.txt and vix.app projects, why CMake keeps priority, and how project metadata flows into vix build and vix run.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-app/vix-app-tests-and-examples",
+    "title": "vix.app Tests and Examples",
+    "description": "How to structure tests and examples with vix.app using one manifest per target while keeping projects simple and predictable.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build",
+    "title": "vix build",
+    "description": "Technical articles about how vix build works internally.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/graph-target-executor-default",
+    "title": "Vix Build Graph Target Executor by Default",
+    "description": "How Vix Build now uses a target-aware graph executor by default, skips unnecessary Ninja work, and adds a fast build-state path for no-op builds.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/how-vix-build-works",
+    "title": "How vix build Works",
+    "description": "A technical walkthrough of the vix build pipeline, from project resolution and planning to CMake compatibility, build graphs, caching, and execution.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/toward-native-vix-app-builds",
+    "title": "Toward Native vix.app Builds",
+    "description": "Why vix.app can become the native fast path for Vix builds, how it can bypass CMake for simple projects, and what a BuildGraph-first execution model would look like.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-artifact-cache-design",
+    "title": "vix Artifact Cache Design",
+    "description": "How Vix can reuse larger build outputs such as libraries, executables, and package artifacts by fingerprinting build inputs and avoiding repeated work.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-build-cmake-compatibility",
+    "title": "vix build CMake Compatibility Path",
+    "description": "Why vix build keeps CMake as the compatibility path, how Vix uses CMake without exposing all of its complexity, and where vix.app fits into that model.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-build-graph-design",
+    "title": "vix build Graph Design",
+    "description": "How Vix models build work as nodes, tasks, dependencies, and target-aware execution for faster and more predictable C++ builds.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-object-cache-incremental-builds",
+    "title": "vix Object Cache and Incremental Builds",
+    "description": "How Vix can avoid unnecessary recompilation by caching object files, tracking compile inputs, and rebuilding only what changed.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-replay",
+    "title": "vix replay",
+    "description": "",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run",
+    "title": "vix run",
+    "description": "Technical articles about how vix run resolves scripts, projects, targets, and runtime arguments.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run/how-vix-run-resolves-targets",
+    "title": "How vix run Resolves Targets",
+    "description": "How vix run decides what to execute across script mode, CMake project mode, and vix.app project mode.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run/vix-direct-script-runner",
+    "title": "vix Direct Script Runner",
+    "description": "How Vix can run a single C++ file without requiring a full project, when direct execution is enough, and when script mode should fall back to generated build infrastructure.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run/vix-run-cmake-fallback",
+    "title": "vix run CMake Fallback",
+    "description": "How vix run can fall back to generated CMake when direct script execution is not enough, while keeping the user command simple.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run/vix-run-runtime-arguments",
+    "title": "vix run Runtime Arguments",
+    "description": "How vix run separates Vix CLI options from user program arguments across script mode and project mode.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "vix-run/vix-run-script-vs-project-mode",
+    "title": "vix run Script Mode vs Project Mode",
+    "description": "How vix run separates single-file execution from project execution, why both modes exist, and how Vix decides which build path to use.",
+    "date": "2026-05-17",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.0",
+    "title": "Vix.cpp v2.1.0",
+    "description": "A major Vix.cpp release focused on runtime performance, developer experience, structured documentation, real-world template examples, and ecosystem maturity.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.1",
+    "title": "Vix.cpp v2.1.1",
+    "description": "A Vix.cpp stability release improving registry dependency resolution, package manifest compatibility, generated CMake safety, and dependency loading order.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.10",
+    "title": "Vix.cpp v2.1.10",
+    "description": "A Vix.cpp release completing cross-platform build stability by fixing Windows dependency resolution, improving fmt and spdlog setup, and simplifying Boost-related dependencies.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.11",
+    "title": "Vix.cpp v2.1.11",
+    "description": "A Vix.cpp release introducing full SDK packaging for Linux, macOS, and Windows, with installable artifacts containing bin, include, and lib layouts.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.12",
+    "title": "Vix.cpp v2.1.12",
+    "description": "A Vix.cpp SDK stabilization release making JSON and SQLite dependencies export-safe, fixing CMake package exports, and improving cross-platform installability.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.13",
+    "title": "Vix.cpp v2.1.13",
+    "description": "A Vix.cpp SDK packaging release making nlohmann_json integration export-safe, fixing cache module FetchContent behavior, and improving CMake export consistency.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.14",
+    "title": "Vix.cpp v2.1.14",
+    "description": "A Vix.cpp release cleaning the cache module dependency model, removing direct nlohmann_json linkage, fixing VixTargets export errors, and enforcing vix::json as the unified JSON abstraction.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.15",
+    "title": "Vix.cpp v2.1.15",
+    "description": "A Vix.cpp release improving SDK binary portability, relative RPATH handling, installer UX, Windows installation logs, and self-contained runtime behavior.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.16",
+    "title": "Vix.cpp v2.1.16",
+    "description": "A Vix.cpp release improving Linux release portability, SDK runtime compatibility, header-only fmt and spdlog usage, and packaged artifact validation.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.17",
+    "title": "Vix.cpp v2.1.17",
+    "description": "A Vix.cpp patch release fixing SQLite target resolution in exported WebSocket packages and improving CMake dependency handling for consumer projects.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.18",
+    "title": "Vix.cpp v2.1.18",
+    "description": "A Vix.cpp patch release improving SQLite target compatibility across CMake versions and fixing remaining vix run failures caused by exported WebSocket SQLite dependencies.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.19",
+    "title": "Vix.cpp v2.1.19",
+    "description": "A Vix.cpp release improving structured CMake build diagnostics, cleaner error readability, reliable clean builds, and safer publish edge-case handling.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.2",
+    "title": "Vix.cpp v2.1.2",
+    "description": "A Vix.cpp release improving CLI usability with shell completion, paginated search results, live runtime output through PTY, and more accurate command suggestions.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.3",
+    "title": "Vix.cpp v2.1.3",
+    "description": "A Vix.cpp release improving runtime output, introducing task execution, project utilities, formatting, environment inspection, global updates, and stronger REPL support.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.4",
+    "title": "Vix.cpp v2.1.4",
+    "description": "A Vix.cpp code quality release focused on warning-free builds, safer runtime patterns, cleaner CMake configuration, improved CLI consistency, and stronger module maintainability.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.5",
+    "title": "Vix.cpp v2.1.5",
+    "description": "A Vix.cpp release fixing the Linux aarch64 release pipeline, improving cross-compilation dependency discovery, and stabilizing CI across supported targets.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.7",
+    "title": "Vix.cpp v2.1.7",
+    "description": "A Vix.cpp release fixing macOS build failures, completing cross-platform dependency setup, and stabilizing CI builds across Linux, macOS, and Windows.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.8",
+    "title": "Vix.cpp v2.1.8",
+    "description": "A Vix.cpp build stability release fixing macOS spdlog compatibility, replacing internal spdlog headers with the official fmt API, and improving cross-platform portability.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.1.9",
+    "title": "Vix.cpp v2.1.9",
+    "description": "A Vix.cpp build reliability release completing the fmt migration, fixing macOS header resolution, improving spdlog and fmt dependency propagation, and simplifying CMake configuration.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.2.0",
+    "title": "Vix.cpp v2.2.0",
+    "description": "A Vix.cpp release introducing the manifest, resolver, lockfile, semver dependency system, transitive package resolution, and interactive configuration generation.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.3.0",
+    "title": "Vix.cpp v2.3.0",
+    "description": "A Vix.cpp release introducing ultra-fast direct C++ execution, smart CMake fallback, script caching, database flags, and a cleaner run pipeline.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.3.1",
+    "title": "Vix.cpp v2.3.1",
+    "description": "A Vix.cpp patch release improving OpenSSL resolution in VixConfig.cmake for consumer projects, especially on macOS and Homebrew-based environments.",
+    "date": "2026-04-13",
+    "author": ""
+  },
+  {
+    "path": "changelog/v2.0.0",
+    "title": "Vix.cpp v2.0.0",
+    "description": "The first official V2 release of Vix.cpp, replacing the Boost.Beast-based V1 runtime with a Boost-free native HTTP stack, async-first architecture, and cleaner module boundaries.",
+    "date": "2026-03-31",
+    "author": ""
+  },
+  {
+    "path": "roadmap/production-simplicity-checklist",
+    "title": "Vix Production Simplicity Checklist",
+    "description": "",
+    "date": "",
+    "author": ""
+  },
+  {
+    "path": "vix-app/why-vix-app-exists",
+    "title": "Why vix.app Exists",
+    "description": "",
+    "date": "",
+    "author": ""
+  },
+  {
+    "path": "vix-build/no-op-target-builds-fast-by-default",
+    "title": "No-op target builds are now fast by default",
+    "description": "",
+    "date": "",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-build-roadmap-execution",
+    "title": "Vix Build Roadmap Execution",
+    "description": "",
+    "date": "",
+    "author": ""
+  },
+  {
+    "path": "vix-build/vix-game-module-foundation",
+    "title": "Building the Vix Game Foundation",
+    "description": "",
+    "date": "",
+    "author": ""
+  },
+  {
+    "path": "vix-core",
+    "title": "Vix Core",
+    "description": "",
+    "date": "",
+    "author": ""
+  }
+]

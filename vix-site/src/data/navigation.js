@@ -12,6 +12,12 @@ export const navigation = [
   },
 
   {
+    label: "Blog",
+    to: "/blog",
+    external: false,
+  },
+
+  {
     label: "Community",
     to: "/community",
     external: false,
