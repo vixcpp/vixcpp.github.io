@@ -24,8 +24,8 @@ export default defineConfig({
         categories: ["developer", "productivity", "utilities"],
         description:
           "Modern C++ backend runtime for offline-first, P2P, and high-performance applications.",
-        theme_color: "#0b0e14",
-        background_color: "#0b0e14",
+        theme_color: "#0d1117",
+        background_color: "#0d1117",
         display: "standalone",
         scope: "/",
         start_url: "/",

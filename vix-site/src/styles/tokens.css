@@ -1,76 +1,123 @@
 :root {
-  color-scheme: dark;
+  /* Brand */
+  --vix-green: #22c55e;
+  --vix-green-light: #4ade80;
+  --vix-green-dark: #15803d;
+  --vix-mint: #d4fcd4;
 
-  /* ── Backgrounds — dark soft Vix theme ── */
-  --bg: #131619;
-  --bg-soft: #1a1e22;
-  --bg-panel: #1a1e22;
-  --bg-panel-strong: #20252a;
-  --bg-elevated: #20252a;
+  /* Backgrounds */
+  --vix-bg: #0d1117;
+  --vix-bg-alt: #161b22;
+  --vix-bg-soft: #11161d;
 
-  /* ── Ink / code surfaces ── */
-  --bg-ink: #0f1215;
-  --bg-ink-soft: #15191d;
+  /* Legacy aliases retained for shared component utilities. */
+  --color-bg: var(--vix-bg);
+  --color-bg-soft: var(--vix-bg-soft);
+  --color-surface: var(--vix-bg-soft);
+  --color-surface-raised: var(--vix-bg-soft);
 
-  /* ── Text ── */
-  --text: rgba(255, 255, 255, 0.92);
-  --text-soft: rgba(255, 255, 255, 0.62);
-  --text-muted: rgba(255, 255, 255, 0.4);
-  --text-faint: rgba(255, 255, 255, 0.28);
+  /* Text */
+  --vix-text: rgba(255, 255, 255, 0.92);
+  --vix-text-secondary: rgba(255, 255, 255, 0.62);
+  --vix-text-muted: rgba(255, 255, 255, 0.4);
+  --vix-link: #6bb8ff;
+  --vix-link-hover: #98ceff;
 
-  --text-invert: rgba(255, 255, 255, 0.92);
-  --text-invert-soft: rgba(255, 255, 255, 0.62);
+  --color-text: var(--vix-text);
+  --color-text-secondary: var(--vix-text-secondary);
+  --color-text-muted: var(--vix-text-muted);
 
-  /* ── Borders ── */
-  --line: rgba(255, 255, 255, 0.07);
-  --line-soft: rgba(255, 255, 255, 0.045);
-  --line-strong: rgba(255, 255, 255, 0.1);
-  --line-ink: rgba(255, 255, 255, 0.08);
+  /* Borders */
+  --vix-border: rgba(255, 255, 255, 0.08);
+  --color-border: var(--vix-border);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
 
-  /* ── Brand green ── */
-  --green: #22c55e;
-  --green-soft: #4ade80;
-  --green-bright: #86efac;
-  --green-strong: #16a34a;
-  --green-dark: #15803d;
-  --green-faint: rgba(34, 197, 94, 0.1);
-  --green-glow: rgba(34, 197, 94, 0.14);
-  --green-line: rgba(34, 197, 94, 0.35);
+  /* Interactive */
+  --color-primary: var(--vix-green);
+  --color-primary-hover: var(--vix-green-light);
+  --color-focus: rgba(34, 197, 94, 0.35);
 
-  /* ── Links ── */
-  --link: #6bb8ff;
-  --link-hover: #98ceff;
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #38bdf8;
 
-  /* ── Status ── */
-  --danger: #f87171;
-  --warning: #fbbf24;
-
-  /* ── Shadows ── */
-  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
-  --shadow-panel: 0 8px 40px rgba(0, 0, 0, 0.42);
-  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.45);
-  --shadow-green: 0 12px 32px rgba(34, 197, 94, 0.18);
-
-  /* ── Radii ── */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-
-  /* ── Layout ── */
-  --container: 1120px;
-  --container-wide: 1240px;
-
-  /* ── Typography ── */
+  /* Typography */
   --font-sans:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --font-mono:
-    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
-    monospace;
 
-  /* ── Motion ── */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --speed: 160ms;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* Font sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.75rem;
+  --text-5xl: 3.75rem;
+  --text-6xl: 5rem;
+
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-heading: 1.2;
+  --leading-body: 1.7;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Layout */
+  --container-width: 1200px;
+  --container-padding: 24px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.24);
+
+  --shadow-green: 0 0 40px rgba(34, 197, 94, 0.08);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+
+  /* Brand gradient */
+  --gradient-vix: linear-gradient(
+    135deg,
+    var(--vix-mint) 0%,
+    var(--vix-green-light) 42%,
+    var(--vix-green) 72%,
+    var(--vix-green-dark) 100%
+  );
+}
+
+@media (max-width: 720px) {
+  :root {
+    --container-padding: 18px;
+
+    --text-5xl: 3rem;
+    --text-6xl: 3.75rem;
+
+    --space-24: 5rem;
+    --space-32: 6rem;
+  }
 }

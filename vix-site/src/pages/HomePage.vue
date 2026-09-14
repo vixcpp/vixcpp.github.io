@@ -1,81 +1,21 @@
-<template>
-  <main class="home">
-    <HeroSection />
-
-    <!-- 1. Explain what Vix.cpp is before going deeper -->
-    <WhatItIsSection />
-    <ArchitectureSection />
-
-    <!-- 2. Show how the user starts and works with it -->
-    <InstallSection />
-    <CliSection />
-    <ReplySection />
-    <DiagnosticsSection />
-    <ReplaySection />
-    <TemplatesSection />
-    <RendererSection />
-    <VixAppSection />
-    <AppModulesSection />
-    <ProductionSection />
-    <DifferenceSection />
-
-    <!-- 3. Build trust with numbers and positioning -->
-    <PerformanceSection />
-    <ComparisonSection />
-    <WhatItIsNotSection />
-
-    <!-- 4. Explain the repository and real validation projects -->
-    <RepositoryPurposeSection />
-    <VixNoteSection />
-    <PicoSection />
-
-    <!-- 5. Show ecosystem and future direction -->
-    <EcosystemSection />
-    <RoadmapSection />
-    <DirectionSection />
-
-    <!-- 6. Company and final resources -->
-    <SoftadastraSection />
-    <ResourcesSection />
-  </main>
-</template>
-
 <script setup>
-import HeroSection from "@/components/home/HeroSection.vue";
-
-import WhatItIsSection from "@/components/home/WhatItIsSection.vue";
-import ArchitectureSection from "@/components/home/ArchitectureSection.vue";
-
-import InstallSection from "@/components/home/InstallSection.vue";
-import CliSection from "@/components/home/CliSection.vue";
-import DifferenceSection from "@/components/home/DifferenceSection.vue";
-
-import PerformanceSection from "@/components/home/PerformanceSection.vue";
-import ComparisonSection from "@/components/home/ComparisonSection.vue";
-import WhatItIsNotSection from "@/components/home/WhatItIsNotSection.vue";
-
-import RepositoryPurposeSection from "@/components/home/RepositoryPurposeSection.vue";
-import VixNoteSection from "@/components/home/VixNoteSection.vue";
-import PicoSection from "@/components/home/PicoSection.vue";
-
-import EcosystemSection from "@/components/home/EcosystemSection.vue";
-import RoadmapSection from "@/components/home/RoadmapSection.vue";
-import DirectionSection from "@/components/home/DirectionSection.vue";
-
-import SoftadastraSection from "@/components/home/SoftadastraSection.vue";
-import ResourcesSection from "@/components/home/ResourcesSection.vue";
-import AppModulesSection from "@/components/home/AppModulesSection.vue";
-import ProductionSection from "@/components/home/ProductionSection.vue";
-import VixAppSection from "@/components/home/VixAppSection.vue";
-import TemplatesSection from "@/components/home/TemplatesSection.vue";
-import ReplySection from "@/components/home/ReplySection.vue";
-import DiagnosticsSection from "@/components/home/DiagnosticsSection.vue";
-import ReplaySection from "@/components/home/ReplaySection.vue";
-import RendererSection from "@/components/home/RendererSection.vue";
+import HeroSection from "../components/home/HeroSection.vue";
+import WhyVixSection from "../components/home/WhyVixSection.vue";
+import BuildWithVixSection from "../components/home/BuildWithVixSection.vue";
+import ProductionSection from "../components/home/ProductionSection.vue";
+import CommunitySection from "../components/home/CommunitySection.vue";
+import SoftadastraSection from "../components/home/SoftadastraSection.vue";
+import SponsorsSection from "../components/home/SponsorsSection.vue";
+import GetStartedSection from "../components/home/GetStartedSection.vue";
 </script>
 
-<style scoped>
-.home {
-  overflow: hidden;
-}
-</style>
+<template>
+  <HeroSection />
+  <WhyVixSection />
+  <BuildWithVixSection />
+  <ProductionSection />
+  <CommunitySection />
+  <SoftadastraSection />
+  <SponsorsSection />
+  <GetStartedSection />
+</template>

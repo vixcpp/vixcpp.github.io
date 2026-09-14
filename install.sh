@@ -1,303 +1,590 @@
 #!/usr/bin/env sh
 set -eu
 
-# minisign public key (ONLY the base64 key, without the comment line)
+# Public key used to verify release archives when minisign is installed.
 MINISIGN_PUBKEY="RWSIfpPSznK9A1gWUc8Eg2iXXQwU5d9BYuQNKGOcoujAF2stPu5rKFjQ"
 
-REPO="${VIX_REPO:-vixcpp/vix}"
-VERSION="${VIX_VERSION:-latest}"   # "latest" or "vX.Y.Z"
+VIX_REPO="${VIX_REPO:-vixcpp/vix}"
 
-# install kind: sdk or cli
-INSTALL_KIND="${VIX_INSTALL_KIND:-sdk}"
+# "latest" means the latest release validated by the complete release CI.
+VIX_VERSION="${VIX_VERSION:-latest}"
 
-# SDK installs a full prefix, CLI installs only the binary
-PREFIX_DIR="${VIX_INSTALL_PREFIX:-$HOME/.local}"
-BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
+# This file must be updated only after:
+# - all CI jobs succeed;
+# - all release assets are uploaded;
+# - checksums are uploaded;
+# - installation tests succeed.
+VIX_STABLE_URL="${VIX_STABLE_URL:-https://vixcpp.com/releases/stable.txt}"
+
+VIX_INSTALL_BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
+VIX_INSTALL_SHARE_DIR="${VIX_INSTALL_SHARE_DIR:-$HOME/.local/share}"
+
 BIN_NAME="vix"
 
-# --------------------------------------------------
-# Styling
-# --------------------------------------------------
+TMP_DIR=""
+BIN_STAGE=""
+NOTE_STAGE=""
+DEST=""
+
 if [ -t 2 ] && [ "${NO_COLOR:-}" = "" ]; then
   C_RESET="$(printf '\033[0m')"
   C_BOLD="$(printf '\033[1m')"
-  C_DIM="$(printf '\033[2m')"
   C_RED="$(printf '\033[31m')"
   C_GREEN="$(printf '\033[32m')"
   C_YELLOW="$(printf '\033[33m')"
-  C_BLUE="$(printf '\033[34m')"
   C_CYAN="$(printf '\033[36m')"
+  C_DIM="$(printf '\033[2m')"
 else
   C_RESET=""
   C_BOLD=""
-  C_DIM=""
   C_RED=""
   C_GREEN=""
   C_YELLOW=""
-  C_BLUE=""
   C_CYAN=""
+  C_DIM=""
 fi
 
 die() {
-  printf "%s✖%s vix install: %s\n" "$C_RED" "$C_RESET" "$*" >&2
+  printf "  %s✗%s  %s\n" "$C_RED" "$C_RESET" "$*" >&2
   exit 1
 }
 
-info() {
-  printf "%s›%s vix install: %s\n" "$C_CYAN" "$C_RESET" "$*" >&2
+step() {
+  printf "  →  %s\n" "$*" >&2
 }
 
 ok() {
-  printf "%s✔%s vix install: %s\n" "$C_GREEN" "$C_RESET" "$*" >&2
+  printf "  %s✓%s  %s\n" "$C_GREEN" "$C_RESET" "$*" >&2
 }
 
 warn() {
-  printf "%s!%s vix install: %s\n" "$C_YELLOW" "$C_RESET" "$*" >&2
+  printf "  %s!%s  %s\n" "$C_YELLOW" "$C_RESET" "$*" >&2
 }
 
-step() {
-  printf "\n%s==>%s %s\n" "$C_BOLD$C_BLUE" "$C_RESET" "$*" >&2
+hint() {
+  printf "  ·  %s%s%s\n" "$C_DIM" "$*" "$C_RESET" >&2
 }
 
-banner() {
-  printf '\n' >&2
-  printf "%sVix.cpp installer%s\n" "$C_BOLD" "$C_RESET" >&2
-  printf "%sNative runtime and SDK installer%s\n" "$C_DIM" "$C_RESET" >&2
+have() {
+  command -v "$1" >/dev/null 2>&1
 }
 
-# --------------------------------------------------
-# Helpers
-# --------------------------------------------------
-have() { command -v "$1" >/dev/null 2>&1; }
-need_cmd() { have "$1" || die "missing dependency: $1"; }
+need_cmd() {
+  have "$1" || die "missing dependency: $1"
+}
+
+cleanup() {
+  if [ -n "${BIN_STAGE:-}" ]; then
+    rm -f "$BIN_STAGE" >/dev/null 2>&1 || true
+  fi
+
+  if [ -n "${NOTE_STAGE:-}" ]; then
+    rm -rf "$NOTE_STAGE" >/dev/null 2>&1 || true
+  fi
+
+  if [ -n "${TMP_DIR:-}" ]; then
+    rm -rf "$TMP_DIR" >/dev/null 2>&1 || true
+  fi
+}
 
 fetch() {
   url="$1"
   out="$2"
 
   if have curl; then
-    curl -fsSL "$url" -o "$out" >/dev/null 2>&1
-  elif have wget; then
-    wget -qO "$out" "$url" >/dev/null 2>&1
-  else
-    die "need curl or wget"
+    curl \
+      -fsSL \
+      --retry 3 \
+      --retry-delay 1 \
+      --connect-timeout 15 \
+      --max-time 300 \
+      "$url" \
+      -o "$out"
+    return
   fi
+
+  if have wget; then
+    wget \
+      -q \
+      --tries=3 \
+      --timeout=30 \
+      -O "$out" \
+      "$url"
+    return
+  fi
+
+  return 1
 }
+
+fetch_text() {
+  url="$1"
+
+  if have curl; then
+    curl \
+      -fsSL \
+      --retry 3 \
+      --retry-delay 1 \
+      --connect-timeout 15 \
+      --max-time 60 \
+      "$url"
+    return
+  fi
+
+  if have wget; then
+    wget \
+      -q \
+      --tries=3 \
+      --timeout=30 \
+      -O- \
+      "$url"
+    return
+  fi
+
+  return 1
+}
+
+url_exists() {
+  url="$1"
+
+  if have curl; then
+    curl \
+      -fsSIL \
+      --retry 2 \
+      --retry-delay 1 \
+      --connect-timeout 15 \
+      --max-time 60 \
+      "$url" \
+      >/dev/null 2>&1
+    return
+  fi
+
+  if have wget; then
+    wget \
+      -q \
+      --spider \
+      --tries=2 \
+      --timeout=30 \
+      "$url" \
+      >/dev/null 2>&1
+    return
+  fi
+
+  return 1
+}
+
+valid_release_tag() {
+  value="$1"
+
+  printf "%s\n" "$value" |
+    awk '
+      /^v[0-9]+\.[0-9]+\.[0-9]+$/ {
+        valid = 1
+      }
+
+      END {
+        exit valid ? 0 : 1
+      }
+    '
+}
+
+show_help() {
+  cat <<EOF
+Vix.cpp installer
+
+Usage:
+  install.sh
+
+Environment:
+  VIX_VERSION
+      Release version to install.
+
+      Examples:
+        latest
+        vX.Y.Z
+
+      Default: latest
+
+      "latest" means the latest release validated by the complete
+      Vix release CI, not necessarily the newest GitHub tag.
+
+  VIX_STABLE_URL
+      URL containing the latest validated release tag.
+
+      Default:
+        https://vixcpp.com/releases/stable.txt
+
+  VIX_REPO
+      GitHub repository containing release assets.
+
+      Default:
+        vixcpp/vix
+
+  VIX_INSTALL_BIN_DIR
+      CLI installation directory.
+
+      Default:
+        \$HOME/.local/bin
+
+  VIX_INSTALL_SHARE_DIR
+      Runtime assets installation directory.
+
+      Default:
+        \$HOME/.local/share
+
+After installation:
+  vix upgrade
+  vix upgrade --check
+  vix upgrade --sdk list
+  vix upgrade --sdk web
+EOF
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h)
+      show_help
+      exit 0
+      ;;
+
+    --cli-only|--cli)
+      # Kept for backward compatibility.
+      # The installer installs the Vix CLI and its required runtime assets.
+      ;;
+
+    --sdk)
+      die "SDK installation moved to: vix upgrade --sdk"
+      ;;
+
+    *)
+      die "unknown option: $arg"
+      ;;
+  esac
+done
 
 need_cmd uname
 need_cmd mktemp
 need_cmd tar
+need_cmd awk
+need_cmd find
+need_cmd mkdir
+need_cmd rm
+need_cmd cp
+need_cmd mv
+need_cmd chmod
 
-banner
+if ! have curl && ! have wget; then
+  die "need curl or wget"
+fi
 
-# --------------------------------------------------
-# Detect platform
-# --------------------------------------------------
-step "Detecting platform"
+detect_platform() {
+  os="$(uname -s)"
+  arch="$(uname -m)"
 
-os="$(uname -s | tr '[:upper:]' '[:lower:]')"
-arch="$(uname -m)"
+  case "$os" in
+    Linux)
+      OS="linux"
+      ;;
 
-case "$os" in
-  linux)  OS="linux" ;;
-  darwin) OS="macos" ;;
-  *) die "unsupported OS: $os (only Linux/macOS supported by install.sh)" ;;
-esac
+    Darwin)
+      OS="macos"
+      ;;
 
-case "$arch" in
-  x86_64|amd64) ARCH="x86_64" ;;
-  arm64|aarch64) ARCH="aarch64" ;;
-  *) die "unsupported CPU arch: $arch" ;;
-esac
+    *)
+      die "unsupported OS: $os"
+      ;;
+  esac
 
-ok "platform detected: os=$OS arch=$ARCH"
+  case "$arch" in
+    x86_64|amd64)
+      ARCH="x86_64"
+      ;;
 
-TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t vix)"
-cleanup() { rm -rf "$TMP_DIR"; }
-trap cleanup EXIT INT TERM
+    arm64|aarch64)
+      ARCH="aarch64"
+      ;;
 
-# --------------------------------------------------
-# Resolve version
-# --------------------------------------------------
-resolve_version() {
-  if [ "$VERSION" = "latest" ]; then
-    have curl || die "curl is required to resolve latest (or set VIX_VERSION=vX.Y.Z)"
-    final="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/$REPO/releases/latest")"
-    tag="${final##*/}"
-    [ -n "$tag" ] || die "could not resolve latest version"
-    printf "%s" "$tag"
-  else
-    printf "%s" "$VERSION"
-  fi
+    *)
+      die "unsupported architecture: $arch"
+      ;;
+  esac
 }
 
-step "Resolving release version"
-TAG="$(resolve_version)"
-ok "repo=$REPO version=$TAG os=$OS arch=$ARCH kind=$INSTALL_KIND"
+resolve_stable_pointer() {
+  stable="$(
+    fetch_text "$VIX_STABLE_URL" 2>/dev/null |
+      awk '
+        {
+          gsub(/\r/, "", $0)
+        }
 
-case "$INSTALL_KIND" in
-  sdk)
-    ASSET="vix-sdk-${OS}-${ARCH}.tar.gz"
-    ;;
-  cli)
-    ASSET="vix-${OS}-${ARCH}.tar.gz"
-    ;;
-  *)
-    die "unsupported VIX_INSTALL_KIND='$INSTALL_KIND' (expected sdk or cli)"
-    ;;
-esac
+        NF {
+          print $1
+          exit
+        }
+      '
+  )" || return 1
 
-BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
-URL_BIN="${BASE_URL}/${ASSET}"
-URL_SHA="${URL_BIN}.sha256"
-URL_MINISIG="${URL_BIN}.minisig"
+  [ -n "$stable" ] || return 1
+  valid_release_tag "$stable" || return 1
 
-ARCHIVE_PATH="${TMP_DIR}/${ASSET}"
-SHA_PATH="${TMP_DIR}/${ASSET}.sha256"
-SIG_PATH="${TMP_DIR}/${ASSET}.minisig"
-EXTRACT_DIR="${TMP_DIR}/extract"
+  printf "%s" "$stable"
+}
 
-# --------------------------------------------------
-# Download
-# --------------------------------------------------
-step "Downloading archive"
-info "asset: $ASSET"
-info "url: $URL_BIN"
-fetch "$URL_BIN" "$ARCHIVE_PATH" || die "download failed"
-ok "archive downloaded"
+release_is_installable() {
+  tag="$1"
+  base_url="https://github.com/${VIX_REPO}/releases/download/${tag}"
 
-# --------------------------------------------------
-# SHA256 verification
-# --------------------------------------------------
-step "Verifying checksum"
-if fetch "$URL_SHA" "$SHA_PATH"; then
+  valid_release_tag "$tag" || return 1
+
+  url_exists "$base_url/$ASSET" || return 1
+  url_exists "$base_url/$ASSET.sha256" || return 1
+
+  return 0
+}
+
+resolve_version() {
+  if [ "$VIX_VERSION" != "latest" ]; then
+    valid_release_tag "$VIX_VERSION" \
+      || die "invalid release version: $VIX_VERSION"
+
+    release_is_installable "$VIX_VERSION" \
+      || die "release $VIX_VERSION is incomplete for $OS/$ARCH"
+
+    printf "%s" "$VIX_VERSION"
+    return
+  fi
+
+  stable="$(resolve_stable_pointer || true)"
+
+  if [ -z "$stable" ]; then
+    die "Could not resolve the latest validated Vix release. Please try again later."
+  fi
+
+  if ! release_is_installable "$stable"; then
+    die "Could not resolve the latest validated Vix release. Please try again later."
+  fi
+
+  printf "%s" "$stable"
+}
+
+verify_checksum() {
+  archive="$1"
+  sha_file="$2"
+
   if ! have sha256sum && ! have shasum; then
-    die "need sha256sum (Linux) or shasum (macOS) for verification"
+    die "need sha256sum or shasum for checksum verification"
   fi
 
   expected="$(
-    awk '
-      /^[0-9a-fA-F]{64}/ { print $1; exit }
-      /^SHA256 \(/ { print $NF; exit }
-    ' "$SHA_PATH"
+    sed -n 's/^\([0-9a-fA-F]\{64\}\).*/\1/p' "$sha_file" |
+      head -n 1 |
+      tr 'A-F' 'a-f'
   )"
 
   [ -n "$expected" ] || die "invalid sha256 file"
 
   if have sha256sum; then
-    actual="$(sha256sum "$ARCHIVE_PATH" | awk '{print $1}')"
+    actual="$(
+      sha256sum "$archive" |
+        awk '{print $1}' |
+        tr 'A-F' 'a-f'
+    )"
   else
-    actual="$(shasum -a 256 "$ARCHIVE_PATH" | awk '{print $1}')"
+    actual="$(
+      shasum -a 256 "$archive" |
+        awk '{print $1}' |
+        tr 'A-F' 'a-f'
+    )"
   fi
 
+  [ -n "$actual" ] || die "could not calculate archive sha256"
   [ "$expected" = "$actual" ] || die "sha256 mismatch"
-  ok "sha256 ok"
-else
-  warn "sha256 file not found"
-fi
+}
+verify_signature() {
+  archive="$1"
+  sig_file="$2"
 
-# --------------------------------------------------
-# Minisign verification
-# --------------------------------------------------
-step "Verifying signature"
-if fetch "$URL_MINISIG" "$SIG_PATH"; then
-  if have minisign; then
-    if minisign -Vm "$ARCHIVE_PATH" -P "$MINISIGN_PUBKEY" >/dev/null 2>&1; then
-      ok "minisign ok"
+  minisign \
+    -Vm "$archive" \
+    -x "$sig_file" \
+    -P "$MINISIGN_PUBKEY" \
+    >/dev/null 2>&1 \
+    || die "signature verification failed"
+}
+
+download_and_verify_asset() {
+  base_url="$1"
+  asset="$2"
+
+  archive="$TMP_DIR/$asset"
+  sha_file="$TMP_DIR/$asset.sha256"
+  sig_file="$TMP_DIR/$asset.minisig"
+
+  step "Downloading $asset"
+
+  fetch "$base_url/$asset" "$archive" \
+    || die "failed to download $asset"
+
+  fetch "$base_url/$asset.sha256" "$sha_file" \
+    || die "checksum not found for $asset"
+
+  verify_checksum "$archive" "$sha_file"
+  ok "sha256 verified"
+
+  if fetch "$base_url/$asset.minisig" "$sig_file" 2>/dev/null; then
+    if have minisign; then
+      verify_signature "$archive" "$sig_file"
+      ok "minisign verified"
     else
-      die "minisign verification failed"
+      hint "minisign is not installed; signature verification skipped"
     fi
-  else
-    warn "minisig is published but minisign is not installed"
-    warn "continuing because checksum verification already succeeded"
-  fi
-else
-  warn "minisig not found"
-fi
-
-# --------------------------------------------------
-# Extract
-# --------------------------------------------------
-step "Extracting archive"
-mkdir -p "$EXTRACT_DIR"
-tar -xzf "$ARCHIVE_PATH" -C "$EXTRACT_DIR"
-ok "archive extracted"
-
-# --------------------------------------------------
-# Install
-# --------------------------------------------------
-step "Installing"
-
-if [ "$INSTALL_KIND" = "cli" ]; then
-  mkdir -p "$BIN_DIR"
-
-  [ -f "${EXTRACT_DIR}/${BIN_NAME}" ] || die "archive does not contain '${BIN_NAME}'"
-
-  chmod +x "${EXTRACT_DIR}/${BIN_NAME}"
-  dest="${BIN_DIR}/${BIN_NAME}"
-
-  info "installing CLI to: $dest"
-  mv -f "${EXTRACT_DIR}/${BIN_NAME}" "$dest"
-  ok "CLI installed"
-else
-  mkdir -p "$PREFIX_DIR" "$BIN_DIR"
-
-  info "installing SDK to: $PREFIX_DIR"
-  cp -R "${EXTRACT_DIR}/." "$PREFIX_DIR/"
-
-  if [ -f "${PREFIX_DIR}/bin/${BIN_NAME}" ]; then
-    target="${PREFIX_DIR}/bin/${BIN_NAME}"
-  elif [ -f "${PREFIX_DIR}/install/bin/${BIN_NAME}" ]; then
-    target="${PREFIX_DIR}/install/bin/${BIN_NAME}"
-  else
-    target="$(find "$PREFIX_DIR" -type f -path "*/bin/${BIN_NAME}" 2>/dev/null | head -n 1 || true)"
   fi
 
-  [ -n "$target" ] || die "could not find installed '${BIN_NAME}' in SDK"
+  printf "%s" "$archive"
+}
 
-  chmod +x "$target"
-  dest="${BIN_DIR}/${BIN_NAME}"
+install_cli() {
+  archive="$(download_and_verify_asset "$BASE_URL" "$ASSET")"
+  extract_dir="$TMP_DIR/cli"
 
-  if [ "$target" = "$dest" ]; then
-    info "CLI already installed at: $dest"
+  rm -rf "$extract_dir"
+  mkdir -p "$extract_dir"
+
+  step "Extracting $ASSET"
+
+  tar -xzf "$archive" -C "$extract_dir" \
+    || die "failed to extract $ASSET"
+
+  if [ -f "$extract_dir/$BIN_NAME" ]; then
+    src="$extract_dir/$BIN_NAME"
+  elif [ -f "$extract_dir/bin/$BIN_NAME" ]; then
+    src="$extract_dir/bin/$BIN_NAME"
   else
-    ln -sf "$target" "$dest"
-    info "linked CLI to: $dest"
+    src="$(
+      find "$extract_dir" -type f -name "$BIN_NAME" 2>/dev/null |
+        awk 'NR == 1 { print; exit }'
+    )"
   fi
 
-  ok "SDK installed"
-fi
+  [ -n "$src" ] || die "$BIN_NAME not found in archive"
+  [ -f "$src" ] || die "invalid $BIN_NAME executable in archive"
 
-# --------------------------------------------------
-# Validate install
-# --------------------------------------------------
-step "Validating installation"
-if "$dest" --version >/dev/null 2>&1; then
-  INSTALLED_VERSION="$("$dest" --version 2>/dev/null || true)"
-  ok "installed: $INSTALLED_VERSION"
+  note_src="$extract_dir/share/vix/note"
+  note_dest="$VIX_INSTALL_SHARE_DIR/vix/note"
+  note_parent="$VIX_INSTALL_SHARE_DIR/vix"
+
+  [ -f "$note_src/index.html" ] \
+    || die "missing Vix Note asset: index.html"
+
+  [ -f "$note_src/assets/note.css" ] \
+    || die "missing Vix Note asset: note.css"
+
+  [ -f "$note_src/assets/note.js" ] \
+    || die "missing Vix Note asset: note.js"
+
+  mkdir -p "$VIX_INSTALL_BIN_DIR"
+  mkdir -p "$note_parent"
+
+  BIN_STAGE="$VIX_INSTALL_BIN_DIR/.${BIN_NAME}.install.$$"
+  NOTE_STAGE="$note_parent/.note.install.$$"
+
+  rm -f "$BIN_STAGE"
+  rm -rf "$NOTE_STAGE"
+
+  step "Preparing $VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
+  cp "$src" "$BIN_STAGE" \
+    || die "failed to prepare $BIN_NAME executable"
+
+  chmod +x "$BIN_STAGE" \
+    || die "failed to make $BIN_NAME executable"
+
+  if ! "$BIN_STAGE" --version >/dev/null 2>&1; then
+    die "downloaded $BIN_NAME executable failed its version check"
+  fi
+
+  step "Preparing Vix Note assets"
+
+  cp -R "$note_src" "$NOTE_STAGE" \
+    || die "failed to prepare Vix Note assets"
+
+  [ -f "$NOTE_STAGE/index.html" ] \
+    || die "failed to prepare Vix Note index.html"
+
+  [ -f "$NOTE_STAGE/assets/note.css" ] \
+    || die "failed to prepare Vix Note note.css"
+
+  [ -f "$NOTE_STAGE/assets/note.js" ] \
+    || die "failed to prepare Vix Note note.js"
+
+  step "Installing Vix Note assets to $note_dest"
+
+  rm -rf "$note_dest"
+
+  mv "$NOTE_STAGE" "$note_dest" \
+    || die "failed to install Vix Note assets"
+
+  NOTE_STAGE=""
+
+  step "Installing to $VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
+  DEST="$VIX_INSTALL_BIN_DIR/$BIN_NAME"
+
+  mv "$BIN_STAGE" "$DEST" \
+    || die "failed to install $BIN_NAME"
+
+  BIN_STAGE=""
+
+  chmod +x "$DEST" \
+    || die "failed to make installed $BIN_NAME executable"
+
+  ok "Vix Note assets installed"
+}
+
+detect_platform
+
+ASSET="vix-${OS}-${ARCH}.tar.gz"
+
+TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t vix)"
+
+trap cleanup EXIT HUP INT TERM
+
+printf "  %s▲%s  %s%sVix.cpp%s  installer\n" \
+  "$C_CYAN" \
+  "$C_RESET" \
+  "$C_BOLD" \
+  "$C_GREEN" \
+  "$C_RESET" \
+  >&2
+
+printf "  %s------------------------------------%s\n" \
+  "$C_DIM" \
+  "$C_RESET" \
+  >&2
+
+TAG="$(resolve_version)"
+BASE_URL="https://github.com/${VIX_REPO}/releases/download/${TAG}"
+
+printf "  version   %s\n" "$TAG" >&2
+printf "  platform  %s/%s\n" "$OS" "$ARCH" >&2
+printf "\n" >&2
+
+install_cli
+
+if "$DEST" --version >/dev/null 2>&1; then
+  ok "Done — vix $TAG installed"
 else
-  warn "installed, but running 'vix --version' failed"
+  die "installed, but '$BIN_NAME --version' failed"
 fi
 
-# --------------------------------------------------
-# PATH hint
-# --------------------------------------------------
-step "Checking PATH"
 case ":$PATH:" in
-  *":$BIN_DIR:"*)
-    ok "'$BIN_DIR' is already in PATH"
+  *":$VIX_INSTALL_BIN_DIR:"*)
+    hint "run: vix upgrade --check"
+    hint "sdk: vix upgrade --sdk list"
     ;;
+
   *)
-    warn "'$BIN_DIR' is not in your PATH"
-    info "Add this to your shell config:"
-    printf "  export PATH=\"%s:\$PATH\"\n" "$BIN_DIR" >&2
+    hint "add $VIX_INSTALL_BIN_DIR to PATH"
+    hint "then run: vix upgrade --sdk list"
     ;;
 esac
-
-# --------------------------------------------------
-# Final summary
-# --------------------------------------------------
-printf "\n%sDone.%s\n" "$C_BOLD$C_GREEN" "$C_RESET" >&2
-printf "%sLocation:%s %s\n" "$C_BOLD" "$C_RESET" "$dest" >&2
-printf "%sVersion:%s  %s\n" "$C_BOLD" "$C_RESET" "$TAG" >&2
-printf "%sKind:%s     %s\n" "$C_BOLD" "$C_RESET" "$INSTALL_KIND" >&2

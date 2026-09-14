@@ -16,10 +16,6 @@ VIX_VERSION="${VIX_VERSION:-latest}"
 # - installation tests succeed.
 VIX_STABLE_URL="${VIX_STABLE_URL:-https://vixcpp.com/releases/stable.txt}"
 
-# Emergency fallback used if stable.txt is unavailable, invalid,
-# or points to an incomplete release.
-VIX_FALLBACK_VERSION="${VIX_FALLBACK_VERSION:-v2.7.8}"
-
 VIX_INSTALL_BIN_DIR="${VIX_INSTALL_BIN_DIR:-$HOME/.local/bin}"
 VIX_INSTALL_SHARE_DIR="${VIX_INSTALL_SHARE_DIR:-$HOME/.local/share}"
 
@@ -204,8 +200,7 @@ Environment:
 
       Examples:
         latest
-        v2.7.8
-        v2.8.3
+        vX.Y.Z
 
       Default: latest
 
@@ -217,13 +212,6 @@ Environment:
 
       Default:
         https://vixcpp.com/releases/stable.txt
-
-  VIX_FALLBACK_VERSION
-      Emergency fallback used when the stable release pointer is
-      unavailable or incomplete.
-
-      Default:
-        v2.7.8
 
   VIX_REPO
       GitHub repository containing release assets.
@@ -368,26 +356,15 @@ resolve_version() {
 
   stable="$(resolve_stable_pointer || true)"
 
-  if [ -n "$stable" ]; then
-    if release_is_installable "$stable"; then
-      printf "%s" "$stable"
-      return
-    fi
-
-    warn "validated stable release $stable is incomplete for $OS/$ARCH"
-  else
-    warn "could not resolve the validated stable release"
+  if [ -z "$stable" ]; then
+    die "Could not resolve the latest validated Vix release. Please try again later."
   fi
 
-  if valid_release_tag "$VIX_FALLBACK_VERSION" &&
-     [ "$VIX_FALLBACK_VERSION" != "$stable" ] &&
-     release_is_installable "$VIX_FALLBACK_VERSION"; then
-    step "Falling back to stable release $VIX_FALLBACK_VERSION"
-    printf "%s" "$VIX_FALLBACK_VERSION"
-    return
+  if ! release_is_installable "$stable"; then
+    die "Could not resolve the latest validated Vix release. Please try again later."
   fi
 
-  die "no installable Vix release found for $OS/$ARCH"
+  printf "%s" "$stable"
 }
 
 verify_checksum() {

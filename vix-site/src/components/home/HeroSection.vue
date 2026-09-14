@@ -1,1133 +1,813 @@
+<script setup>
+import { hero } from "../../data/hero";
+</script>
+
 <template>
   <section class="hero">
-    <!-- Subtle dotted grid backdrop -->
-    <div class="hero__grid" aria-hidden="true" />
+    <div class="container">
+      <!-- ===================================================
+           Intro
+      ==================================================== -->
 
-    <div class="hero__inner container-wide">
-      <!-- LEFT -->
-      <div class="hero__content">
-        <p class="hero__eyebrow">
-          <span class="hero__eyebrow-tick" />
-          Native C++ application workflow
-        </p>
+      <div class="hero-intro">
+        <div class="hero-intro__copy">
+          <h1 class="hero-title">
+            {{ hero.title }}
+          </h1>
 
-        <h1 class="hero__title">Build real applications with modern C++.</h1>
+          <p class="hero-description">
+            {{ hero.description }}
+          </p>
+        </div>
 
-        <p class="hero__lead">
-          Vix.cpp keeps the native C++ model intact while giving projects a more
-          direct workflow around the application: create it, run it, build it,
-          test it, check it, package it, and prepare it for production.
-        </p>
+        <aside class="hero-start" aria-label="Get started with Vix.cpp">
+          <span class="hero-start__label">Get started</span>
 
-        <div class="hero__actions">
-          <RouterLink to="/install" class="hero__btn hero__btn--primary">
-            Install Vix <span class="hero__arrow" aria-hidden="true">→</span>
-          </RouterLink>
           <a
+            class="hero-start__primary"
             href="https://docs.vixcpp.com"
             target="_blank"
             rel="noreferrer"
-            class="hero__btn hero__btn--secondary"
           >
-            Read the docs <span class="hero__arrow" aria-hidden="true">→</span>
+            Get Started
           </a>
-          <a
-            href="https://github.com/vixcpp/vix"
-            target="_blank"
-            rel="noreferrer"
-            class="hero__btn hero__btn--ghost"
-          >
-            GitHub
-          </a>
-        </div>
 
-        <div class="hero__commands" aria-label="Common Vix commands">
-          <CommandLine
-            command="curl -fsSL https://vixcpp.com/install.sh | bash"
-          />
-          <CommandLine command="vix upgrade --sdk info web" />
-        </div>
+          <div class="hero-start__secondary-actions">
+            <a href="https://docs.vixcpp.com" target="_blank" rel="noreferrer">
+              Documentation
+            </a>
+            <a
+              href="https://github.com/vixcpp/vix"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
+        </aside>
       </div>
 
-      <!-- RIGHT — terminal code card -->
-      <aside class="hero__side" aria-label="Vix.cpp code examples">
-        <div
-          class="code-card"
-          @mouseenter="cardHover = true"
-          @mouseleave="cardHover = false"
-        >
-          <div class="code-head">
-            <div class="head-scroll">
-              <div class="head-left">
-                <span class="dot dot-red" />
-                <span class="dot dot-yellow" />
-                <span class="dot dot-green" />
-                <span class="head-title">{{
-                  activeTab?.file || activeTab?.label
-                }}</span>
+      <!-- ===================================================
+           Showcase
+      ==================================================== -->
+
+      <div class="hero-showcase">
+        <!-- Left -->
+        <div class="showcase-copy">
+          <article
+            v-for="(section, index) in hero.showcase"
+            :key="section.title"
+            class="showcase-item"
+          >
+            <div class="showcase-item__number">
+              {{ String(index + 1).padStart(2, "0") }}
+            </div>
+
+            <div class="showcase-item__body">
+              <h2>
+                {{ section.title }}
+              </h2>
+
+              <p>
+                {{ section.description }}
+              </p>
+
+              <ul>
+                <li v-for="point in section.points" :key="point">
+                  {{ point }}
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Right -->
+        <div class="showcase-demo">
+          <div class="dev-window">
+            <!-- Editor title bar -->
+            <div class="dev-window__bar">
+              <div class="dev-window__bar-left">
+                <span class="window-dot" />
+                <span class="window-dot" />
+                <span class="window-dot window-dot--active" />
+
+                <span class="dev-window__file"> main.cpp </span>
               </div>
 
-              <div
-                v-if="tabs.length > 1"
-                class="tabs"
-                role="tablist"
-                aria-label="Hero examples"
-                @wheel.prevent="onTabsWheel"
-              >
-                <button
-                  v-for="t in tabs"
-                  :key="t.key"
-                  type="button"
-                  class="tab"
-                  :class="{ active: activeKey === t.key }"
-                  role="tab"
-                  :aria-selected="activeKey === t.key"
-                  @click="activeKey = t.key"
+              <span class="dev-window__language"> C++ </span>
+            </div>
+
+            <!-- Code -->
+            <div class="editor">
+              <div class="editor__line">
+                <span class="editor__number">1</span
+                ><code
+                  ><span class="cpp-directive">#include</span>
+                  <span class="cpp-include">&lt;future&gt;</span></code
                 >
-                  {{ t.label }}
-                </button>
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">2</span
+                ><code
+                  ><span class="cpp-directive">#include</span>
+                  <span class="cpp-include">&lt;iostream&gt;</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">3</span
+                ><code
+                  ><span class="cpp-directive">#include</span>
+                  <span class="cpp-include">&lt;thread&gt;</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">4</span><code />
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">5</span
+                ><code
+                  ><span class="cpp-keyword">int</span>
+                  <span class="cpp-function">main</span
+                  ><span class="cpp-op">()</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">6</span
+                ><code><span class="cpp-op">{</span></code>
+              </div>
+              <div class="editor__line editor__line--problem">
+                <span class="editor__number">7</span
+                ><code
+                  >&nbsp;&nbsp;&nbsp;&nbsp;<span class="cpp-namespace">std</span
+                  ><span class="cpp-op">::</span>promise<span class="cpp-op"
+                    >&lt;</span
+                  ><span class="cpp-keyword">int</span
+                  ><span class="cpp-op">&gt;</span> promise<span class="cpp-op"
+                    >;</span
+                  ></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">8</span
+                ><code
+                  >&nbsp;&nbsp;&nbsp;&nbsp;<span class="cpp-keyword">auto</span>
+                  future <span class="cpp-op">=</span> promise<span
+                    class="cpp-op"
+                    >.</span
+                  ><span class="cpp-function">get_future</span
+                  ><span class="cpp-op">();</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">9</span><code />
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">10</span
+                ><code
+                  >&nbsp;&nbsp;&nbsp;&nbsp;<span class="cpp-namespace">std</span
+                  ><span class="cpp-op">::</span>thread worker<span
+                    class="cpp-op"
+                    >([</span
+                  >p <span class="cpp-op">=</span>
+                  <span class="cpp-namespace">std</span
+                  ><span class="cpp-op">::</span
+                  ><span class="cpp-function">move</span
+                  ><span class="cpp-op">(</span>promise<span class="cpp-op"
+                    >)]() </span
+                  >mutable <span class="cpp-op">{});</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">11</span
+                ><code
+                  >&nbsp;&nbsp;&nbsp;&nbsp;worker<span class="cpp-op">.</span
+                  ><span class="cpp-function">join</span
+                  ><span class="cpp-op">();</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">12</span><code />
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">13</span
+                ><code
+                  >&nbsp;&nbsp;&nbsp;&nbsp;<span class="cpp-namespace">std</span
+                  ><span class="cpp-op">::</span>cout
+                  <span class="cpp-op">&lt;&lt;</span> future<span
+                    class="cpp-op"
+                    >.</span
+                  ><span class="cpp-function">get</span
+                  ><span class="cpp-op">() &lt;&lt;</span>
+                  <span class="cpp-include">'\n'</span
+                  ><span class="cpp-op">;</span></code
+                >
+              </div>
+              <div class="editor__line">
+                <span class="editor__number">14</span
+                ><code><span class="cpp-op">}</span></code>
               </div>
             </div>
 
-            <button
-              v-if="activeTab"
-              type="button"
-              class="copy-btn"
-              @click="copy(activeTab.code)"
-              :title="copied ? 'Copied' : 'Copy'"
-              aria-label="Copy"
-            >
-              <svg
-                v-if="!copied"
-                class="ico"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M9 9h10v10H9V9Z"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <svg
-                v-else
-                class="ico"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M20 7L10 17l-4-4"
-                  stroke="currentColor"
-                  stroke-width="1.9"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+            <!-- Terminal -->
+            <div class="terminal">
+              <div class="terminal__bar">
+                <span>Terminal</span>
 
-          <div class="code-body" role="region" aria-label="Hero code example">
-            <pre
-              class="code-pre"
-            ><code class="code-code" v-html="activeHtml" /></pre>
-          </div>
+                <span class="terminal__state"> Vix </span>
+              </div>
 
-          <div class="code-foot">
-            <span class="code-foot-mark" aria-hidden="true">
-              <svg
-                viewBox="0 0 120 120"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon points="28,24 45,24 60,96 50,96" fill="#4ade80" />
-                <polygon points="92,24 75,24 60,96 70,96" fill="#22c55e" />
-              </svg>
-            </span>
-            <span>vix run {{ activeTab?.file }}</span>
+              <div class="terminal__body">
+                <div class="terminal__command">
+                  <span class="terminal__prompt">$</span>
+
+                  <span class="terminal__command-text">vix run main.cpp</span>
+                </div>
+
+                <div>
+                  <span class="terminal__error">runtime error:</span> broken
+                  promise
+                </div>
+
+                <div class="terminal__location">
+                  --&gt; /home/softadastra/tmp/vix/main.cpp:7:5
+                </div>
+
+                <div class="terminal__frame">
+                  <div>
+                    <span class="terminal__line-number"> 5 | </span>
+
+                    int main()
+                  </div>
+
+                  <div>
+                    <span class="terminal__line-number"> 6 | </span>
+                    {
+                  </div>
+
+                  <div class="terminal__problem">
+                    <span class="terminal__line-number"> 7 | </span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;std::promise&lt;int&gt; promise;
+                  </div>
+
+                  <div>
+                    <span class="terminal__line-number"> &nbsp;&nbsp;| </span>
+                    <span class="terminal__caret"
+                      >&nbsp;&nbsp;&nbsp;&nbsp;^</span
+                    >
+                  </div>
+
+                  <div>
+                    <span class="terminal__line-number"> 8 | </span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;auto future = promise.get_future();
+                  </div>
+                </div>
+
+                <div class="terminal__hint">
+                  <span class="terminal__hint-label">hint:</span>
+
+                  <span>
+                    set a value or exception before destroying the promise, or
+                    keep the promise alive until fulfillment
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </aside>
+      </div>
     </div>
   </section>
 </template>
 
-<script setup>
-import { computed, ref, watch } from "vue";
-import CommandLine from "@/components/common/CommandLine.vue";
-import { hero } from "@/data/hero";
-
-/* ── tabs ── */
-const tabs = computed(() =>
-  (hero.examples || [])
-    .filter((x) => x?.key && x?.label && typeof x.code === "string")
-    .map((x) => ({
-      key: x.key,
-      label: x.label,
-      lang: x.lang || "cpp",
-      file: x.file || "",
-      code: x.code,
-    })),
-);
-
-const activeKey = ref("");
-watch(
-  () => tabs.value.map((t) => t.key).join(","),
-  () => {
-    activeKey.value = tabs.value[0]?.key || "";
-  },
-  { immediate: true },
-);
-const activeTab = computed(
-  () => tabs.value.find((t) => t.key === activeKey.value) || null,
-);
-
-/* ── copy ── */
-const cardHover = ref(false);
-const copied = ref(false);
-
-function onTabsWheel(event) {
-  const el = event.currentTarget;
-  if (!el) return;
-
-  const delta =
-    Math.abs(event.deltaX) > Math.abs(event.deltaY)
-      ? event.deltaX
-      : event.deltaY;
-
-  el.scrollLeft += delta;
-}
-
-async function copy(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const ta = Object.assign(document.createElement("textarea"), {
-      value: text,
-    });
-    Object.assign(ta.style, { position: "fixed", opacity: "0" });
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-  }
-  copied.value = true;
-  clearTimeout(copy._t);
-  copy._t = setTimeout(() => (copied.value = false), 900);
-}
-
-/* ── C++ highlighter ── */
-function esc(s) {
-  return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-const KW = new Set([
-  "alignas",
-  "alignof",
-  "and",
-  "and_eq",
-  "asm",
-  "auto",
-  "bitand",
-  "bitor",
-  "bool",
-  "break",
-  "case",
-  "catch",
-  "char",
-  "char8_t",
-  "char16_t",
-  "char32_t",
-  "class",
-  "compl",
-  "concept",
-  "const",
-  "consteval",
-  "constexpr",
-  "constinit",
-  "const_cast",
-  "continue",
-  "co_await",
-  "co_return",
-  "co_yield",
-  "decltype",
-  "default",
-  "delete",
-  "do",
-  "double",
-  "dynamic_cast",
-  "else",
-  "enum",
-  "explicit",
-  "export",
-  "extern",
-  "false",
-  "float",
-  "for",
-  "friend",
-  "goto",
-  "if",
-  "inline",
-  "int",
-  "long",
-  "mutable",
-  "namespace",
-  "new",
-  "noexcept",
-  "not",
-  "not_eq",
-  "nullptr",
-  "operator",
-  "or",
-  "or_eq",
-  "private",
-  "protected",
-  "public",
-  "register",
-  "reinterpret_cast",
-  "requires",
-  "return",
-  "short",
-  "signed",
-  "sizeof",
-  "static",
-  "static_assert",
-  "static_cast",
-  "struct",
-  "switch",
-  "template",
-  "this",
-  "thread_local",
-  "throw",
-  "true",
-  "try",
-  "typedef",
-  "typeid",
-  "typename",
-  "union",
-  "unsigned",
-  "using",
-  "virtual",
-  "void",
-  "volatile",
-  "wchar_t",
-  "while",
-  "xor",
-  "xor_eq",
-]);
-const TYPES = new Set([
-  "size_t",
-  "ssize_t",
-  "string",
-  "string_view",
-  "vector",
-  "map",
-  "unordered_map",
-  "set",
-  "unordered_set",
-  "optional",
-  "variant",
-  "expected",
-  "unique_ptr",
-  "shared_ptr",
-  "weak_ptr",
-  "App",
-  "Request",
-  "Response",
-  "Context",
-  "Config",
-  "Frame",
-  "Agent",
-  "Database",
-  "NodeConfig",
-  "Operation",
-  "Server",
-  "RuntimeExecutor",
-  "P2PRuntime",
-]);
-const NAMESPACES = new Set([
-  "std",
-  "vix",
-  "asio",
-  "net",
-  "http",
-  "ws",
-  "ai",
-  "game",
-  "config",
-  "executor",
-  "websocket",
-  "p2p",
-  "sync",
-  "outbox",
-  "db",
-]);
-
-function wrap(cls, text) {
-  return `<span class="${cls}">${esc(text)}</span>`;
-}
-
-function splitLineComment(line) {
-  let inStr = false,
-    inChar = false;
-  for (let i = 0; i < line.length - 1; i++) {
-    const c = line[i];
-    if (!inChar && c === '"' && line[i - 1] !== "\\") inStr = !inStr;
-    if (!inStr && c === "'" && line[i - 1] !== "\\") inChar = !inChar;
-    if (!inStr && !inChar && line[i] === "/" && line[i + 1] === "/") {
-      const before = line.slice(0, i);
-      if (before.endsWith("http:") || before.endsWith("https:")) continue;
-      return { code: before, comment: line.slice(i) };
-    }
-  }
-  return { code: line, comment: "" };
-}
-
-function highlightDirective(line) {
-  const m = line.match(
-    /^(\s*#\s*(?:include|define|pragma|if|ifdef|ifndef|endif|elif|else)\b)(.*)$/,
-  );
-  if (!m) return null;
-  let out = wrap("t-dir", m[1]);
-  const rest = m[2] || "";
-  const ang = rest.match(/^(\s*)(<[^>\n]*>)(.*)$/);
-  if (ang) {
-    out += esc(ang[1]) + wrap("t-inc", ang[2]) + highlightInline(ang[3] || "");
-    return out;
-  }
-  const quo = rest.match(/^(\s*)("([^"\\]|\\.)*")(.*)$/);
-  if (quo) {
-    out += esc(quo[1]) + wrap("t-inc", quo[2]) + highlightInline(quo[4] || "");
-    return out;
-  }
-  return out + highlightInline(rest);
-}
-
-function highlightInline(s) {
-  let out = "",
-    i = 0;
-  const isIdStart = (ch) => /[A-Za-z_]/.test(ch);
-  const isId = (ch) => /[A-Za-z0-9_]/.test(ch);
-  while (i < s.length) {
-    const ch = s[i];
-    if (ch === '"') {
-      let j = i + 1;
-      while (j < s.length && !(s[j] === '"' && s[j - 1] !== "\\")) j++;
-      const str = s.slice(i, Math.min(j + 1, s.length));
-      out += wrap("t-str", str);
-      i += str.length;
-      continue;
-    }
-    if (ch === "'") {
-      let j = i + 1;
-      while (j < s.length && !(s[j] === "'" && s[j - 1] !== "\\")) j++;
-      const lit = s.slice(i, Math.min(j + 1, s.length));
-      out += wrap("t-char", lit);
-      i += lit.length;
-      continue;
-    }
-    if (/[0-9]/.test(ch)) {
-      const m = s
-        .slice(i)
-        .match(/^(0x[0-9A-Fa-f]+|[0-9]+(?:\.[0-9]+)?)([uUlLfF]{0,3})/);
-      if (m) {
-        out += wrap("t-num", m[0]);
-        i += m[0].length;
-        continue;
-      }
-    }
-    if (isIdStart(ch)) {
-      let j = i + 1;
-      while (j < s.length && isId(s[j])) j++;
-      const id = s.slice(i, j);
-      const prev = (() => {
-        for (let k = i - 1; k >= 0; k--)
-          if (s[k] !== " " && s[k] !== "\t") return s[k];
-        return "";
-      })();
-      const next = (() => {
-        for (let k = j; k < s.length; k++)
-          if (s[k] !== " " && s[k] !== "\t") return s[k];
-        return "";
-      })();
-      if (KW.has(id)) out += wrap("t-kw", id);
-      else if (TYPES.has(id)) out += wrap("t-type", id);
-      else if (NAMESPACES.has(id)) out += wrap("t-ns", id);
-      else if (next === "(") out += wrap("t-fn", id);
-      else if (prev === "." || prev === ">") out += wrap("t-mem", id);
-      else out += wrap("t-id", id);
-      i = j;
-      continue;
-    }
-    if (/[\(\)\{\}\[\]\;\,\.\:\=\+\-\*\/\<\>\!\&\|\?]/.test(ch)) {
-      if (s.startsWith("::", i)) {
-        out += wrap("t-op", "::");
-        i += 2;
-        continue;
-      }
-      if (s.startsWith("->", i)) {
-        out += wrap("t-op", "->");
-        i += 2;
-        continue;
-      }
-      out += wrap("t-op", ch);
-      i++;
-      continue;
-    }
-    out += esc(ch);
-    i++;
-  }
-  return out;
-}
-
-function highlightCpp(raw) {
-  return String(raw ?? "")
-    .split("\n")
-    .map((line) => {
-      const { code, comment } = splitLineComment(line);
-      const dir = highlightDirective(code);
-      return (
-        (dir ?? highlightInline(code)) +
-        (comment ? `<span class="t-cmt">${esc(comment)}</span>` : "")
-      );
-    })
-    .join("\n");
-}
-
-const activeHtml = computed(() =>
-  activeTab.value ? highlightCpp(activeTab.value.code) : "",
-);
-</script>
-
 <style scoped>
-/* ── Section ── */
+/* ==========================================================
+   HERO
+========================================================== */
+
 .hero {
   position: relative;
+
+  padding: clamp(2.75rem, 5vw, 4rem) 0 clamp(5rem, 8vw, 7rem);
+
   overflow: hidden;
-  padding-top: 10px;
-  padding-bottom: 96px;
+  background: var(--vix-bg);
 }
 
-/* Faint dotted grid — technical texture, off-white */
-.hero__grid {
-  display: none;
+.hero::before {
+  content: none;
 }
-.hero__inner {
-  position: relative;
+
+/* ==========================================================
+   INTRO
+========================================================== */
+
+.hero-intro {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) 560px;
-  gap: clamp(36px, 6vw, 80px);
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(270px, 0.44fr);
+
   align-items: center;
+
+  gap: clamp(3rem, 7vw, 7rem);
 }
 
-/* ── Left ── */
-.hero__content {
-  max-width: 820px;
+.hero-intro__copy {
+  max-width: 760px;
 }
 
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin-bottom: 22px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--green-strong);
+.hero-title {
+  max-width: 760px;
+
+  margin: 0;
+
+  color: var(--color-text);
+
+  font-size: clamp(2.8rem, 4.9vw, 4.35rem);
+  font-weight: 670;
+  line-height: 1;
+
+  letter-spacing: -0.058em;
 }
 
-.hero__eyebrow-tick {
-  width: 16px;
-  height: 1.5px;
-  background: var(--green);
-  border-radius: 2px;
-}
+.hero-description {
+  max-width: 680px;
 
-.hero__title {
-  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
-  font-weight: 800;
-  line-height: 0.98;
-  letter-spacing: -0.04em;
-  color: var(--text);
-  margin: 0 0 24px;
-  max-width: 16ch;
-}
+  margin-top: 1.25rem;
 
-.hero__lead {
-  max-width: 56ch;
-  margin: 0 0 32px;
-  color: var(--text-soft);
-  font-size: clamp(1.04rem, 1.4vw, 1.18rem);
+  color: var(--color-text-secondary);
+
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
   line-height: 1.72;
 }
 
-/* Actions */
-.hero__actions {
+.hero-start {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 30px;
+  align-items: flex-start;
+  flex-direction: column;
+
+  gap: 0.8rem;
+  min-width: 0;
+  padding-left: clamp(1.25rem, 3vw, 2.5rem);
+
+  border-left: 1px solid var(--vix-border);
 }
 
-.hero__btn {
+.hero-start__label {
+  color: var(--vix-text-muted);
+
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-start__primary {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0.7rem 1.2rem;
-  border-radius: var(--radius-md);
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition:
-    transform var(--speed) var(--ease),
-    background var(--speed) var(--ease),
-    border-color var(--speed) var(--ease),
-    color var(--speed) var(--ease),
-    box-shadow var(--speed) var(--ease);
-}
 
-.hero__btn--primary {
-  background: var(--green);
-  color: #fff;
-  box-shadow: var(--shadow-green);
-}
-.hero__btn--primary:hover {
-  background: var(--green-strong);
-  color: #fff;
-  transform: translateY(-1px);
-}
+  min-height: 42px;
+  padding: 0 1rem;
 
-.hero__btn--secondary {
-  background: var(--bg-panel);
-  border-color: var(--line-strong);
-  color: var(--text);
-}
-.hero__btn--secondary:hover {
-  border-color: var(--green-line);
-  color: var(--green-strong);
-  transform: translateY(-1px);
-}
-
-.hero__btn--ghost {
-  background: transparent;
-  border-color: var(--line);
-  color: var(--text-soft);
-}
-.hero__btn--ghost:hover {
-  background: var(--bg-sunken);
-  color: var(--text);
-}
-
-.hero__arrow {
-  opacity: 0.7;
-}
-
-/* CommandLines */
-.hero__commands {
-  display: grid;
-  gap: 4px;
-  max-width: 480px;
-}
-
-/* ── Right: terminal card (dark, contrast) ── */
-.hero__side {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.code-card {
-  width: 100%;
-  min-width: 0;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--line-ink);
-  background: var(--bg-ink);
-  box-shadow: var(--shadow-lg);
-}
-
-/* Header */
-.code-head {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 11px 54px 11px 13px;
-  border-bottom: 1px solid var(--line-ink);
-  background: var(--bg-ink-soft);
-}
-
-.head-scroll {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.head-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 0 0 auto;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-}
-
-.dot-red {
-  background: #ff5f57;
-}
-
-.dot-yellow {
-  background: #febc2e;
-}
-
-.dot-green {
-  background: #28c840;
-}
-
-.head-title {
-  color: var(--text-invert-soft);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 96px;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.065);
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-  overscroll-behavior-inline: contain;
-}
-
-.tabs:hover {
-  scrollbar-color: rgba(134, 239, 172, 0.55) transparent;
-}
-
-.tabs::-webkit-scrollbar {
-  height: 2px;
-}
-
-.tabs::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.tabs::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 999px;
-}
-
-.tabs:hover::-webkit-scrollbar-thumb {
-  background: rgba(134, 239, 172, 0.55);
-}
-
-.tabs:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(134, 239, 172, 0.8);
-}
-
-.tab {
-  flex: 0 0 auto;
-  border: 0;
-  background: transparent;
-  color: var(--text-invert-soft);
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: 999px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    background var(--speed),
-    color var(--speed);
-}
-.tab:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-invert);
-}
-
-.tab.active {
-  background: rgba(34, 197, 94, 0.18);
-  color: #86efac;
-}
-
-/* Copy */
-.copy-btn {
-  position: absolute;
-  top: 50%;
-  right: 13px;
-  z-index: 5;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 18, 21, 0.92);
+  color: #041008;
+  background: var(--vix-green-light);
+  border: 1px solid var(--vix-green-light);
   border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--text-invert-soft);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%);
-  transition:
-    opacity var(--speed),
-    background var(--speed),
-    border-color var(--speed),
-    color var(--speed);
+
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
-.copy-btn .ico {
-  display: block;
-  width: 16px;
-  height: 16px;
-  margin: 0 auto;
-}
-
-.copy-btn .ico path {
-  stroke: currentColor;
-  fill: none;
-}
-
-.code-card:hover .copy-btn {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.copy-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #86efac;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .copy-btn {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-/* Body */
-.code-body {
-  height: auto;
-  max-height: 420px;
-  overflow: auto;
-}
-.code-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.code-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-}
-.code-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.code-pre {
-  margin: 0;
-  padding: 16px 18px;
-  white-space: pre;
-  line-height: 1.7;
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  color: var(--text-invert);
-  background: transparent;
-  border-radius: 0px !important;
-}
-.code-code {
-  display: inline-block;
-  min-width: 100%;
-}
-
-/* Footer prompt */
-.code-foot {
+.hero-start__secondary-actions {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-top: 1px solid var(--line-ink);
-  background: var(--bg-ink-soft);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: var(--text-invert-soft);
-}
-.code-foot-mark {
-  width: 13px;
-  height: 13px;
-  opacity: 0.9;
-}
-.code-foot-mark svg {
-  width: 100%;
-  height: 100%;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
-/* ── Custom C++ syntax palette — unique, harmonised with brand green ──
-   Background is ink; keys: green for keywords, mint for types, soft
-   warm for strings, muted for ops. Not the VSCode default. */
-.code-code :deep(.t-dir) {
-  color: #d8b4fe;
-}
+.hero-start__secondary-actions a {
+  padding: 0.3rem 0;
 
-.code-code :deep(.t-inc) {
-  color: #fca5a5;
-}
+  color: var(--vix-link);
+  border-bottom: 1px solid var(--vix-border);
 
-.code-code :deep(.t-kw) {
-  color: #4ade80;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
-.code-code :deep(.t-type) {
-  color: #7dd3a8;
+.hero-start__secondary-actions a:hover {
+  color: var(--vix-link-hover);
+  border-color: var(--vix-link-hover);
 }
 
-.code-code :deep(.t-ns) {
-  color: #5eead4;
+/* ==========================================================
+   SHOWCASE
+========================================================== */
+
+.hero-showcase {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.86fr)
+    minmax(470px, 1.14fr);
+
+  gap: clamp(3.5rem, 7vw, 7rem);
+
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+  padding-top: clamp(2.8rem, 5vw, 4rem);
+
+  border-top: 1px solid var(--color-border);
 }
 
-.code-code :deep(.t-fn) {
-  color: #fde68a;
+/* ==========================================================
+   SHOWCASE LEFT
+========================================================== */
+
+.showcase-copy {
+  display: flex;
+  flex-direction: column;
 }
 
-.code-code :deep(.t-mem) {
-  color: #bfdbfe;
+.showcase-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+
+  gap: 1rem;
+
+  padding-bottom: 2rem;
+
+  border-bottom: 1px solid var(--color-border);
 }
 
-.code-code :deep(.t-id) {
-  color: #e2e8f0;
+.showcase-item + .showcase-item {
+  padding-top: 2rem;
 }
 
-.code-code :deep(.t-str),
-.code-code :deep(.t-char) {
-  color: #fcd9a8;
+.showcase-item__number {
+  padding-top: 0.26rem;
+
+  color: var(--color-primary);
+
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
 }
 
-.code-code :deep(.t-num) {
-  color: #c4b5fd;
+.showcase-item__body h2 {
+  max-width: 520px;
+
+  margin: 0;
+
+  color: var(--color-text);
+
+  font-size: clamp(1.28rem, 2vw, 1.62rem);
+  font-weight: 650;
+  line-height: 1.17;
+
+  letter-spacing: -0.034em;
 }
 
-.code-code :deep(.t-cmt) {
-  color: #6b7280;
-  font-style: italic;
+.showcase-item__body p {
+  max-width: 540px;
+
+  margin-top: 0.6rem;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.91rem;
+  line-height: 1.68;
 }
 
-.code-code :deep(.t-op) {
-  color: #94a3b8;
+.showcase-item__body ul {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.24rem;
+
+  margin: 0.62rem 0 0;
+
+  padding-left: 1.1rem;
+
+  color: var(--color-text-muted);
+
+  font-size: 0.83rem;
+  line-height: 1.62;
 }
 
-/* ── Responsive ── */
-@media (max-width: 1080px) {
-  .hero__inner {
+.showcase-item__body li::marker {
+  color: var(--color-primary);
+}
+
+/* ==========================================================
+   DEV WINDOW
+========================================================== */
+
+.showcase-demo {
+  position: sticky;
+
+  top: 94px;
+
+  align-self: start;
+
+  min-width: 0;
+}
+
+.dev-window {
+  overflow: hidden;
+
+  background: var(--vix-bg-soft);
+
+  border: 1px solid var(--vix-border);
+  border-radius: var(--radius-md);
+}
+
+.dev-window__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 39px;
+  padding-inline: 0.9rem;
+
+  color: #9aa79f;
+  background: var(--vix-bg-soft);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+}
+
+.dev-window__bar-left {
+  display: flex;
+  align-items: center;
+
+  gap: 0.44rem;
+}
+
+.window-dot {
+  width: 7px;
+  height: 7px;
+
+  background: #3c4840;
+
+  border-radius: 50%;
+}
+
+.window-dot--active {
+  margin-right: 0.4rem;
+
+  background: rgba(34, 197, 94, 0.72);
+}
+
+.dev-window__file {
+  color: #adb8b1;
+}
+
+.dev-window__language {
+  color: #5e6c63;
+}
+
+/* ==========================================================
+   EDITOR
+========================================================== */
+
+.editor {
+  padding-block: 1.1rem;
+
+  background: var(--vix-bg-soft);
+
+  font-family: var(--font-mono);
+  font-size: 0.81rem;
+  line-height: 1.72;
+}
+
+.editor__line {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+
+  min-height: 1.72em;
+
+  padding-right: 1rem;
+
+  color: #d3d8d5;
+}
+
+.editor__number {
+  padding-right: 0.85rem;
+
+  color: #435047;
+
+  text-align: right;
+
+  user-select: none;
+}
+
+.editor__line--problem {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.cpp-directive {
+  color: #c586c0;
+}
+
+.cpp-include {
+  color: #ce9178;
+}
+
+.cpp-keyword {
+  color: #569cd6;
+}
+
+.cpp-namespace {
+  color: #4fc1ff;
+}
+
+.cpp-function {
+  color: #dcdcaa;
+}
+
+.cpp-number {
+  color: #b5cea8;
+}
+
+.cpp-op {
+  color: rgba(226, 232, 240, 0.6);
+}
+
+/* ==========================================================
+   TERMINAL
+========================================================== */
+
+.terminal {
+  border-top: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 34px;
+  padding-inline: 0.9rem;
+
+  color: #68766d;
+  background: var(--vix-bg-soft);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.terminal__state {
+  color: rgba(34, 197, 94, 0.82);
+}
+
+.terminal__body {
+  padding: 1.15rem;
+
+  color: #bac3be;
+  background: var(--vix-bg-soft);
+
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  line-height: 1.7;
+}
+
+.terminal__command {
+  color: var(--vix-green-light);
+}
+
+.terminal__command-text {
+  color: var(--vix-green-light);
+}
+
+.terminal__prompt {
+  margin-right: 0.45rem;
+
+  color: #22c55e;
+
+  font-weight: 800;
+}
+
+.terminal__space {
+  height: 0.65rem;
+}
+
+.terminal__error {
+  margin-right: 0.35rem;
+
+  color: #fb7185;
+
+  font-weight: 750;
+}
+
+.terminal__location {
+  color: #a7dfb8;
+}
+
+.terminal__frame {
+  margin-block: 0.35rem;
+}
+
+.terminal__line-number {
+  color: #56635b;
+}
+
+.terminal__problem {
+  color: var(--vix-text);
+}
+
+.terminal__caret {
+  color: #fb7185;
+}
+
+.terminal__hint {
+  display: flex;
+
+  gap: 0.45rem;
+
+  margin-top: 0.55rem;
+
+  color: #bac4be;
+}
+
+.terminal__hint-label {
+  flex: 0 0 auto;
+
+  color: #facc15;
+
+  font-weight: 700;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1020px) {
+  .hero-intro {
+    grid-template-columns:
+      minmax(0, 1fr)
+      260px;
+
+    gap: 2.5rem;
+  }
+
+  .hero-showcase {
     grid-template-columns: 1fr;
   }
-  .hero__side {
-    max-width: 640px;
-    width: 100%;
+
+  .showcase-demo {
+    position: static;
+
+    max-width: 760px;
   }
 }
 
-/* ── Mobile only ── */
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .hero {
-    padding-top: 0;
-    overflow-x: hidden;
+    padding-top: 2.75rem;
   }
 
-  .hero__inner {
+  .hero-intro {
     grid-template-columns: 1fr;
-    gap: 34px;
-    width: 100%;
-    padding-inline: 20px;
-    box-sizing: border-box;
   }
 
-  .hero__content,
-  .hero__side,
-  .code-card {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+  .hero-start {
+    margin-top: 0.35rem;
+    padding-left: 1rem;
   }
 
-  .hero__content {
-    padding-top: 34px;
+  .hero-title {
+    font-size: clamp(2.7rem, 12vw, 3.9rem);
   }
 
-  .hero__eyebrow {
-    font-size: 0.66rem;
-    margin-bottom: 16px;
-  }
-
-  .hero__title {
-    display: block;
-    font-size: clamp(2.25rem, 13vw, 3.1rem);
-    line-height: 0.98;
-    max-width: 12ch;
-    margin-bottom: 22px;
-  }
-
-  .hero__lead {
-    max-width: 100%;
-    font-size: 1rem;
-    line-height: 1.65;
-    margin-bottom: 26px;
-  }
-
-  .hero__actions {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .hero__btn {
-    width: 100%;
-    justify-content: center;
-    padding: 0.95rem 1.2rem;
-    font-size: 1rem;
-  }
-
-  .hero__commands {
-    max-width: 100%;
-    gap: 6px;
-    overflow: hidden;
-  }
-
-  .hero__side {
-    justify-content: flex-start;
-    overflow: hidden;
-  }
-
-  .code-card {
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .code-head {
-    padding: 9px 50px 9px 10px;
-  }
-
-  .head-scroll {
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .head-left {
-    flex: 0 0 auto;
-  }
-
-  .head-title {
-    display: none;
-  }
-
-  .tab {
-    font-size: 0.68rem;
-    padding: 4px 8px;
-  }
-
-  .copy-btn {
-    right: 10px;
-    width: 32px;
-    height: 32px;
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .code-body {
-    height: 350px;
-    overflow: auto;
-  }
-
-  .code-pre {
-    padding: 16px 14px;
-    font-size: 0.74rem;
-    line-height: 1.7;
-  }
-
-  .code-foot {
-    padding: 10px 14px;
-    font-size: 0.72rem;
-  }
-
-  .code-foot span:last-child {
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .hero-showcase {
+    margin-top: 3.2rem;
+    padding-top: 2.6rem;
   }
 }
 
-@media (max-width: 420px) {
-  .hero__inner {
-    padding-inline: 16px;
+@media (max-width: 540px) {
+  .showcase-item {
+    grid-template-columns: 1fr;
+
+    gap: 0.3rem;
   }
 
-  .hero__content {
-    padding-top: 28px;
-  }
-
-  .hero__title {
-    font-size: clamp(2.05rem, 14vw, 2.65rem);
-    max-width: 11ch;
-  }
-
-  .hero__lead {
-    font-size: 0.96rem;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-  }
-
-  .tab {
+  .editor {
     font-size: 0.64rem;
-    padding: 4px 7px;
   }
 
-  .code-body {
-    height: 270px;
+  .editor__line {
+    grid-template-columns:
+      30px
+      1fr;
   }
 
-  .code-pre {
-    font-size: 0.7rem;
-    padding: 14px 12px;
+  .terminal__body {
+    padding-inline: 0.72rem;
+
+    font-size: 0.6rem;
   }
 }
 </style>
