@@ -25,7 +25,7 @@ const meta = computed(() => {
     ],
     "/blog": [
       "Blog | Vix.cpp",
-      "News, technical deep dives, release notes, and development updates from the Vix.cpp project.",
+      "News, release notes, technical deep dives, and development updates from Vix.cpp.",
     ],
   };
   const [title, description] = post

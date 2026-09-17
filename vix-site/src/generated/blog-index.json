@@ -1,5 +1,12 @@
 [
   {
+    "path": "changelog/v2.9.0",
+    "title": "Vix.cpp v2.9.0",
+    "description": "Vix.cpp v2.9.0 clarifies responsibility across the build system, networking, SDK packaging, and mobile platform support.",
+    "date": "2026-09-17",
+    "author": ""
+  },
+  {
     "path": "changelog/v2.8.5",
     "title": "Vix.cpp v2.8.5",
     "description": "Vix.cpp v2.8.5 stabilizes Vix Realtime and strengthens modular application architecture with module-scoped Git dependencies, deterministic module graphs, transactional project mutations, and stricter installation contracts.",
