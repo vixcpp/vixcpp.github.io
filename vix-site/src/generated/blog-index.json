@@ -2,7 +2,7 @@
   {
     "path": "changelog/v2.9.0",
     "title": "Vix.cpp v2.9.0",
-    "description": "Vix.cpp v2.9.0 clarifies responsibility across the build system, networking, SDK packaging, and mobile platform support.",
+    "description": "Vix.cpp v2.9.0 clarifies ownership across the build system, dependency management, networking, SDK packaging, and mobile platform support.",
     "date": "2026-09-17",
     "author": ""
   },
