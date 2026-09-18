@@ -1,16 +1,10 @@
 <script setup>
-import { ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { site } from "../../data/site";
 import { navigation } from "../../data/navigation";
 
 const route = useRoute();
-const menuOpen = ref(false);
-
-function closeMenu() {
-  menuOpen.value = false;
-}
 
 function isActive(item) {
   if (item.external || !item.to) {
@@ -40,29 +34,10 @@ function isActive(item) {
         >
           <img class="brand__logo" :src="site.logo" alt="" />
 
-          <span class="brand__name"><span>Vix</span><span class="brand__name-suffix">.cpp</span></span>
-        </RouterLink>
-
-        <button
-          class="menu-button"
-          type="button"
-          :aria-expanded="menuOpen"
-          aria-label="Toggle navigation"
-          @click="menuOpen = !menuOpen"
-        >
-          <span>Menu</span>
-
-          <span
-            class="menu-button__icon"
-            :class="{
-              'menu-button__icon--open': menuOpen,
-            }"
-            aria-hidden="true"
+          <span class="brand__name"
+            ><span>Vix</span><span class="brand__name-suffix">.cpp</span></span
           >
-            <i />
-            <i />
-          </span>
-        </button>
+        </RouterLink>
       </div>
     </div>
 
@@ -76,12 +51,7 @@ function isActive(item) {
          Navigation band
     ==================================================== -->
 
-    <div
-      class="navigation-band"
-      :class="{
-        'navigation-band--open': menuOpen,
-      }"
-    >
+    <div class="navigation-band">
       <nav class="navigation-band__inner" aria-label="Main navigation">
         <template v-for="item in navigation" :key="item.label">
           <a
@@ -182,7 +152,6 @@ function isActive(item) {
 }
 
 .brand__name {
-
   font-family: var(--font-sans);
 
   font-size: clamp(2.55rem, 5vw, 4.35rem);
@@ -253,7 +222,6 @@ function isActive(item) {
   text-decoration: none;
 
   white-space: nowrap;
-
 }
 
 .navigation-link:hover {
@@ -317,7 +285,6 @@ function isActive(item) {
   height: 1px;
 
   background: currentColor;
-
 }
 
 .menu-button__icon i:first-child {
@@ -338,68 +305,5 @@ function isActive(item) {
   top: 6px;
 
   transform: rotate(-45deg);
-}
-
-/* ==========================================================
-   Responsive
-========================================================== */
-
-@media (max-width: 760px) {
-  .brand-band__inner {
-    width: min(calc(100% - 32px), var(--container-width));
-
-    min-height: 88px;
-  }
-
-  .brand__logo {
-    width: 48px;
-    height: 48px;
-  }
-
-  .brand__name {
-    font-size: 2.15rem;
-  }
-
-  .menu-button {
-    display: inline-flex;
-  }
-
-  .navigation-band {
-    display: none;
-  }
-
-  .navigation-band--open {
-    display: block;
-  }
-
-  .navigation-band__inner {
-    align-items: stretch;
-    flex-direction: column;
-
-    gap: 0;
-
-    width: min(calc(100% - 32px), var(--container-width));
-
-    padding: 0.5rem 0 0.8rem;
-  }
-
-  .navigation-link {
-    min-height: 46px;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-    font-size: 0.9rem;
-  }
-
-  .navigation-link:last-child {
-    border-bottom: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navigation-link,
-  .menu-button__icon i {
-    transition: none;
-  }
 }
 </style>
