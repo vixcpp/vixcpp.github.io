@@ -59,6 +59,12 @@ export default defineConfig({
             };
           })
           .filter((post) => post.path);
+        const docs = JSON.parse(
+          readFileSync(
+            fileURLToPath(new URL("./src/generated/docs-index.json", import.meta.url)),
+            "utf8",
+          ),
+        );
         const items = posts
           .map(
             (post) =>
@@ -75,7 +81,9 @@ export default defineConfig({
           "/learn",
           "/community",
           "/blog",
+          "/docs",
           ...allPosts.map((post) => `/blog/${post.path}`),
+          ...docs.filter((page) => page.path).map((page) => `/docs/${page.path}`),
         ]
           .map(
             (path) =>
@@ -140,7 +148,6 @@ export default defineConfig({
 
       workbox: {
         navigateFallback: "/index.html",
-        navigateFallbackDenylist: [/^\/docs(\/|$)/],
         globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json}"],
         runtimeCaching: [
           {

@@ -1,0 +1,2666 @@
+[
+  {
+    "path": "",
+    "title": "Vix.cpp Documentation"
+  },
+  {
+    "path": "api",
+    "title": "API Reference"
+  },
+  {
+    "path": "api/async",
+    "title": "API Reference"
+  },
+  {
+    "path": "api/config",
+    "title": "Config API"
+  },
+  {
+    "path": "api/core",
+    "title": "Core"
+  },
+  {
+    "path": "api/core/console",
+    "title": "Console"
+  },
+  {
+    "path": "api/core/core",
+    "title": "API Reference"
+  },
+  {
+    "path": "api/core/format",
+    "title": "Format"
+  },
+  {
+    "path": "api/core/input",
+    "title": "Input"
+  },
+  {
+    "path": "api/core/inspect",
+    "title": "Inspect"
+  },
+  {
+    "path": "api/core/print",
+    "title": "Print"
+  },
+  {
+    "path": "api/http",
+    "title": "HTTP API"
+  },
+  {
+    "path": "api/json",
+    "title": "JSON API"
+  },
+  {
+    "path": "api/kv",
+    "title": "Vix KV API"
+  },
+  {
+    "path": "api/log",
+    "title": "Log"
+  },
+  {
+    "path": "api/log/server-pretty-logs",
+    "title": "Server Pretty Logs"
+  },
+  {
+    "path": "api/middleware",
+    "title": "Middleware API"
+  },
+  {
+    "path": "api/p2p",
+    "title": "P2P API"
+  },
+  {
+    "path": "api/threadpool",
+    "title": "ThreadPool API"
+  },
+  {
+    "path": "api/websocket",
+    "title": "WebSocket API"
+  },
+  {
+    "path": "app-modules",
+    "title": "Application Modules"
+  },
+  {
+    "path": "app-modules/backend-modules",
+    "title": "Backend Modules"
+  },
+  {
+    "path": "app-modules/best-practices",
+    "title": "Best Practices"
+  },
+  {
+    "path": "app-modules/cli-workflow",
+    "title": "CLI Workflow"
+  },
+  {
+    "path": "app-modules/dependencies-and-checks",
+    "title": "Dependencies and Checks"
+  },
+  {
+    "path": "app-modules/generated-registration",
+    "title": "Generated Registration"
+  },
+  {
+    "path": "app-modules/getting-started",
+    "title": "Getting Started"
+  },
+  {
+    "path": "app-modules/module-layout",
+    "title": "Module Layout"
+  },
+  {
+    "path": "app-modules/module-manifest",
+    "title": "Module Manifest"
+  },
+  {
+    "path": "app-modules/tests",
+    "title": "Tests"
+  },
+  {
+    "path": "app-modules/troubleshooting",
+    "title": "Troubleshooting"
+  },
+  {
+    "path": "app-modules/why-modules",
+    "title": "Why Modules Exist"
+  },
+  {
+    "path": "app-modules/with-cmake",
+    "title": "Using with CMake"
+  },
+  {
+    "path": "app-modules/with-vix-app",
+    "title": "Using with vix.app"
+  },
+  {
+    "path": "book",
+    "title": "Book"
+  },
+  {
+    "path": "book/01-introduction",
+    "title": "Introduction"
+  },
+  {
+    "path": "book/02-why-vix",
+    "title": "Why Vix Exists"
+  },
+  {
+    "path": "book/03-mental-model",
+    "title": "Mental Model"
+  },
+  {
+    "path": "book/04-application-model",
+    "title": "Application Model"
+  },
+  {
+    "path": "book/04-routes",
+    "title": "Routes"
+  },
+  {
+    "path": "book/05-request-response",
+    "title": "Request and Response"
+  },
+  {
+    "path": "book/05-runtime-workflow",
+    "title": "Runtime Workflow"
+  },
+  {
+    "path": "book/06-build-workflow",
+    "title": "Build Workflow"
+  },
+  {
+    "path": "book/06-json-api",
+    "title": "JSON API"
+  },
+  {
+    "path": "book/07-middleware",
+    "title": "Middleware"
+  },
+  {
+    "path": "book/07-modules-and-composition",
+    "title": "Modules and Composition"
+  },
+  {
+    "path": "book/08-local-to-production",
+    "title": "From Local to Production"
+  },
+  {
+    "path": "book/08-validation",
+    "title": "Validation"
+  },
+  {
+    "path": "book/09-errors-and-logging",
+    "title": "Errors and logging"
+  },
+  {
+    "path": "book/09-next-steps",
+    "title": "Next Steps"
+  },
+  {
+    "path": "book/10-database",
+    "title": "Database"
+  },
+  {
+    "path": "book/11-realtime-websocket",
+    "title": "Real-time WebSocket"
+  },
+  {
+    "path": "book/12-async-runtime",
+    "title": "Async runtime"
+  },
+  {
+    "path": "book/13-cache",
+    "title": "Cache"
+  },
+  {
+    "path": "book/14-offline-first-sync",
+    "title": "Offline-first sync"
+  },
+  {
+    "path": "book/15-p2p",
+    "title": "P2P"
+  },
+  {
+    "path": "book/16-production-deployment",
+    "title": "Production deployment"
+  },
+  {
+    "path": "book/17-next-steps",
+    "title": "Next steps"
+  },
+  {
+    "path": "cli",
+    "title": "Vix CLI"
+  },
+  {
+    "path": "cli/add",
+    "title": "vix add"
+  },
+  {
+    "path": "cli/agent",
+    "title": "vix agent"
+  },
+  {
+    "path": "cli/build",
+    "title": "vix build"
+  },
+  {
+    "path": "cli/cache",
+    "title": "vix cache"
+  },
+  {
+    "path": "cli/check",
+    "title": "vix check"
+  },
+  {
+    "path": "cli/clean",
+    "title": "vix clean"
+  },
+  {
+    "path": "cli/commands",
+    "title": "CLI Commands"
+  },
+  {
+    "path": "cli/completion",
+    "title": "vix completion"
+  },
+  {
+    "path": "cli/db",
+    "title": "vix db"
+  },
+  {
+    "path": "cli/deploy",
+    "title": "vix deploy"
+  },
+  {
+    "path": "cli/desktop",
+    "title": "vix desktop"
+  },
+  {
+    "path": "cli/dev",
+    "title": "vix dev"
+  },
+  {
+    "path": "cli/doctor",
+    "title": "vix doctor"
+  },
+  {
+    "path": "cli/env",
+    "title": "vix env"
+  },
+  {
+    "path": "cli/fmt",
+    "title": "vix fmt"
+  },
+  {
+    "path": "cli/game",
+    "title": "vix game"
+  },
+  {
+    "path": "cli/health",
+    "title": "vix health"
+  },
+  {
+    "path": "cli/info",
+    "title": "vix info"
+  },
+  {
+    "path": "cli/install",
+    "title": "vix install"
+  },
+  {
+    "path": "cli/list",
+    "title": "vix list"
+  },
+  {
+    "path": "cli/logs",
+    "title": "vix logs"
+  },
+  {
+    "path": "cli/make",
+    "title": "vix make"
+  },
+  {
+    "path": "cli/mobile",
+    "title": "vix mobile"
+  },
+  {
+    "path": "cli/modules",
+    "title": "vix modules"
+  },
+  {
+    "path": "cli/new",
+    "title": "vix new"
+  },
+  {
+    "path": "cli/note",
+    "title": "vix note"
+  },
+  {
+    "path": "cli/orm",
+    "title": "vix orm"
+  },
+  {
+    "path": "cli/outdated",
+    "title": "vix outdated"
+  },
+  {
+    "path": "cli/p2p",
+    "title": "vix p2p"
+  },
+  {
+    "path": "cli/pack",
+    "title": "vix pack"
+  },
+  {
+    "path": "cli/proxy",
+    "title": "vix proxy"
+  },
+  {
+    "path": "cli/publish",
+    "title": "vix publish"
+  },
+  {
+    "path": "cli/registry",
+    "title": "vix registry"
+  },
+  {
+    "path": "cli/remove",
+    "title": "vix remove"
+  },
+  {
+    "path": "cli/repl",
+    "title": "Vix Reply"
+  },
+  {
+    "path": "cli/replay",
+    "title": "vix replay"
+  },
+  {
+    "path": "cli/reset",
+    "title": "vix reset"
+  },
+  {
+    "path": "cli/run",
+    "title": "vix run"
+  },
+  {
+    "path": "cli/search",
+    "title": "vix search"
+  },
+  {
+    "path": "cli/service",
+    "title": "vix service"
+  },
+  {
+    "path": "cli/store",
+    "title": "vix store"
+  },
+  {
+    "path": "cli/task",
+    "title": "vix task"
+  },
+  {
+    "path": "cli/tests",
+    "title": "vix tests"
+  },
+  {
+    "path": "cli/uninstall",
+    "title": "vix uninstall"
+  },
+  {
+    "path": "cli/unpublish",
+    "title": "registry: unpublish namespace/name"
+  },
+  {
+    "path": "cli/update",
+    "title": "vix update"
+  },
+  {
+    "path": "cli/upgrade",
+    "title": "vix upgrade"
+  },
+  {
+    "path": "cli/verify",
+    "title": "vix verify"
+  },
+  {
+    "path": "cli/ws",
+    "title": "vix ws"
+  },
+  {
+    "path": "cmd",
+    "title": "cmd"
+  },
+  {
+    "path": "code-of-conduct",
+    "title": "Code of Conduct"
+  },
+  {
+    "path": "contributing",
+    "title": "Contribution"
+  },
+  {
+    "path": "docs-guides",
+    "title": "Vix.cpp Documentation Standard"
+  },
+  {
+    "path": "examples",
+    "title": "Examples"
+  },
+  {
+    "path": "examples/async-app",
+    "title": "Async App"
+  },
+  {
+    "path": "examples/auth-api-key",
+    "title": "API Key Auth"
+  },
+  {
+    "path": "examples/auth-jwt",
+    "title": "JWT Auth"
+  },
+  {
+    "path": "examples/auth-rbac",
+    "title": "RBAC"
+  },
+  {
+    "path": "examples/background-task",
+    "title": "Background Task"
+  },
+  {
+    "path": "examples/cookies",
+    "title": "Cookies"
+  },
+  {
+    "path": "examples/form-parser",
+    "title": "Form Parser"
+  },
+  {
+    "path": "examples/hello-app",
+    "title": "Hello App"
+  },
+  {
+    "path": "examples/http-cache",
+    "title": "HTTP Cache"
+  },
+  {
+    "path": "examples/json-api",
+    "title": "JSON API"
+  },
+  {
+    "path": "examples/middleware-api",
+    "title": "Middleware API"
+  },
+  {
+    "path": "examples/multipart-upload",
+    "title": "Multipart Upload"
+  },
+  {
+    "path": "examples/production-bootstrap",
+    "title": "Production Bootstrap"
+  },
+  {
+    "path": "examples/session-counter",
+    "title": "Session Counter"
+  },
+  {
+    "path": "examples/sqlite-api",
+    "title": "SQLite API"
+  },
+  {
+    "path": "examples/static-site",
+    "title": "Static Site"
+  },
+  {
+    "path": "examples/websocket-chat",
+    "title": "WebSocket Chat"
+  },
+  {
+    "path": "experimental",
+    "title": "Experimental"
+  },
+  {
+    "path": "experimental/vix-app",
+    "title": "vix.app"
+  },
+  {
+    "path": "getting-started",
+    "title": "Welcome to Vix.cpp"
+  },
+  {
+    "path": "getting-started/create-your-first-project",
+    "title": "Create Your First Project"
+  },
+  {
+    "path": "getting-started/first-http-server",
+    "title": "Your First HTTP Server"
+  },
+  {
+    "path": "getting-started/installation",
+    "title": "Installation"
+  },
+  {
+    "path": "getting-started/run-your-first-file",
+    "title": "Run Your First C++ File"
+  },
+  {
+    "path": "getting-started/setup-environment",
+    "title": "Set Up Your Environment"
+  },
+  {
+    "path": "getting-started/what-is-vixcpp",
+    "title": "What is Vix.cpp?"
+  },
+  {
+    "path": "guides",
+    "title": "Guides"
+  },
+  {
+    "path": "guides/artifact-cache",
+    "title": "Artifact Cache"
+  },
+  {
+    "path": "guides/authentication",
+    "title": "Authentication"
+  },
+  {
+    "path": "guides/build-rest-api",
+    "title": "Build a REST API"
+  },
+  {
+    "path": "guides/cors",
+    "title": "CORS"
+  },
+  {
+    "path": "guides/cpp-developer-toolkit",
+    "title": "C++ Developer Toolkit"
+  },
+  {
+    "path": "guides/cpp-runtime",
+    "title": "C++ Runtime"
+  },
+  {
+    "path": "guides/database",
+    "title": "Database"
+  },
+  {
+    "path": "guides/database/cli",
+    "title": "Database CLI"
+  },
+  {
+    "path": "guides/database/configuration",
+    "title": "Database configuration"
+  },
+  {
+    "path": "guides/database/connection-pool",
+    "title": "Connection pool"
+  },
+  {
+    "path": "guides/database/migrations",
+    "title": "Migrations"
+  },
+  {
+    "path": "guides/database/mysql",
+    "title": "MySQL"
+  },
+  {
+    "path": "guides/database/queries",
+    "title": "Queries"
+  },
+  {
+    "path": "guides/database/quick-start",
+    "title": "Database quick start"
+  },
+  {
+    "path": "guides/database/schema-snapshots",
+    "title": "Schema snapshots"
+  },
+  {
+    "path": "guides/database/sqlite",
+    "title": "SQLite"
+  },
+  {
+    "path": "guides/database/transactions",
+    "title": "Transactions"
+  },
+  {
+    "path": "guides/diagnostics",
+    "title": "Diagnostics"
+  },
+  {
+    "path": "guides/fast-target-builds",
+    "title": "Fast Target Builds"
+  },
+  {
+    "path": "guides/game",
+    "title": "Game Guide"
+  },
+  {
+    "path": "guides/json",
+    "title": "JSON"
+  },
+  {
+    "path": "guides/json/build-json",
+    "title": "Build JSON"
+  },
+  {
+    "path": "guides/json/http",
+    "title": "JSON with HTTP"
+  },
+  {
+    "path": "guides/json/jpath",
+    "title": "JPath"
+  },
+  {
+    "path": "guides/json/parse-json",
+    "title": "Parse JSON"
+  },
+  {
+    "path": "guides/json/quick-start",
+    "title": "JSON Quick Start"
+  },
+  {
+    "path": "guides/json/safe-access",
+    "title": "Safe Access"
+  },
+  {
+    "path": "guides/json/simple-token",
+    "title": "Simple Token"
+  },
+  {
+    "path": "guides/json/write-json",
+    "title": "Write JSON"
+  },
+  {
+    "path": "guides/object-cache",
+    "title": "Object Cache"
+  },
+  {
+    "path": "guides/orm",
+    "title": "ORM"
+  },
+  {
+    "path": "guides/orm/entities",
+    "title": "Entities"
+  },
+  {
+    "path": "guides/orm/mappers",
+    "title": "Mappers"
+  },
+  {
+    "path": "guides/orm/query-builder",
+    "title": "Query Builder"
+  },
+  {
+    "path": "guides/orm/quick-start",
+    "title": "ORM quick start"
+  },
+  {
+    "path": "guides/orm/repositories",
+    "title": "Repositories"
+  },
+  {
+    "path": "guides/orm/unit-of-work",
+    "title": "Unit of Work"
+  },
+  {
+    "path": "guides/orm/with-vix-db",
+    "title": "With vix::db"
+  },
+  {
+    "path": "guides/production-files",
+    "title": "Production Files"
+  },
+  {
+    "path": "guides/production-files/database",
+    "title": "Production Database"
+  },
+  {
+    "path": "guides/production-files/deploy",
+    "title": "Production Deploy"
+  },
+  {
+    "path": "guides/production-files/environment",
+    "title": "Production Environment"
+  },
+  {
+    "path": "guides/production-files/existing-cpp-projects",
+    "title": "Existing C++ Projects"
+  },
+  {
+    "path": "guides/production-files/health",
+    "title": "Production Health"
+  },
+  {
+    "path": "guides/production-files/logs",
+    "title": "Production Logs"
+  },
+  {
+    "path": "guides/production-files/proxy",
+    "title": "Production Proxy"
+  },
+  {
+    "path": "guides/production-files/service",
+    "title": "Production Service"
+  },
+  {
+    "path": "guides/production-files/websocket",
+    "title": "Production WebSocket"
+  },
+  {
+    "path": "guides/production-nginx-systemd",
+    "title": "Production: Nginx + systemd"
+  },
+  {
+    "path": "guides/rate-limiting",
+    "title": "Rate limiting"
+  },
+  {
+    "path": "guides/replay",
+    "title": "Replay a Run"
+  },
+  {
+    "path": "guides/runtime-arguments",
+    "title": "Runtime Arguments"
+  },
+  {
+    "path": "guides/sessions",
+    "title": "Sessions"
+  },
+  {
+    "path": "guides/static-files",
+    "title": "Static files"
+  },
+  {
+    "path": "guides/templates",
+    "title": "Templates"
+  },
+  {
+    "path": "guides/validation",
+    "title": "Validation"
+  },
+  {
+    "path": "guides/vix-app",
+    "title": "vix.app"
+  },
+  {
+    "path": "guides/vix-app/app-modules",
+    "title": "App Modules"
+  },
+  {
+    "path": "guides/vix-app/best-practices",
+    "title": "Best Practices"
+  },
+  {
+    "path": "guides/vix-app/cmake-fallback",
+    "title": "CMake Fallback"
+  },
+  {
+    "path": "guides/vix-app/compile-options",
+    "title": "Compile Options"
+  },
+  {
+    "path": "guides/vix-app/examples",
+    "title": "Examples"
+  },
+  {
+    "path": "guides/vix-app/getting-started",
+    "title": "Getting Started"
+  },
+  {
+    "path": "guides/vix-app/libraries",
+    "title": "Libraries"
+  },
+  {
+    "path": "guides/vix-app/manifest-reference",
+    "title": "Manifest Reference"
+  },
+  {
+    "path": "guides/vix-app/migration-from-cmake",
+    "title": "Migrating from CMake"
+  },
+  {
+    "path": "guides/vix-app/output-directory",
+    "title": "Output Directory"
+  },
+  {
+    "path": "guides/vix-app/packages-and-links",
+    "title": "Packages and Links"
+  },
+  {
+    "path": "guides/vix-app/project-types",
+    "title": "Project Types"
+  },
+  {
+    "path": "guides/vix-app/resources",
+    "title": "Resources"
+  },
+  {
+    "path": "guides/vix-app/sources-and-includes",
+    "title": "Sources and Includes"
+  },
+  {
+    "path": "guides/vix-app/tests",
+    "title": "Tests"
+  },
+  {
+    "path": "guides/vix-app/troubleshooting",
+    "title": "Troubleshooting"
+  },
+  {
+    "path": "guides/vix-vs-cmake",
+    "title": "Vix.cpp vs CMake"
+  },
+  {
+    "path": "guides/websocket-chat",
+    "title": "WebSocket chat"
+  },
+  {
+    "path": "internals",
+    "title": "Internals"
+  },
+  {
+    "path": "internals/architecture",
+    "title": "Architecture"
+  },
+  {
+    "path": "internals/cache-system",
+    "title": "Cache System"
+  },
+  {
+    "path": "internals/design-decisions",
+    "title": "Design Decisions"
+  },
+  {
+    "path": "internals/direct-compile",
+    "title": "Direct Compile"
+  },
+  {
+    "path": "internals/error-diagnostics",
+    "title": "Error Diagnostics"
+  },
+  {
+    "path": "internals/performance",
+    "title": "Performance"
+  },
+  {
+    "path": "internals/runtime-model",
+    "title": "Runtime Model"
+  },
+  {
+    "path": "modules",
+    "title": "Modules"
+  },
+  {
+    "path": "modules/agent",
+    "title": "Agent"
+  },
+  {
+    "path": "modules/agent/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/agent/cache-and-run-history",
+    "title": "Cache and Run History"
+  },
+  {
+    "path": "modules/agent/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/agent/command-tool",
+    "title": "Command Tool"
+  },
+  {
+    "path": "modules/agent/configuration",
+    "title": "Configuration"
+  },
+  {
+    "path": "modules/agent/custom-providers",
+    "title": "Custom Providers"
+  },
+  {
+    "path": "modules/agent/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/agent/file-read-tool",
+    "title": "File Read Tool"
+  },
+  {
+    "path": "modules/agent/model-providers",
+    "title": "Model Providers"
+  },
+  {
+    "path": "modules/agent/ollama",
+    "title": "Ollama"
+  },
+  {
+    "path": "modules/agent/project-scanning",
+    "title": "Project Scanning"
+  },
+  {
+    "path": "modules/agent/public-api",
+    "title": "Public API"
+  },
+  {
+    "path": "modules/agent/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/agent/requests-and-responses",
+    "title": "Requests and Responses"
+  },
+  {
+    "path": "modules/agent/tools",
+    "title": "Tools"
+  },
+  {
+    "path": "modules/agent/workspace",
+    "title": "Workspace"
+  },
+  {
+    "path": "modules/async",
+    "title": "Async"
+  },
+  {
+    "path": "modules/async/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/async/architecture",
+    "title": "Architecture"
+  },
+  {
+    "path": "modules/async/cancellation",
+    "title": "Cancellation"
+  },
+  {
+    "path": "modules/async/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/async/core-concepts",
+    "title": "Core Concepts"
+  },
+  {
+    "path": "modules/async/cpu-offloading",
+    "title": "CPU Offloading"
+  },
+  {
+    "path": "modules/async/dns",
+    "title": "DNS"
+  },
+  {
+    "path": "modules/async/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/async/execution-model",
+    "title": "Execution Model"
+  },
+  {
+    "path": "modules/async/io-context",
+    "title": "iocontext"
+  },
+  {
+    "path": "modules/async/lifecycle-and-shutdown",
+    "title": "Lifecycle and Shutdown"
+  },
+  {
+    "path": "modules/async/networking",
+    "title": "Networking"
+  },
+  {
+    "path": "modules/async/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/async/scheduler",
+    "title": "Scheduler"
+  },
+  {
+    "path": "modules/async/signals",
+    "title": "Signals"
+  },
+  {
+    "path": "modules/async/spawn",
+    "title": "Spawn and Detached Tasks"
+  },
+  {
+    "path": "modules/async/task-composition",
+    "title": "Task Composition"
+  },
+  {
+    "path": "modules/async/tasks",
+    "title": "Tasks"
+  },
+  {
+    "path": "modules/async/tcp",
+    "title": "TCP"
+  },
+  {
+    "path": "modules/async/thread-pool",
+    "title": "Thread Pool"
+  },
+  {
+    "path": "modules/async/timers",
+    "title": "Timers"
+  },
+  {
+    "path": "modules/async/udp",
+    "title": "UDP"
+  },
+  {
+    "path": "modules/async/when-all-and-when-any",
+    "title": "whenall and whenany"
+  },
+  {
+    "path": "modules/cache",
+    "title": "Cache"
+  },
+  {
+    "path": "modules/cache/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/cache/cache-context",
+    "title": "Cache Context"
+  },
+  {
+    "path": "modules/cache/cache-entry",
+    "title": "Cache Entry"
+  },
+  {
+    "path": "modules/cache/cache-keys",
+    "title": "Cache Keys"
+  },
+  {
+    "path": "modules/cache/cache-policy",
+    "title": "Cache Policy"
+  },
+  {
+    "path": "modules/cache/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/cache/context-mapper",
+    "title": "Context Mapper"
+  },
+  {
+    "path": "modules/cache/file-store",
+    "title": "File Store"
+  },
+  {
+    "path": "modules/cache/lru-memory-store",
+    "title": "LRU Memory Store"
+  },
+  {
+    "path": "modules/cache/memory-store",
+    "title": "Memory Store"
+  },
+  {
+    "path": "modules/cache/offline-and-network-errors",
+    "title": "Offline and Network Errors"
+  },
+  {
+    "path": "modules/cache/pruning",
+    "title": "Pruning"
+  },
+  {
+    "path": "modules/cache/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/cache/stores",
+    "title": "Stores"
+  },
+  {
+    "path": "modules/conversion",
+    "title": "Conversion"
+  },
+  {
+    "path": "modules/conversion/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/conversion/booleans",
+    "title": "Booleans"
+  },
+  {
+    "path": "modules/conversion/enums",
+    "title": "Enums"
+  },
+  {
+    "path": "modules/conversion/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/conversion/expected-results",
+    "title": "Expected Results"
+  },
+  {
+    "path": "modules/conversion/floats",
+    "title": "Floats"
+  },
+  {
+    "path": "modules/conversion/generic-parse",
+    "title": "Generic Parse"
+  },
+  {
+    "path": "modules/conversion/integers",
+    "title": "Integers"
+  },
+  {
+    "path": "modules/conversion/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/conversion/to-string",
+    "title": "To String"
+  },
+  {
+    "path": "modules/core",
+    "title": "Core"
+  },
+  {
+    "path": "modules/core/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/core/app",
+    "title": "vix::App"
+  },
+  {
+    "path": "modules/core/architecture",
+    "title": "Architecture"
+  },
+  {
+    "path": "modules/core/async-and-runtime",
+    "title": "Async and runtime"
+  },
+  {
+    "path": "modules/core/attached-runtime",
+    "title": "Attached runtime"
+  },
+  {
+    "path": "modules/core/configuration",
+    "title": "Configuration"
+  },
+  {
+    "path": "modules/core/console",
+    "title": "Console"
+  },
+  {
+    "path": "modules/core/format",
+    "title": "Format"
+  },
+  {
+    "path": "modules/core/handlers",
+    "title": "Handlers"
+  },
+  {
+    "path": "modules/core/http-server",
+    "title": "HTTP server"
+  },
+  {
+    "path": "modules/core/input",
+    "title": "Input"
+  },
+  {
+    "path": "modules/core/inspect",
+    "title": "Inspect"
+  },
+  {
+    "path": "modules/core/middleware",
+    "title": "Middleware"
+  },
+  {
+    "path": "modules/core/openapi",
+    "title": "OpenAPI"
+  },
+  {
+    "path": "modules/core/print",
+    "title": "Print"
+  },
+  {
+    "path": "modules/core/request",
+    "title": "Request"
+  },
+  {
+    "path": "modules/core/response",
+    "title": "Response"
+  },
+  {
+    "path": "modules/core/routing",
+    "title": "Routing"
+  },
+  {
+    "path": "modules/core/runtime-executor",
+    "title": "Runtime executor"
+  },
+  {
+    "path": "modules/core/sessions",
+    "title": "Sessions"
+  },
+  {
+    "path": "modules/core/static-files",
+    "title": "Static files"
+  },
+  {
+    "path": "modules/core/templates",
+    "title": "Templates"
+  },
+  {
+    "path": "modules/core/tls",
+    "title": "TLS"
+  },
+  {
+    "path": "modules/core/transports",
+    "title": "Transports"
+  },
+  {
+    "path": "modules/crypto",
+    "title": "Crypto"
+  },
+  {
+    "path": "modules/crypto/aead",
+    "title": "AEAD"
+  },
+  {
+    "path": "modules/crypto/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/crypto/bytes-and-hex",
+    "title": "Bytes and Hex"
+  },
+  {
+    "path": "modules/crypto/certificates",
+    "title": "Certificates"
+  },
+  {
+    "path": "modules/crypto/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/crypto/constant-time-compare",
+    "title": "Constant-Time Compare"
+  },
+  {
+    "path": "modules/crypto/hashing",
+    "title": "Hashing"
+  },
+  {
+    "path": "modules/crypto/hmac",
+    "title": "HMAC"
+  },
+  {
+    "path": "modules/crypto/kdf",
+    "title": "KDF"
+  },
+  {
+    "path": "modules/crypto/keys",
+    "title": "Keys"
+  },
+  {
+    "path": "modules/crypto/passwords",
+    "title": "Passwords"
+  },
+  {
+    "path": "modules/crypto/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/crypto/random",
+    "title": "Random"
+  },
+  {
+    "path": "modules/crypto/results-and-errors",
+    "title": "Results and Errors"
+  },
+  {
+    "path": "modules/crypto/signatures",
+    "title": "Signatures"
+  },
+  {
+    "path": "modules/env",
+    "title": "Env"
+  },
+  {
+    "path": "modules/env/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/env/env-files",
+    "title": ".env Files"
+  },
+  {
+    "path": "modules/env/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/env/layered-loading",
+    "title": "Layered Loading"
+  },
+  {
+    "path": "modules/env/load-into-process",
+    "title": "Load Into Process"
+  },
+  {
+    "path": "modules/env/options",
+    "title": "Options"
+  },
+  {
+    "path": "modules/env/parsing",
+    "title": "Parsing"
+  },
+  {
+    "path": "modules/env/process-environment",
+    "title": "Process Environment"
+  },
+  {
+    "path": "modules/env/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/env/typed-values",
+    "title": "Typed Values"
+  },
+  {
+    "path": "modules/error",
+    "title": "Error"
+  },
+  {
+    "path": "modules/error/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/error/error-categories",
+    "title": "Error Categories"
+  },
+  {
+    "path": "modules/error/error-codes",
+    "title": "Error Codes"
+  },
+  {
+    "path": "modules/error/error-object",
+    "title": "Error Object"
+  },
+  {
+    "path": "modules/error/exception",
+    "title": "Exception Bridge"
+  },
+  {
+    "path": "modules/error/result",
+    "title": "Result"
+  },
+  {
+    "path": "modules/fs",
+    "title": "FS"
+  },
+  {
+    "path": "modules/fs/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/fs/copy-move-remove",
+    "title": "Copy, Move, and Remove"
+  },
+  {
+    "path": "modules/fs/directories",
+    "title": "Directories"
+  },
+  {
+    "path": "modules/fs/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/fs/listing",
+    "title": "Listing"
+  },
+  {
+    "path": "modules/fs/metadata",
+    "title": "Metadata"
+  },
+  {
+    "path": "modules/fs/options",
+    "title": "Options"
+  },
+  {
+    "path": "modules/fs/paths-and-results",
+    "title": "Paths and Results"
+  },
+  {
+    "path": "modules/fs/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/fs/read-and-write",
+    "title": "Read and Write"
+  },
+  {
+    "path": "modules/io",
+    "title": "IO"
+  },
+  {
+    "path": "modules/io/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/io/buffers",
+    "title": "Buffers"
+  },
+  {
+    "path": "modules/io/copy",
+    "title": "Copy"
+  },
+  {
+    "path": "modules/io/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/io/input-and-output",
+    "title": "Input and Output"
+  },
+  {
+    "path": "modules/io/lines",
+    "title": "Lines"
+  },
+  {
+    "path": "modules/io/options",
+    "title": "Options"
+  },
+  {
+    "path": "modules/io/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/io/read-and-write",
+    "title": "Read and Write"
+  },
+  {
+    "path": "modules/io/standard-streams",
+    "title": "Standard Streams"
+  },
+  {
+    "path": "modules/kv",
+    "title": "KV"
+  },
+  {
+    "path": "modules/kv/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/kv/keys",
+    "title": "Keys"
+  },
+  {
+    "path": "modules/kv/opening",
+    "title": "Opening a database"
+  },
+  {
+    "path": "modules/kv/persistence",
+    "title": "Persistence"
+  },
+  {
+    "path": "modules/kv/recovery",
+    "title": "Recovery"
+  },
+  {
+    "path": "modules/kv/stats",
+    "title": "Stats"
+  },
+  {
+    "path": "modules/kv/values",
+    "title": "Values"
+  },
+  {
+    "path": "modules/middleware",
+    "title": "Middleware"
+  },
+  {
+    "path": "modules/middleware/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/middleware/app-integration",
+    "title": "App Integration"
+  },
+  {
+    "path": "modules/middleware/authentication",
+    "title": "Authentication"
+  },
+  {
+    "path": "modules/middleware/basics",
+    "title": "Basics"
+  },
+  {
+    "path": "modules/middleware/concepts",
+    "title": "Core Concepts"
+  },
+  {
+    "path": "modules/middleware/http-cache",
+    "title": "HTTP Cache"
+  },
+  {
+    "path": "modules/middleware/observability",
+    "title": "Observability"
+  },
+  {
+    "path": "modules/middleware/parsers",
+    "title": "Parsers"
+  },
+  {
+    "path": "modules/middleware/performance",
+    "title": "Performance"
+  },
+  {
+    "path": "modules/middleware/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/middleware/security",
+    "title": "Security"
+  },
+  {
+    "path": "modules/note",
+    "title": "Vix Note"
+  },
+  {
+    "path": "modules/note/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/note/cells",
+    "title": "Cells"
+  },
+  {
+    "path": "modules/note/cpp-cells",
+    "title": "C++ Cells"
+  },
+  {
+    "path": "modules/note/document-format",
+    "title": "Document Format"
+  },
+  {
+    "path": "modules/note/export",
+    "title": "Export"
+  },
+  {
+    "path": "modules/note/extension-manifest",
+    "title": "Extension Manifest"
+  },
+  {
+    "path": "modules/note/extension-protocol",
+    "title": "Extension Protocol"
+  },
+  {
+    "path": "modules/note/extension-requirements",
+    "title": "Extension Requirements"
+  },
+  {
+    "path": "modules/note/extension-tutorial-pyrelune",
+    "title": "Pyrelune Extension Tutorial"
+  },
+  {
+    "path": "modules/note/extensions",
+    "title": "Creating Note Extensions"
+  },
+  {
+    "path": "modules/note/html-cells",
+    "title": "HTML Cells"
+  },
+  {
+    "path": "modules/note/local-ui",
+    "title": "Local UI"
+  },
+  {
+    "path": "modules/note/project-context",
+    "title": "Project Context"
+  },
+  {
+    "path": "modules/note/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/note/reply-cells",
+    "title": "Reply Cells"
+  },
+  {
+    "path": "modules/note/runtime",
+    "title": "Runtime"
+  },
+  {
+    "path": "modules/os",
+    "title": "OS"
+  },
+  {
+    "path": "modules/os/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/os/directories",
+    "title": "Directories"
+  },
+  {
+    "path": "modules/os/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/os/platform-and-architecture",
+    "title": "Platform and Architecture"
+  },
+  {
+    "path": "modules/os/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/os/sleep",
+    "title": "Sleep"
+  },
+  {
+    "path": "modules/os/system-resources",
+    "title": "System Resources"
+  },
+  {
+    "path": "modules/os/user-and-process",
+    "title": "User and Process"
+  },
+  {
+    "path": "modules/p2p",
+    "title": "p2p"
+  },
+  {
+    "path": "modules/p2p/api-reference",
+    "title": "api reference"
+  },
+  {
+    "path": "modules/p2p/bootstrap",
+    "title": "bootstrap"
+  },
+  {
+    "path": "modules/p2p/discovery",
+    "title": "discovery"
+  },
+  {
+    "path": "modules/p2p/http-control",
+    "title": "http control"
+  },
+  {
+    "path": "modules/p2p/node",
+    "title": "node"
+  },
+  {
+    "path": "modules/p2p/protocol",
+    "title": "protocol"
+  },
+  {
+    "path": "modules/p2p/router",
+    "title": "router"
+  },
+  {
+    "path": "modules/p2p/wal-replication",
+    "title": "wal replication"
+  },
+  {
+    "path": "modules/path",
+    "title": "Path"
+  },
+  {
+    "path": "modules/path/absolute-and-relative",
+    "title": "Absolute and Relative"
+  },
+  {
+    "path": "modules/path/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/path/components",
+    "title": "Path Components"
+  },
+  {
+    "path": "modules/path/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/path/join-and-normalize",
+    "title": "Join and Normalize"
+  },
+  {
+    "path": "modules/path/lexical-paths",
+    "title": "Lexical Paths"
+  },
+  {
+    "path": "modules/path/options",
+    "title": "Options"
+  },
+  {
+    "path": "modules/path/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/path/separators-and-styles",
+    "title": "Separators and Styles"
+  },
+  {
+    "path": "modules/process",
+    "title": "Process"
+  },
+  {
+    "path": "modules/process/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/process/async",
+    "title": "Async"
+  },
+  {
+    "path": "modules/process/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/process/commands",
+    "title": "Commands"
+  },
+  {
+    "path": "modules/process/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/process/options-and-pipes",
+    "title": "Options and Pipes"
+  },
+  {
+    "path": "modules/process/output",
+    "title": "Output"
+  },
+  {
+    "path": "modules/process/pipelines",
+    "title": "Pipelines"
+  },
+  {
+    "path": "modules/process/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/process/spawn-and-child",
+    "title": "Spawn and Child"
+  },
+  {
+    "path": "modules/process/status-and-wait",
+    "title": "Status and Wait"
+  },
+  {
+    "path": "modules/process/terminate-and-kill",
+    "title": "Terminate and Kill"
+  },
+  {
+    "path": "modules/realtime",
+    "title": "Realtime"
+  },
+  {
+    "path": "modules/realtime/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/realtime/architecture",
+    "title": "Architecture"
+  },
+  {
+    "path": "modules/realtime/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/realtime/commands-and-results",
+    "title": "Commands and Results"
+  },
+  {
+    "path": "modules/realtime/configuration",
+    "title": "Configuration"
+  },
+  {
+    "path": "modules/realtime/connections",
+    "title": "Connections"
+  },
+  {
+    "path": "modules/realtime/core-concepts",
+    "title": "Core Concepts"
+  },
+  {
+    "path": "modules/realtime/distributed-presence",
+    "title": "Distributed Presence"
+  },
+  {
+    "path": "modules/realtime/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/realtime/event-store",
+    "title": "Event Store"
+  },
+  {
+    "path": "modules/realtime/events",
+    "title": "Events"
+  },
+  {
+    "path": "modules/realtime/health",
+    "title": "Health"
+  },
+  {
+    "path": "modules/realtime/metrics",
+    "title": "Metrics"
+  },
+  {
+    "path": "modules/realtime/postgresql",
+    "title": "PostgreSQL"
+  },
+  {
+    "path": "modules/realtime/presence",
+    "title": "Presence"
+  },
+  {
+    "path": "modules/realtime/protocol",
+    "title": "Protocol"
+  },
+  {
+    "path": "modules/realtime/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/realtime/replay-and-recovery",
+    "title": "Replay and Recovery"
+  },
+  {
+    "path": "modules/realtime/room-handlers",
+    "title": "Room Handlers"
+  },
+  {
+    "path": "modules/realtime/room-manager",
+    "title": "Room Manager"
+  },
+  {
+    "path": "modules/realtime/room-ownership",
+    "title": "Room Ownership"
+  },
+  {
+    "path": "modules/realtime/room-state",
+    "title": "Room State"
+  },
+  {
+    "path": "modules/realtime/rooms",
+    "title": "Rooms"
+  },
+  {
+    "path": "modules/realtime/server",
+    "title": "Server"
+  },
+  {
+    "path": "modules/realtime/session-resume",
+    "title": "Session Resume"
+  },
+  {
+    "path": "modules/realtime/sessions",
+    "title": "Sessions"
+  },
+  {
+    "path": "modules/realtime/snapshots",
+    "title": "Snapshots"
+  },
+  {
+    "path": "modules/realtime/transport",
+    "title": "Transport"
+  },
+  {
+    "path": "modules/realtime/websocket-integration",
+    "title": "WebSocket Integration"
+  },
+  {
+    "path": "modules/requests",
+    "title": "Requests"
+  },
+  {
+    "path": "modules/requests/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/requests/bodies",
+    "title": "Bodies"
+  },
+  {
+    "path": "modules/requests/client",
+    "title": "Client"
+  },
+  {
+    "path": "modules/requests/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/requests/headers-and-params",
+    "title": "Headers and Params"
+  },
+  {
+    "path": "modules/requests/https-and-tls",
+    "title": "HTTPS and TLS"
+  },
+  {
+    "path": "modules/requests/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/requests/redirects-and-cookies",
+    "title": "Redirects and Cookies"
+  },
+  {
+    "path": "modules/requests/request-options",
+    "title": "Request Options"
+  },
+  {
+    "path": "modules/requests/responses",
+    "title": "Responses"
+  },
+  {
+    "path": "modules/requests/session",
+    "title": "Session"
+  },
+  {
+    "path": "modules/requests/timeouts",
+    "title": "Timeouts"
+  },
+  {
+    "path": "modules/sync",
+    "title": "Sync"
+  },
+  {
+    "path": "modules/sync/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/sync/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/sync/file-outbox-store",
+    "title": "File Outbox Store"
+  },
+  {
+    "path": "modules/sync/inflight-recovery",
+    "title": "In-flight Recovery"
+  },
+  {
+    "path": "modules/sync/offline-first-model",
+    "title": "Offline-first Model"
+  },
+  {
+    "path": "modules/sync/operations",
+    "title": "Operations"
+  },
+  {
+    "path": "modules/sync/outbox",
+    "title": "Outbox"
+  },
+  {
+    "path": "modules/sync/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/sync/retry-policy",
+    "title": "Retry Policy"
+  },
+  {
+    "path": "modules/sync/sync-engine",
+    "title": "Sync Engine"
+  },
+  {
+    "path": "modules/sync/transports",
+    "title": "Transports"
+  },
+  {
+    "path": "modules/sync/wal",
+    "title": "WAL"
+  },
+  {
+    "path": "modules/tests",
+    "title": "Tests"
+  },
+  {
+    "path": "modules/tests/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/tests/assertions",
+    "title": "Assertions"
+  },
+  {
+    "path": "modules/tests/cli",
+    "title": "CLI"
+  },
+  {
+    "path": "modules/tests/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/tests/colors-and-output",
+    "title": "Colors and Output"
+  },
+  {
+    "path": "modules/tests/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/tests/registry",
+    "title": "Registry"
+  },
+  {
+    "path": "modules/tests/runner",
+    "title": "Runner"
+  },
+  {
+    "path": "modules/tests/summaries",
+    "title": "Summaries"
+  },
+  {
+    "path": "modules/tests/test-cases",
+    "title": "Test Cases"
+  },
+  {
+    "path": "modules/tests/test-suites",
+    "title": "Test Suites"
+  },
+  {
+    "path": "modules/tests/timers",
+    "title": "Timers"
+  },
+  {
+    "path": "modules/threadpool",
+    "title": "ThreadPool"
+  },
+  {
+    "path": "modules/threadpool/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/threadpool/architecture",
+    "title": "Architecture"
+  },
+  {
+    "path": "modules/threadpool/cancellation",
+    "title": "Cancellation"
+  },
+  {
+    "path": "modules/threadpool/cmake",
+    "title": "CMake"
+  },
+  {
+    "path": "modules/threadpool/configuration",
+    "title": "Configuration"
+  },
+  {
+    "path": "modules/threadpool/core-concepts",
+    "title": "Core Concepts"
+  },
+  {
+    "path": "modules/threadpool/deadlines",
+    "title": "Deadlines"
+  },
+  {
+    "path": "modules/threadpool/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/threadpool/execution-model",
+    "title": "Execution Model"
+  },
+  {
+    "path": "modules/threadpool/executors",
+    "title": "Executors"
+  },
+  {
+    "path": "modules/threadpool/futures-and-promises",
+    "title": "Futures and Promises"
+  },
+  {
+    "path": "modules/threadpool/lifecycle-and-shutdown",
+    "title": "Lifecycle and Shutdown"
+  },
+  {
+    "path": "modules/threadpool/metrics-and-statistics",
+    "title": "Metrics and Statistics"
+  },
+  {
+    "path": "modules/threadpool/parallel-algorithms",
+    "title": "Parallel Algorithms"
+  },
+  {
+    "path": "modules/threadpool/parallel-for",
+    "title": "Parallel For"
+  },
+  {
+    "path": "modules/threadpool/parallel-for-each",
+    "title": "Parallel For Each"
+  },
+  {
+    "path": "modules/threadpool/parallel-map",
+    "title": "Parallel Map"
+  },
+  {
+    "path": "modules/threadpool/parallel-pipeline",
+    "title": "Parallel Pipeline"
+  },
+  {
+    "path": "modules/threadpool/parallel-reduce",
+    "title": "Parallel Reduce"
+  },
+  {
+    "path": "modules/threadpool/periodic-tasks",
+    "title": "Periodic Tasks"
+  },
+  {
+    "path": "modules/threadpool/priorities",
+    "title": "Priorities"
+  },
+  {
+    "path": "modules/threadpool/queue-and-rejection",
+    "title": "Queue and Rejection Policies"
+  },
+  {
+    "path": "modules/threadpool/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/threadpool/scheduling",
+    "title": "Scheduling Model"
+  },
+  {
+    "path": "modules/threadpool/scopes",
+    "title": "Scopes"
+  },
+  {
+    "path": "modules/threadpool/synchronization",
+    "title": "Synchronization"
+  },
+  {
+    "path": "modules/threadpool/task-groups",
+    "title": "Task Groups"
+  },
+  {
+    "path": "modules/threadpool/task-handles",
+    "title": "Task Handles"
+  },
+  {
+    "path": "modules/threadpool/task-results-and-status",
+    "title": "Task Results and Status"
+  },
+  {
+    "path": "modules/threadpool/tasks",
+    "title": "Tasks and Options"
+  },
+  {
+    "path": "modules/threadpool/thread-pool",
+    "title": "Thread Pool"
+  },
+  {
+    "path": "modules/threadpool/timeouts",
+    "title": "Timeouts"
+  },
+  {
+    "path": "modules/threadpool/worker-affinity",
+    "title": "Worker Affinity"
+  },
+  {
+    "path": "modules/time",
+    "title": "Time"
+  },
+  {
+    "path": "modules/time/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/time/chrono-interop",
+    "title": "Chrono Interop"
+  },
+  {
+    "path": "modules/time/clocks",
+    "title": "Clocks"
+  },
+  {
+    "path": "modules/time/dates",
+    "title": "Dates"
+  },
+  {
+    "path": "modules/time/datetimes",
+    "title": "DateTime"
+  },
+  {
+    "path": "modules/time/durations",
+    "title": "Durations"
+  },
+  {
+    "path": "modules/time/parsing",
+    "title": "Parsing"
+  },
+  {
+    "path": "modules/time/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/time/timestamps",
+    "title": "Timestamps"
+  },
+  {
+    "path": "modules/ui",
+    "title": "Vix UI"
+  },
+  {
+    "path": "modules/ui/app-shell",
+    "title": "App shell"
+  },
+  {
+    "path": "modules/ui/assets",
+    "title": "Assets"
+  },
+  {
+    "path": "modules/ui/examples",
+    "title": "Examples"
+  },
+  {
+    "path": "modules/ui/forms",
+    "title": "Forms"
+  },
+  {
+    "path": "modules/ui/html",
+    "title": "HTML helpers"
+  },
+  {
+    "path": "modules/ui/html-response",
+    "title": "HTML response"
+  },
+  {
+    "path": "modules/ui/live",
+    "title": "Live UI"
+  },
+  {
+    "path": "modules/ui/pwa",
+    "title": "PWA helpers"
+  },
+  {
+    "path": "modules/ui/tests",
+    "title": "Tests"
+  },
+  {
+    "path": "modules/ui/views",
+    "title": "Views"
+  },
+  {
+    "path": "modules/validation",
+    "title": "Validation"
+  },
+  {
+    "path": "modules/validation/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/validation/base-models",
+    "title": "Base Models"
+  },
+  {
+    "path": "modules/validation/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/validation/forms",
+    "title": "Forms"
+  },
+  {
+    "path": "modules/validation/parsed-validation",
+    "title": "Parsed Validation"
+  },
+  {
+    "path": "modules/validation/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/validation/results",
+    "title": "Results"
+  },
+  {
+    "path": "modules/validation/rules",
+    "title": "Rules"
+  },
+  {
+    "path": "modules/validation/schemas",
+    "title": "Schemas"
+  },
+  {
+    "path": "modules/validation/single-field-validation",
+    "title": "Single Field Validation"
+  },
+  {
+    "path": "modules/webrpc",
+    "title": "WebRPC"
+  },
+  {
+    "path": "modules/webrpc/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/webrpc/batches-and-notifications",
+    "title": "Batches and Notifications"
+  },
+  {
+    "path": "modules/webrpc/context",
+    "title": "Context"
+  },
+  {
+    "path": "modules/webrpc/dispatcher",
+    "title": "Dispatcher"
+  },
+  {
+    "path": "modules/webrpc/errors",
+    "title": "Errors"
+  },
+  {
+    "path": "modules/webrpc/metadata",
+    "title": "Metadata"
+  },
+  {
+    "path": "modules/webrpc/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/webrpc/requests",
+    "title": "Requests"
+  },
+  {
+    "path": "modules/webrpc/responses",
+    "title": "Responses"
+  },
+  {
+    "path": "modules/webrpc/router",
+    "title": "Router"
+  },
+  {
+    "path": "modules/websocket",
+    "title": "WebSocket"
+  },
+  {
+    "path": "modules/websocket/api-reference",
+    "title": "API Reference"
+  },
+  {
+    "path": "modules/websocket/attached-runtime",
+    "title": "Attached runtime"
+  },
+  {
+    "path": "modules/websocket/client",
+    "title": "Client"
+  },
+  {
+    "path": "modules/websocket/concepts",
+    "title": "Concepts"
+  },
+  {
+    "path": "modules/websocket/configuration",
+    "title": "Configuration"
+  },
+  {
+    "path": "modules/websocket/http-api",
+    "title": "HTTP API"
+  },
+  {
+    "path": "modules/websocket/long-polling",
+    "title": "Long polling"
+  },
+  {
+    "path": "modules/websocket/message-store",
+    "title": "Message store"
+  },
+  {
+    "path": "modules/websocket/messages",
+    "title": "Messages"
+  },
+  {
+    "path": "modules/websocket/metrics",
+    "title": "Metrics"
+  },
+  {
+    "path": "modules/websocket/openapi",
+    "title": "OpenAPI"
+  },
+  {
+    "path": "modules/websocket/quick-start",
+    "title": "Quick Start"
+  },
+  {
+    "path": "modules/websocket/rooms-and-broadcasting",
+    "title": "Rooms and Broadcasting"
+  },
+  {
+    "path": "modules/websocket/router",
+    "title": "Router"
+  },
+  {
+    "path": "modules/websocket/server",
+    "title": "Server"
+  },
+  {
+    "path": "modules/websocket/session",
+    "title": "Session"
+  },
+  {
+    "path": "modules/websocket/shutdown",
+    "title": "Shutdown"
+  },
+  {
+    "path": "modules/websocket/sqlite-message-store",
+    "title": "SQLite message store"
+  },
+  {
+    "path": "project-setup",
+    "title": "Project setup"
+  },
+  {
+    "path": "pull-request",
+    "title": "Pull Requests"
+  },
+  {
+    "path": "quick-start",
+    "title": "Quick start"
+  },
+  {
+    "path": "README",
+    "title": "README"
+  },
+  {
+    "path": "registry",
+    "title": "Package Registry"
+  },
+  {
+    "path": "registry/extensions",
+    "title": "Registry Extensions"
+  },
+  {
+    "path": "registry/package-metadata",
+    "title": "Package Metadata"
+  },
+  {
+    "path": "registry/publishing",
+    "title": "Publishing Packages"
+  },
+  {
+    "path": "registry/vix-json",
+    "title": "vix.json Reference"
+  },
+  {
+    "path": "releases",
+    "title": "Releases"
+  },
+  {
+    "path": "releases/builds",
+    "title": "Builds"
+  },
+  {
+    "path": "releases/changelog",
+    "title": "Changelog"
+  },
+  {
+    "path": "sdks",
+    "title": "SDK Profiles"
+  },
+  {
+    "path": "sdks/agent",
+    "title": "Agent SDK"
+  },
+  {
+    "path": "sdks/all",
+    "title": "Full SDK"
+  },
+  {
+    "path": "sdks/data",
+    "title": "Data SDK"
+  },
+  {
+    "path": "sdks/default",
+    "title": "Default SDK"
+  },
+  {
+    "path": "sdks/desktop",
+    "title": "Desktop SDK"
+  },
+  {
+    "path": "sdks/game",
+    "title": "Game SDK"
+  },
+  {
+    "path": "sdks/p2p",
+    "title": "P2P SDK"
+  },
+  {
+    "path": "sdks/web",
+    "title": "Web SDK"
+  },
+  {
+    "path": "security",
+    "title": "Security"
+  },
+  {
+    "path": "templates",
+    "title": "Project Templates"
+  },
+  {
+    "path": "templates/application",
+    "title": "Application Template"
+  },
+  {
+    "path": "templates/application/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/application/manifest",
+    "title": "Manifest"
+  },
+  {
+    "path": "templates/application/module-registry",
+    "title": "Module Registry"
+  },
+  {
+    "path": "templates/backend",
+    "title": "Backend Template"
+  },
+  {
+    "path": "templates/backend/app-bootstrap",
+    "title": "App Bootstrap"
+  },
+  {
+    "path": "templates/backend/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/backend/modules-integration",
+    "title": "Modules Integration"
+  },
+  {
+    "path": "templates/backend/production-files",
+    "title": "Production Files"
+  },
+  {
+    "path": "templates/backend/routes-and-middleware",
+    "title": "Routes and Middleware"
+  },
+  {
+    "path": "templates/game",
+    "title": "Game Template"
+  },
+  {
+    "path": "templates/game/assets-and-package",
+    "title": "Assets and Package"
+  },
+  {
+    "path": "templates/game/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/game/manifest",
+    "title": "Game Manifest"
+  },
+  {
+    "path": "templates/library",
+    "title": "Library Template"
+  },
+  {
+    "path": "templates/library/cmake-package",
+    "title": "CMake Package"
+  },
+  {
+    "path": "templates/library/examples-and-tests",
+    "title": "Examples and Tests"
+  },
+  {
+    "path": "templates/library/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/library/registry-metadata",
+    "title": "Registry Metadata"
+  },
+  {
+    "path": "templates/vue",
+    "title": "Vue.js Template"
+  },
+  {
+    "path": "templates/vue/backend-integration",
+    "title": "Backend Integration"
+  },
+  {
+    "path": "templates/vue/frontend-workflow",
+    "title": "Frontend Workflow"
+  },
+  {
+    "path": "templates/vue/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/web",
+    "title": "Web Template"
+  },
+  {
+    "path": "templates/web/layout",
+    "title": "Generated Layout"
+  },
+  {
+    "path": "templates/web/production-files",
+    "title": "Production Files"
+  },
+  {
+    "path": "templates/web/rendering-flow",
+    "title": "Rendering Flow"
+  },
+  {
+    "path": "templates/web/routes-and-views",
+    "title": "Routes and Views"
+  }
+]

@@ -4,40 +4,46 @@ import LearnPage from "../pages/LearnPage.vue";
 import BlogPage from "../pages/BlogPage.vue";
 import BlogPostPage from "../pages/BlogPostPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
+import DocsPage from "../pages/DocsPage.vue";
 
 export const routes = [
-    {
-      path: "/",
-      name: "home",
-      component: HomePage,
-    },
-    {
-      path: "/learn",
-      name: "learn",
-      component: LearnPage,
-    },
+  {
+    path: "/",
+    name: "home",
+    component: HomePage,
+  },
+  {
+    path: "/learn",
+    name: "learn",
+    component: LearnPage,
+  },
 
-    {
-      path: "/community",
-      name: "community",
-      component: CommunityPage,
-    },
-    {
-      path: "/blog",
-      name: "blog",
-      component: BlogPage,
-    },
-    {
-      path: "/blog/:pathMatch(.*)*",
-      name: "blog-post",
-      component: BlogPostPage,
-    },
+  {
+    path: "/community",
+    name: "community",
+    component: CommunityPage,
+  },
+  {
+    path: "/blog",
+    name: "blog",
+    component: BlogPage,
+  },
+  {
+    path: "/blog/:pathMatch(.*)*",
+    name: "blog-post",
+    component: BlogPostPage,
+  },
+  // {
+  //   path: "/docs/:pathMatch(.*)*",
+  //   name: "docs",
+  //   component: DocsPage,
+  // },
 
-    {
-      path: "/:pathMatch(.*)*",
-      name: "not-found",
-      component: NotFoundPage,
-    },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFoundPage,
+  },
 ];
 
 export const routerOptions = {

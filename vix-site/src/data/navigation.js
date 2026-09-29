@@ -6,9 +6,9 @@ export const navigation = [
   },
 
   {
-    label: "Documentation",
-    href: "https://docs.vixcpp.com",
-    external: true,
+    label: "Docs",
+    to: "/docs",
+    external: false,
   },
 
   {

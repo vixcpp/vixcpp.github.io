@@ -5,11 +5,13 @@ import { useHead } from "@unhead/vue";
 import SiteHeader from "./components/layout/SiteHeader.vue";
 import SiteFooter from "./components/layout/SiteFooter.vue";
 import { findBlogPost } from "./data/blog";
+import { findDocsPage } from "./data/docs";
 
 const route = useRoute();
 const meta = computed(() => {
   const post =
     route.path.startsWith("/blog/") && findBlogPost(route.params.pathMatch);
+  const doc = route.path.startsWith("/docs") && findDocsPage(route.params.pathMatch);
   const pages = {
     "/": [
       "Vix.cpp | A runtime for C++ applications",
@@ -27,9 +29,15 @@ const meta = computed(() => {
       "Blog | Vix.cpp",
       "News, release notes, technical deep dives, and development updates from Vix.cpp.",
     ],
+    "/docs": [
+      "Documentation | Vix.cpp",
+      "Vix.cpp documentation for building native C++ applications.",
+    ],
   };
   const [title, description] = post
     ? [`${post.title} | Vix.cpp`, post.description]
+    : doc
+      ? [`${doc.title} | Vix.cpp`, `Vix.cpp documentation: ${doc.title}.`]
     : pages[route.path] || ["Vix.cpp", ""];
   const path = post ? `/blog/${post.path}` : route.path;
   const url = `https://vixcpp.com${path === "/" ? "/" : path}`;
