@@ -4,7 +4,6 @@ import LearnPage from "../pages/LearnPage.vue";
 import BlogPage from "../pages/BlogPage.vue";
 import BlogPostPage from "../pages/BlogPostPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
-import DocsPage from "../pages/DocsPage.vue";
 
 export const routes = [
   {
@@ -17,7 +16,6 @@ export const routes = [
     name: "learn",
     component: LearnPage,
   },
-
   {
     path: "/community",
     name: "community",
@@ -33,11 +31,20 @@ export const routes = [
     name: "blog-post",
     component: BlogPostPage,
   },
-  // {
-  //   path: "/docs/:pathMatch(.*)*",
-  //   name: "docs",
-  //   component: DocsPage,
-  // },
+
+  {
+    path: "/docs/:pathMatch(.*)*",
+    name: "docs",
+    beforeEnter: (to) => {
+      const path = to.params.pathMatch;
+
+      const suffix = Array.isArray(path) ? path.join("/") : path || "";
+
+      window.location.href = `https://docs.vixcpp.com/${suffix}`;
+
+      return false;
+    },
+  },
 
   {
     path: "/:pathMatch(.*)*",
