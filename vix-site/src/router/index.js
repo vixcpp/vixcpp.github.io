@@ -37,10 +37,19 @@ export const routes = [
     name: "docs",
     beforeEnter: (to) => {
       const path = to.params.pathMatch;
-
       const suffix = Array.isArray(path) ? path.join("/") : path || "";
-
-      window.location.href = `https://docs.vixcpp.com/${suffix}`;
+      const target = new URL(
+        suffix ? `/${suffix}` : "/",
+        "https://docs.vixcpp.com",
+      );
+      const queryStart = to.fullPath.indexOf("?");
+      const hashStart = to.fullPath.indexOf("#");
+      target.search =
+        queryStart === -1
+          ? ""
+          : to.fullPath.slice(queryStart, hashStart === -1 ? undefined : hashStart);
+      target.hash = to.hash;
+      window.location.replace(target);
 
       return false;
     },

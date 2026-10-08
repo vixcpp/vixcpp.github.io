@@ -3,7 +3,6 @@ import { ViteSSG } from "vite-ssg";
 import App from "./App.vue";
 import { routes, routerOptions } from "./router";
 import { blogPosts } from "./data/blog";
-import { docsPages } from "./data/docs";
 
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -23,7 +22,5 @@ export const includedRoutes = () => [
   "/learn",
   "/community",
   "/blog",
-  "/docs",
   ...blogPosts.map((post) => `/blog/${post.path}`),
-  ...docsPages.filter((page) => page.path).map((page) => `/docs/${page.path}`),
 ];

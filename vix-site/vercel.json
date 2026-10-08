@@ -4,6 +4,20 @@
   "installCommand": "npm install",
   "routes": [
     {
+      "src": "/docs/?$",
+      "status": 308,
+      "headers": {
+        "Location": "https://docs.vixcpp.com"
+      }
+    },
+    {
+      "src": "/docs/(.*)",
+      "status": 308,
+      "headers": {
+        "Location": "https://docs.vixcpp.com/$1"
+      }
+    },
+    {
       "handle": "filesystem"
     },
     {
