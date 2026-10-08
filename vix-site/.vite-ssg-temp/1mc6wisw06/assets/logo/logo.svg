@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title desc">
+  <title id="title">Vix V logo only</title>
+  <desc id="desc">The standalone green V logo from the Vix image, on a transparent background.</desc>
+
+  <defs>
+    <linearGradient id="leftFace" x1="104" y1="121" x2="301" y2="363" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.17" stop-color="#e8ffd6"/>
+      <stop offset="0.40" stop-color="#96ff53"/>
+      <stop offset="0.70" stop-color="#28ca3c"/>
+      <stop offset="1" stop-color="#007b24"/>
+    </linearGradient>
+
+    <linearGradient id="rightFace" x1="377" y1="120" x2="259" y2="388" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9aff63"/>
+      <stop offset="0.23" stop-color="#58ec42"/>
+      <stop offset="0.58" stop-color="#18b934"/>
+      <stop offset="1" stop-color="#006c1f"/>
+    </linearGradient>
+
+    <linearGradient id="thinFace" x1="140" y1="226" x2="256" y2="416" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.20" stop-color="#ddffc6"/>
+      <stop offset="0.52" stop-color="#82ff36"/>
+      <stop offset="1" stop-color="#0db52a"/>
+    </linearGradient>
+
+    <linearGradient id="leftHighlight" x1="97" y1="122" x2="281" y2="388" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.48" stop-color="#d8ffd1"/>
+      <stop offset="1" stop-color="#44f143"/>
+    </linearGradient>
+
+    <linearGradient id="rightHighlight" x1="329" y1="123" x2="417" y2="123" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#edffe9"/>
+      <stop offset="1" stop-color="#d2ffc9"/>
+    </linearGradient>
+
+    <linearGradient id="centerShadow" x1="286" y1="301" x2="253" y2="392" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34db39"/>
+      <stop offset="0.38" stop-color="#0b6e22"/>
+      <stop offset="1" stop-color="#001205"/>
+    </linearGradient>
+
+    <filter id="outerGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.28  0 0 0 0 1  0 0 0 0 0.14  0 0 0 0.82 0"/>
+    </filter>
+
+    <filter id="wideGlow" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.9  0 0 0 0 0.12  0 0 0 0.48 0"/>
+    </filter>
+
+    <g id="vShape">
+      <path d="M329.6 123.1H417.0L262.8 390.9L218.1 315.1Z" fill="url(#rightFace)"/>
+      <path d="M99.1 123.1H194.5L307.5 313.7L262.4 390.9Z" fill="url(#leftFace)"/>
+      <path d="M138.6 226.1L257.7 404.0L248.0 417.3Z" fill="url(#thinFace)"/>
+    </g>
+  </defs>
+
+  <use href="#vShape" filter="url(#wideGlow)" opacity="0.68"/>
+  <use href="#vShape" filter="url(#outerGlow)" opacity="0.88"/>
+
+  <g>
+    <path d="M329.6 123.1H417.0L262.8 390.9L218.1 315.1Z" fill="url(#rightFace)"/>
+    <path d="M99.1 123.1H194.5L307.5 313.7L262.4 390.9Z" fill="url(#leftFace)"/>
+    <path d="M138.6 226.1L257.7 404.0L248.0 417.3Z" fill="url(#thinFace)"/>
+
+    <path d="M99.1 123.1H194.5" fill="none" stroke="#fafff5" stroke-width="2.5" stroke-linecap="square"/>
+    <path d="M329.6 123.1H417.0" fill="none" stroke="url(#rightHighlight)" stroke-width="2.5" stroke-linecap="square"/>
+    <path d="M99.1 123.1L262.4 390.9" fill="none" stroke="url(#leftHighlight)" stroke-width="1.7" stroke-linecap="square"/>
+    <path d="M194.5 123.1L307.5 313.7" fill="none" stroke="#b9ff8d" stroke-width="1.45" stroke-linecap="square"/>
+    <path d="M329.6 123.1L218.1 315.1" fill="none" stroke="#baff86" stroke-width="1.45" stroke-linecap="square"/>
+    <path d="M417.0 123.1L262.8 390.9" fill="none" stroke="#50f247" stroke-width="1.75" stroke-linecap="square"/>
+    <path d="M138.6 226.1L248.0 417.3" fill="none" stroke="#f9fff0" stroke-width="1.15" stroke-linecap="square"/>
+    <path d="M257.7 404.0L248.0 417.3" fill="none" stroke="#5dff31" stroke-width="1.8" stroke-linecap="square"/>
+    <path d="M158.0 262.8L248.0 417.3" fill="none" stroke="#05210d" stroke-width="2.1" stroke-linecap="square" opacity="0.62"/>
+    <path d="M262.4 390.9L307.5 313.7" fill="none" stroke="url(#centerShadow)" stroke-width="3.1" stroke-linecap="square" opacity="0.86"/>
+  </g>
+</svg>

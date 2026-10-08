@@ -1,0 +1,54 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1024 1024"
+  role="img"
+  aria-label="Softadastra logo"
+>
+  <title>Softadastra logo</title>
+
+  <path
+    fill="none"
+    stroke="#f97316"
+    stroke-width="92"
+    stroke-linecap="butt"
+    stroke-linejoin="round"
+    d="
+      M 704 454
+      C 780 414 754 320 685 270
+      C 601 209 470 207 386 265
+      C 321 310 284 383 320 430
+      C 340 456 394 475 456 507
+      C 540 550 605 601 600 681
+      C 596 739 552 775 500 789
+    "
+  />
+
+  <path
+    fill="none"
+    stroke="#f97316"
+    stroke-width="92"
+    stroke-linecap="butt"
+    stroke-linejoin="round"
+    d="
+      M 469 274
+      C 428 350 469 410 539 461
+      L 694 576
+      C 752 619 745 681 690 722
+    "
+  />
+
+  <path
+    fill="none"
+    stroke="#064e3b"
+    stroke-width="92"
+    stroke-linecap="butt"
+    stroke-linejoin="round"
+    d="
+      M 395 506
+      L 338 536
+      C 293 560 300 632 348 689
+      C 426 781 569 813 683 734
+      C 722 707 746 671 740 631
+    "
+  />
+</svg>

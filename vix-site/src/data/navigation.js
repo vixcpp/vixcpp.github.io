@@ -7,8 +7,8 @@ export const navigation = [
 
   {
     label: "Docs",
-    to: "/docs",
-    external: false,
+    href: "https://docs.vixcpp.com",
+    external: true,
   },
 
   {
